@@ -1,0 +1,183 @@
+<div class="content-wrapper">
+  <section class="content-header">
+    <h1><i class="fa fa-list"></i> Daftar PE Zoonosis</h1>
+    <ol class="breadcrumb">
+      <li><a href="<?=base_url()?>"><i class="fa fa-home"></i> Home</a></li>
+      <li><a href="<?=site_url('zoonosis')?>">Zoonosis</a></li>
+      <li class="active">Daftar PE</li>
+    </ol>
+  </section>
+  <section class="content">
+
+    <div class="filter-bar">
+      <div class="row">
+        <div class="col-sm-2">
+          <label style="font-size:0.82em;margin-bottom:3px">Penyakit</label>
+          <select id="f_penyakit" class="form-control input-sm">
+            <option value="0">-- Semua --</option>
+            <?php foreach($penyakit as $id_p => $info): ?>
+            <option value="<?=$id_p?>"><?=htmlspecialchars($info['singkat'])?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <div class="col-sm-2">
+          <label style="font-size:0.82em;margin-bottom:3px">Provinsi</label>
+          <select id="f_prop" class="form-control input-sm">
+            <option value="0">-- Semua --</option>
+            <?php foreach($list_prop as $pr): ?>
+            <option value="<?=$pr['id']?>"><?=htmlspecialchars($pr['propinsi'])?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <div class="col-sm-2">
+          <label style="font-size:0.82em;margin-bottom:3px">Kab/Kota</label>
+          <select id="f_kota" class="form-control input-sm">
+            <option value="0">-- Semua --</option>
+          </select>
+        </div>
+        <div class="col-sm-2">
+          <label style="font-size:0.82em;margin-bottom:3px">Dari Tgl Sakit</label>
+          <input type="date" id="f_tgl1" class="form-control input-sm" value="<?=date('Y-01-01')?>">
+        </div>
+        <div class="col-sm-2">
+          <label style="font-size:0.82em;margin-bottom:3px">Sampai</label>
+          <input type="date" id="f_tgl2" class="form-control input-sm" value="<?=date('Y-m-d')?>">
+        </div>
+        <div class="col-sm-2">
+          <label style="font-size:0.82em;margin-bottom:3px">&nbsp;</label><br>
+          <button class="btn btn-primary btn-sm" onclick="loadDaftar()">
+            <i class="fa fa-search"></i> Cari
+          </button>
+          <button class="btn btn-success btn-sm" onclick="exportCsv()">
+            <i class="fa fa-download"></i> CSV
+          </button>
+          <a href="<?=site_url('zoonosis/download_template')?>" class="btn btn-default btn-sm" title="Download Template Excel untuk import batch PE">
+            <i class="fa fa-file-excel-o"></i> Template
+          </a>
+          <a href="<?=site_url('zoonosis/upload_excel')?>" class="btn btn-info btn-sm" title="Upload Excel untuk import batch PE">
+            <i class="fa fa-upload"></i> Import Excel
+          </a>
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <div class="col-sm-4">
+          <input type="text" id="f_cari" class="form-control input-sm" placeholder="Cari nama pasien / No PE / NIK...">
+        </div>
+        <div class="col-sm-8" style="padding-top:4px">
+          <?php foreach($penyakit as $id_p => $info): ?>
+          <a href="<?=site_url('zoonosis/form/'.$id_p)?>" class="btn btn-xs btn-<?=$info['warna']?>" style="margin-right:4px">
+            <i class="fa fa-plus"></i> <?=htmlspecialchars($info['singkat'])?>
+          </a>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </div>
+
+    <div class="box box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-table"></i> Data PE
+          <span class="badge" id="jml-total" style="background:#2980b9">0</span>
+        </h3>
+      </div>
+      <div class="box-body table-responsive" style="padding:0">
+        <table class="table table-bordered table-striped tbl-zoo" id="tblDaftar">
+          <thead>
+            <tr style="background:#2c3e50;color:#fff">
+              <th>No PE</th><th>Penyakit</th><th>Provinsi</th><th>Kab/Kota</th>
+              <th>Nama Pasien</th><th>Kelamin</th><th>Umur</th>
+              <th>Tgl Sakit</th><th>Tgl PE</th><th>Status</th><th>Kondisi</th>
+              <th>Lab</th><th>No EBS</th><th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-daftar">
+            <tr><td colspan="14" class="text-center text-muted">Klik Cari untuk memuat data</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+</div>
+</div>
+
+<script>
+var BASE = '<?=base_url()?>';
+var STATUS_LABEL = {0:'Suspek',1:'Probable',2:'Konfirmasi',3:'Discarded'};
+var STATUS_CLASS  = {0:'badge-suspek',1:'badge-probable',2:'badge-konfirmasi',3:'badge-discarded'};
+var AKHIR_LABEL  = {1:'Sembuh',2:'Meninggal',3:'Perawatan'};
+
+$('#f_prop').change(function() {
+    var id = $(this).val();
+    $('#f_kota').html('<option value="0">-- Semua --</option>');
+    if (!id || id=='0') return;
+    $.get(BASE+'zoonosis/get_kota/'+id, function(rows) {
+        $.each(rows, function(i,r) {
+            $('#f_kota').append('<option value="'+r.id+'">'+r.kota+'</option>');
+        });
+    },'json');
+});
+
+function loadDaftar() {
+    var params = {
+        id_penyakit: $('#f_penyakit').val(),
+        id_prop:     $('#f_prop').val(),
+        id_kota:     $('#f_kota').val(),
+        tgl1:        $('#f_tgl1').val(),
+        tgl2:        $('#f_tgl2').val(),
+        cari:        $('#f_cari').val()
+    };
+    $('#tbody-daftar').html('<tr><td colspan="14" class="text-center"><i class="fa fa-spinner fa-spin"></i> Memuat...</td></tr>');
+    $.get(BASE+'zoonosis/get_daftar', params, function(rows) {
+        $('#jml-total').text(rows.length);
+        if (!rows.length) {
+            $('#tbody-daftar').html('<tr><td colspan="14" class="text-center text-muted">Tidak ada data</td></tr>');
+            return;
+        }
+        var html = '';
+        $.each(rows, function(i,r) {
+            var umur = r.umur_thn+'thn';
+            if (r.umur_bln > 0) umur += ' '+r.umur_bln+'bln';
+            var sk = parseInt(r.status_kasus);
+            var ak = parseInt(r.akhir_no);
+            var badge_s = '<span class="badge '+(STATUS_CLASS[sk]||'')+'">'+( STATUS_LABEL[sk]||'-')+'</span>';
+            var badge_a = ak==2
+                ? '<span class="badge badge-meninggal">Meninggal</span>'
+                : '<span class="badge" style="background:#7f8c8d">'+(AKHIR_LABEL[ak]||'-')+'</span>';
+            var lab_icon = r.diperiksa_lab=='1'
+                ? '<i class="fa fa-check-circle text-success"></i>'
+                : '<i class="fa fa-times-circle text-muted"></i>';
+            html += '<tr>'
+                +'<td>'+(r.no_pe||'-')+'</td>'
+                +'<td><small>'+(r.nama_penyakit||'-')+'</small></td>'
+                +'<td><small>'+(r.propinsi||'-')+'</small></td>'
+                +'<td><small>'+(r.kota||'-')+'</small></td>'
+                +'<td><b>'+(r.nama_pasien||'-')+'</b><br><small class="text-muted">'+(r.nik||'')+'</small></td>'
+                +'<td class="text-center">'+(r.kelamin=='L'?'<span class="text-primary">L</span>':'<span class="text-danger">P</span>')+'</td>'
+                +'<td class="text-center">'+umur+'</td>'
+                +'<td>'+(r.tgl_sakit||'-')+'</td>'
+                +'<td>'+(r.tgl_pe||'-')+'</td>'
+                +'<td class="text-center">'+badge_s+'</td>'
+                +'<td class="text-center">'+badge_a+'</td>'
+                +'<td class="text-center">'+lab_icon+'</td>'
+                +'<td><small>'+(r.no_ebs||'-')+'</small></td>'
+                +'<td class="text-center" style="white-space:nowrap">'
+                +'<a href="'+BASE+'zoonosis/detail/'+r.id+'" class="btn btn-xs btn-info" title="Detail"><i class="fa fa-eye"></i></a> '
+                +'<a href="'+BASE+'zoonosis/form_edit/'+r.id+'" class="btn btn-xs btn-warning" title="Edit"><i class="fa fa-pencil"></i></a> '
+                +'<a href="'+BASE+'zoonosis/hapus/'+r.id+'" class="btn btn-xs btn-danger" title="Hapus" onclick="return confirm(\'Hapus data ini?\')"><i class="fa fa-trash"></i></a>'
+                +'</td></tr>';
+        });
+        $('#tbody-daftar').html(html);
+    },'json');
+}
+
+function exportCsv() {
+    var p = '?id_penyakit='+$('#f_penyakit').val()
+        +'&id_prop='+$('#f_prop').val()
+        +'&id_kota='+$('#f_kota').val()
+        +'&tgl1='+$('#f_tgl1').val()
+        +'&tgl2='+$('#f_tgl2').val();
+    window.location = BASE+'zoonosis/export_csv'+p;
+}
+
+$(function() { loadDaftar(); });
+</script>
