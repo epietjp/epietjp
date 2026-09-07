@@ -74,6 +74,9 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <label>Link No EBS</label>
             <select name="no_ebs" class="form-control">
               <option value="">-- Tidak Ada --</option>
+              <?php $existing_no_ebs=fv($v,"no_ebs"); $ebs_keys=array_column($list_ebs,"no_ebs"); if($existing_no_ebs && !in_array($existing_no_ebs,$ebs_keys)): ?>
+              <option value="<?=$existing_no_ebs?>" selected><?=$existing_no_ebs?> [EBS Existing]</option>
+              <?php endif; ?>
               <?php foreach($list_ebs as $ebs): ?>
               <option value="<?=htmlspecialchars($ebs['no_ebs'])?>"
                 <?=fv($v,'no_ebs')==$ebs['no_ebs']?'selected':''?>>

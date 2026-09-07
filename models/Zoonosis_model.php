@@ -56,7 +56,7 @@ class Zoonosis_model extends CI_Model {
               LEFT JOIN ewarn_propinsi pr ON pr.id = z.id_prop
               LEFT JOIN ewarn_kota k      ON k.id  = z.id_kota
               LEFT JOIN ewarn_puskesmas pk ON pk.id = z.id_puskesmas
-              WHERE COALESCE(z.tgl_sakit, z.tgl_laporan, z.tgl_pe, z.create_date) BETWEEN '{$tgl1}' AND '{$tgl2}'";
+              WHERE COALESCE(z.tgl_laporan, z.tgl_sakit, z.tgl_pe, z.create_date) BETWEEN '{$tgl1}' AND '{$tgl2}'";
         if ($id_penyakit) $q .= " AND z.id_penyakit=".intval($id_penyakit);
         // Filter wilayah berdasarkan level user
         if ($kel_place == 2 && !empty($detail_place['id_kota'])) {
@@ -70,7 +70,7 @@ class Zoonosis_model extends CI_Model {
             $c = $this->db->escape_str($cari);
             $q .= " AND (z.nama_pasien LIKE '%{$c}%' OR z.no_pe LIKE '%{$c}%' OR z.nik LIKE '%{$c}%')";
         }
-        $q .= " ORDER BY z.tgl_sakit DESC LIMIT 1000";
+        $q .= " ORDER BY z.tgl_sakit DESC, z.id DESC LIMIT 5000";
         return $this->db->query($q)->result_array();
     }
 

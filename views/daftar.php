@@ -36,7 +36,15 @@
           </select>
         </div>
         <div class="col-sm-2">
-          <label style="font-size:0.82em;margin-bottom:3px">Dari Tgl Sakit</label>
+          <label style="font-size:0.82em;margin-bottom:3px">Tahun</label>
+          <select id="f_tahun" class="form-control input-sm" onchange="setTahun()">
+            <?php for($y=date('Y');$y>=2020;$y--): ?>
+            <option value="<?=$y?>" <?=$y==date('Y')?'selected':''?>><?=$y?></option>
+            <?php endfor; ?>
+          </select>
+        </div>
+        <div class="col-sm-2">
+          <label style="font-size:0.82em;margin-bottom:3px">Dari Tanggal</label>
           <input type="date" id="f_tgl1" class="form-control input-sm" value="<?=date('Y-01-01')?>">
         </div>
         <div class="col-sm-2">
@@ -117,6 +125,12 @@ $('#f_prop').change(function() {
     },'json');
 });
 
+function setTahun() {
+    var y = $("#f_tahun").val();
+    $("#f_tgl1").val(y+"-01-01");
+    $("#f_tgl2").val(y+"-12-31");
+    loadDaftar();
+}
 function loadDaftar() {
     var params = {
         id_penyakit: $('#f_penyakit').val(),
