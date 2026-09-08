@@ -786,6 +786,31 @@ class Zoonosis extends BackendController {
         return sprintf('CLU-%s-%s-%03d', $kode, $tahun, $urut);
     }
 
+
+    public function search_ebs() {
+        $this->_auth();
+        $q       = $this->input->get('q');
+        $id_prop = (int)$this->input->get('id_prop');
+        $id_kota = (int)$this->input->get('id_kota');
+        if (!$id_prop && !$id_kota && strlen($q) < 3) { echo json_encode(array()); return; }
+        $sql = "SELECT e.no_ebs, d.data as diagnosa, k.kota
+             FROM ewarn_form_ebs_new e
+             LEFT JOIN ewarn_data_combo d ON d.id=e.diagnosa_no
+             LEFT JOIN ewarn_distrik dist ON dist.id=e.id_distrik
+             LEFT JOIN ewarn_kota k ON k.id=dist.id_kota
+             LEFT JOIN ewarn_propinsi pr ON pr.id=k.id_prop
+             WHERE e.diagnosa_no IN(18,31,226,32,294,222,24)";
+        if (strlen($q) >= 2) {
+            $ql = $this->db->escape_like_str($q);
+            $sql .= " AND e.no_ebs LIKE '%{$ql}%'";
+        }
+        if ($id_kota)     $sql .= " AND k.id=".intval($id_kota);
+        elseif ($id_prop) $sql .= " AND pr.id=".intval($id_prop);
+        $sql .= " ORDER BY e.no_ebs DESC LIMIT 30";
+        $rows = $this->db->query($sql)->result_array();
+        echo json_encode($rows);
+    }
+
     // Halaman daftar cluster
     public function cluster() {
         $this->_auth();

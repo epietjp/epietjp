@@ -14,7 +14,26 @@ $is_edit = !empty($cluster) && isset($cluster['id']);
 $v = $is_edit ? $cluster : array();
 function fvc($v,$k,$def='') { return isset($v[$k]) ? htmlspecialchars($v[$k]) : $def; }
 ?>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
 <style>
+/* Select2 fix - text visibility */
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #2980b9 !important;
+    border-color: #2471a3 !important;
+    color: #fff !important;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: #fff !important;
+    margin-right: 5px;
+}
+.select2-container--default .select2-selection--multiple {
+    border: 1px solid #ccc;
+    min-height: 34px;
+}
+.select2-container--default .select2-results__option {
+    color: #333 !important;
+}
+
 .form-section{background:#fff;border:1px solid #dce3ec;border-radius:8px;padding:18px 20px;margin-bottom:14px}
 .form-section-title{font-size:14px;font-weight:700;color:#2c3e50;border-left:4px solid #2E75B6;padding-left:10px;margin-bottom:14px}
 label{font-size:13px;font-weight:600;color:#555}
@@ -158,10 +177,15 @@ label{font-size:13px;font-weight:600;color:#555}
     </div>
     <div class="col-sm-3">
       <div class="form-group">
-        <label>Link No EBS</label>
-        <input type="text" name="no_ebs" class="form-control"
-          placeholder="No EBS terkait"
-          value="<?=fvc($v,'no_ebs')?>">
+        <label>Link No EBS <small class="text-muted">(bisa pilih lebih dari 1)</small></label>
+        <select name="no_ebs[]" id="sel-ebs" class="form-control" multiple style="width:100%">
+          <?php if(!empty($v['no_ebs'])): ?>
+          <?php foreach(explode(',', $v['no_ebs']) as $ebs_no): ?>
+          <?php $ebs_no = trim($ebs_no); if(!$ebs_no) continue; ?>
+          <option value="<?=htmlspecialchars($ebs_no)?>" selected><?=htmlspecialchars($ebs_no)?></option>
+          <?php endforeach; ?>
+          <?php endif; ?>
+        </select>
       </div>
     </div>
   </div>
@@ -227,5 +251,30 @@ $('#formCluster').submit(function(e){
 
 $(function(){
   if(initProp) $('#sel_prop_cl').val(initProp).trigger('change');
+});
+</script>
+
+<script>
+$(function() {
+$.getScript("https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js", function() {
+    $("#sel-ebs").select2({
+        tags: true,
+        tokenSeparators: [','],
+        placeholder: 'Klik untuk pilih EBS dari wilayah...',
+        ajax: {
+            url: BASE+'zoonosis/search_ebs',
+            dataType: 'json',
+            delay: 300,
+            data: function(p) { return {q: p.term, id_prop: $('#sel_prop_cl').val(), id_kota: $('#sel_kota_cl').val()}; },
+            processResults: function(d) {
+                return {results: $.map(d, function(r) {
+                    return {id: r.no_ebs, text: r.no_ebs+' | '+r.diagnosa+' | '+(r.kota||'-')};
+                })};
+            },
+            cache: true
+        },
+        minimumInputLength: 0
+    });
+}); // end getScript
 });
 </script>
