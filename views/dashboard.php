@@ -137,6 +137,9 @@
           <a href="<?=site_url('zoonosis/daftar')?>" class="btn btn-default btn-sm">
             <i class="fa fa-list"></i> Daftar PE
           </a>
+          <a href="<?=site_url('zoonosis/cluster')?>" class="btn btn-warning btn-sm">
+            <i class="fa fa-object-group"></i> Cluster
+          </a>
         </div>
       </div>
     </div>

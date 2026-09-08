@@ -65,6 +65,7 @@
           <a href="<?=site_url('zoonosis/download_template')?>" class="btn btn-default btn-sm" title="Download Template Excel untuk import batch PE">
             <i class="fa fa-file-excel-o"></i> Template
           </a>
+          <a href="<?=site_url('zoonosis/cluster')?>" class="btn btn-warning btn-sm"><i class="fa fa-object-group"></i> Cluster</a>
           <a href="<?=site_url('zoonosis/upload_excel')?>" class="btn btn-info btn-sm" title="Upload Excel untuk import batch PE">
             <i class="fa fa-upload"></i> Import Excel
           </a>
