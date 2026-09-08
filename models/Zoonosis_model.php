@@ -206,4 +206,47 @@ class Zoonosis_model extends CI_Model {
             "SELECT id, data FROM ewarn_data_combo WHERE id IN ({$ids}) ORDER BY id"
         )->result_array();
     }
+
+    // Anggota Serumah
+    public function get_anggota_serumah($id_pe) {
+        return $this->db->query(
+            "SELECT * FROM ewarn_ghs_zoonosis_anggota_serumah WHERE id_pe=".intval($id_pe)." ORDER BY id"
+        )->result_array();
+    }
+    public function save_anggota_serumah($id_pe, $rows) {
+        $this->db->where("id_pe", intval($id_pe))->delete("ghs_zoonosis_anggota_serumah");
+        foreach ($rows as $r) {
+            if (empty($r["nama"])) continue;
+            $this->db->insert("ghs_zoonosis_anggota_serumah", array(
+                "id_pe"       => intval($id_pe),
+                "nama"        => $r["nama"],
+                "tempat_kerja"=> $r["tempat_kerja"] ?: NULL,
+                "create_date" => date("Y-m-d H:i:s"),
+            ));
+        }
+    }
+    // Kontak Pneumonia
+    public function get_kontak_pneumonia($id_pe) {
+        return $this->db->query(
+            "SELECT * FROM ewarn_ghs_zoonosis_kontak_pneumonia WHERE id_pe=".intval($id_pe)." ORDER BY id"
+        )->result_array();
+    }
+    public function save_kontak_pneumonia($id_pe, $rows) {
+        $this->db->where("id_pe", intval($id_pe))->delete("ghs_zoonosis_kontak_pneumonia");
+        foreach ($rows as $r) {
+            if (empty($r["nama"])) continue;
+            $this->db->insert("ghs_zoonosis_kontak_pneumonia", array(
+                "id_pe"           => intval($id_pe),
+                "nama"            => $r["nama"],
+                "umur"            => $r["umur"] ? intval($r["umur"]) : NULL,
+                "alamat"          => $r["alamat"] ?: NULL,
+                "hub_penderita"   => $r["hub_penderita"] ?: NULL,
+                "tgl_kontak_awal" => $r["tgl_kontak_awal"] ?: NULL,
+                "tgl_kontak_akhir"=> $r["tgl_kontak_akhir"] ?: NULL,
+                "status_flu"      => $r["status_flu"] ?: NULL,
+                "create_date"     => date("Y-m-d H:i:s"),
+            ));
+        }
+    }
+
 }

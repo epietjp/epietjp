@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap.min.js"></script>
 <div class="content-wrapper">
   <section class="content-header">
     <h1><i class="fa fa-list"></i> Daftar PE Zoonosis</h1>
@@ -181,6 +184,25 @@ function loadDaftar() {
                 +'</td></tr>';
         });
         $('#tbody-daftar').html(html);
+        // Init DataTables
+        if ($.fn.DataTable.isDataTable('#tblDaftar')) {
+            $('#tblDaftar').DataTable().destroy();
+        }
+        $('#tblDaftar').DataTable({
+            paging:   true,
+            ordering: true,
+            info:     true,
+            searching: false,
+            lengthMenu: [[10,25,50,100,500,-1],[10,25,50,100,500,'Semua']],
+            pageLength: 25,
+            language: {
+                lengthMenu: 'Menampilkan _MENU_ data per halaman',
+                info:       'Menampilkan _START_ sampai _END_ dari _TOTAL_ records',
+                infoEmpty:  'Tidak ada data',
+                infoFiltered: '(filtered from _MAX_ total records)',
+                paginate:   {first:'<<',last:'>>',next:'>',previous:'<'}
+            }
+        });
     },'json');
 }
 

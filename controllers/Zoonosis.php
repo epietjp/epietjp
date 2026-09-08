@@ -154,6 +154,8 @@ class Zoonosis extends BackendController {
                 'tgl_laporan'  => date('Y-m-d'),
             ),
             'detail'      => $this->zm->get_eav_template($id_penyakit),
+            'anggota'     => array(),
+            'kontak_pn'   => array(),
             'list_ebs'    => $this->zm->get_ebs_by_penyakit($id_penyakit, $this->kel_place, $this->detail_place),
             'list_diagnosa' => $this->zm->get_diagnosa_by_penyakit($id_penyakit),
         );
@@ -270,6 +272,33 @@ class Zoonosis extends BackendController {
             }
             if ($rows) $this->db->insert_batch('ghs_zoonosis_pe_detail', $rows);
         }
+        // Save anggota serumah
+        $anggota = array();
+        if (isset($_POST['as_nama'])) {
+            foreach ($_POST['as_nama'] as $idx => $nama) {
+                if (trim($nama)) $anggota[] = array(
+                    'nama'        => trim($nama),
+                    'tempat_kerja'=> isset($_POST['as_tempat'][$idx]) ? trim($_POST['as_tempat'][$idx]) : '',
+                );
+            }
+        }
+        $this->zm->save_anggota_serumah($id, $anggota);
+        // Save kontak pneumonia
+        $kontak_pn = array();
+        if (isset($_POST['kp_nama'])) {
+            foreach ($_POST['kp_nama'] as $idx => $nama) {
+                if (trim($nama)) $kontak_pn[] = array(
+                    'nama'             => trim($nama),
+                    'umur'             => isset($_POST['kp_umur'][$idx]) ? (int)$_POST['kp_umur'][$idx] : NULL,
+                    'alamat'           => isset($_POST['kp_alamat'][$idx]) ? trim($_POST['kp_alamat'][$idx]) : '',
+                    'hub_penderita'    => isset($_POST['kp_hub'][$idx]) ? trim($_POST['kp_hub'][$idx]) : '',
+                    'tgl_kontak_awal'  => isset($_POST['kp_tgl_awal'][$idx]) ? $_POST['kp_tgl_awal'][$idx] : NULL,
+                    'tgl_kontak_akhir' => isset($_POST['kp_tgl_akhir'][$idx]) ? $_POST['kp_tgl_akhir'][$idx] : NULL,
+                    'status_flu'       => isset($_POST['kp_status'][$idx]) ? trim($_POST['kp_status'][$idx]) : '',
+                );
+            }
+        }
+        $this->zm->save_kontak_pneumonia($id, $kontak_pn);
         echo json_encode(array('status'=>'ok', 'id'=>$id));
     }
 

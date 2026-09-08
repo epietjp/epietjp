@@ -712,6 +712,59 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         </div>
       </div>
     </div>
+    <!-- ANGGOTA SERUMAH -->
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-users"></i> Anggota Serumah</div>
+      <div id="tbl-anggota">
+        <?php foreach($anggota as $idx => $as): ?>
+        <div class="row anggota-row" style="margin-bottom:6px">
+          <div class="col-sm-5"><input type="text" name="as_nama[]" class="form-control input-sm" placeholder="Nama" value="<?=htmlspecialchars($as['nama'])?>"></div>
+          <div class="col-sm-5"><input type="text" name="as_tempat[]" class="form-control input-sm" placeholder="Tempat Kerja" value="<?=htmlspecialchars($as['tempat_kerja'])?>"></div>
+          <div class="col-sm-2"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.anggota-row').remove()"><i class="fa fa-times"></i></button></div>
+        </div>
+        <?php endforeach; ?>
+        <?php if(empty($anggota)): ?>
+        <div class="row anggota-row" style="margin-bottom:6px">
+          <div class="col-sm-5"><input type="text" name="as_nama[]" class="form-control input-sm" placeholder="Nama"></div>
+          <div class="col-sm-5"><input type="text" name="as_tempat[]" class="form-control input-sm" placeholder="Tempat Kerja"></div>
+          <div class="col-sm-2"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.anggota-row').remove()"><i class="fa fa-times"></i></button></div>
+        </div>
+        <?php endif; ?>
+      </div>
+      <button type="button" class="btn btn-xs btn-default" onclick="tambahAnggota()"><i class="fa fa-plus"></i> Tambah Anggota</button>
+    </div>
+    <!-- KONTAK PNEUMONIA (khusus Avian) -->
+    <?php if($id_penyakit==11): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-user-md"></i> Kontak dengan Penderita Pneumonia</div>
+      <div id="tbl-kontak-pn">
+        <?php foreach($kontak_pn as $idx => $kp): ?>
+        <div class="row kontak-pn-row" style="margin-bottom:6px">
+          <div class="col-sm-2"><input type="text" name="kp_nama[]" class="form-control input-sm" placeholder="Nama" value="<?=htmlspecialchars($kp['nama'])?>"></div>
+          <div class="col-sm-1"><input type="number" name="kp_umur[]" class="form-control input-sm" placeholder="Umur" value="<?=htmlspecialchars($kp['umur'])?>"></div>
+          <div class="col-sm-2"><input type="text" name="kp_hub[]" class="form-control input-sm" placeholder="Hub. Penderita" value="<?=htmlspecialchars($kp['hub_penderita'])?>"></div>
+          <div class="col-sm-2"><input type="date" name="kp_tgl_awal[]" class="form-control input-sm" value="<?=htmlspecialchars($kp['tgl_kontak_awal'])?>"></div>
+          <div class="col-sm-2"><input type="date" name="kp_tgl_akhir[]" class="form-control input-sm" value="<?=htmlspecialchars($kp['tgl_kontak_akhir'])?>"></div>
+          <div class="col-sm-2"><input type="text" name="kp_status[]" class="form-control input-sm" placeholder="Status Flu" value="<?=htmlspecialchars($kp['status_flu'])?>"></div>
+          <div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.kontak-pn-row').remove()"><i class="fa fa-times"></i></button></div>
+        </div>
+        <?php endforeach; ?>
+        <?php if(empty($kontak_pn)): ?>
+        <div class="row kontak-pn-row" style="margin-bottom:6px">
+          <div class="col-sm-2"><input type="text" name="kp_nama[]" class="form-control input-sm" placeholder="Nama"></div>
+          <div class="col-sm-1"><input type="number" name="kp_umur[]" class="form-control input-sm" placeholder="Umur"></div>
+          <div class="col-sm-2"><input type="text" name="kp_hub[]" class="form-control input-sm" placeholder="Hub. Penderita"></div>
+          <div class="col-sm-2"><input type="date" name="kp_tgl_awal[]" class="form-control input-sm"></div>
+          <div class="col-sm-2"><input type="date" name="kp_tgl_akhir[]" class="form-control input-sm"></div>
+          <div class="col-sm-2"><input type="text" name="kp_status[]" class="form-control input-sm" placeholder="Status Flu"></div>
+          <div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.kontak-pn-row').remove()"><i class="fa fa-times"></i></button></div>
+        </div>
+        <?php endif; ?>
+      </div>
+      <small class="text-muted">Nama | Umur | Hub. Penderita | Tgl Kontak Awal | Tgl Kontak Akhir | Status Flu</small><br>
+      <button type="button" class="btn btn-xs btn-default" onclick="tambahKontakPN()"><i class="fa fa-plus"></i> Tambah Kontak</button>
+    </div>
+    <?php endif; ?>
     <!-- KETERANGAN -->
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-sticky-note"></i> Keterangan Lain</div>
@@ -870,4 +923,10 @@ $('#formPE').submit(function(e) {
 $(function() {
     if (initProp) { $('#sel_prop').val(initProp).trigger('change'); }
 });
+function tambahAnggota() {
+    $("#tbl-anggota").append('<div class="row anggota-row" style="margin-bottom:6px"><div class="col-sm-5"><input type="text" name="as_nama[]" class="form-control input-sm" placeholder="Nama"></div><div class="col-sm-5"><input type="text" name="as_tempat[]" class="form-control input-sm" placeholder="Tempat Kerja"></div><div class="col-sm-2"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest(\".anggota-row\").remove()"><i class="fa fa-times"></i></button></div></div>');
+}
+function tambahKontakPN() {
+    $("#tbl-kontak-pn").append('<div class="row kontak-pn-row" style="margin-bottom:6px"><div class="col-sm-2"><input type="text" name="kp_nama[]" class="form-control input-sm" placeholder="Nama"></div><div class="col-sm-1"><input type="number" name="kp_umur[]" class="form-control input-sm" placeholder="Umur"></div><div class="col-sm-2"><input type="text" name="kp_hub[]" class="form-control input-sm" placeholder="Hub."></div><div class="col-sm-2"><input type="date" name="kp_tgl_awal[]" class="form-control input-sm"></div><div class="col-sm-2"><input type="date" name="kp_tgl_akhir[]" class="form-control input-sm"></div><div class="col-sm-2"><input type="text" name="kp_status[]" class="form-control input-sm" placeholder="Status"></div><div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest(\".kontak-pn-row\").remove()"><i class="fa fa-times"></i></button></div></div>');
+}
 </script>
