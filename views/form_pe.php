@@ -507,6 +507,22 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <?php foreach($detail_by_sub as $submodule => $rows): ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-list-alt"></i> <?=htmlspecialchars($submodule)?></div>
+      <?php if(strpos($submodule,'Gejala')===0): ?>
+      <div class="row">
+      <?php foreach($rows as $i => $d): ?>
+        <div class="col-sm-3" style="padding:4px 15px">
+          <input type="hidden" name="dsub[]" value="<?=htmlspecialchars($d['submodule'])?>">
+          <input type="hidden" name="dkey[]" value="<?=htmlspecialchars($d['var_key'])?>">
+          <input type="hidden" name="dtype[]" value="<?=htmlspecialchars($d['var_type'])?>">
+          <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($d['var_label'])?>">
+          <label style="font-weight:normal;margin:0">
+            <input type="checkbox" name="dval[]" value="Ya" <?=$d['var_value']=='Ya'?'checked':'' ?> style="margin-right:5px">
+            <?=htmlspecialchars($d['var_label'])?>
+          </label>
+        </div>
+      <?php endforeach; ?>
+      </div>
+      <?php else: ?>
       <?php foreach($rows as $i => $d): ?>
       <div class="row" style="margin-bottom:6px">
         <input type="hidden" name="dsub[]" value="<?=htmlspecialchars($d['submodule'])?>">
@@ -678,6 +694,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         </div>
       </div>
       <?php endforeach; ?>
+      <?php endif; ?>
     </div>
     <?php endforeach; ?>
     <?php endif; ?>
