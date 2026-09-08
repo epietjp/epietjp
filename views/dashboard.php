@@ -50,7 +50,7 @@
         <div class="zoo-card card-ghpr">
           <div class="zoo-num" id="kpi-8-total">-</div>
           <div class="zoo-label">Gigitan Hewan Penular Rabies (GHPR)</div>
-          <div class="zoo-sub">Konfirmasi: <b id="kpi-8-kon">-</b> &bull; Meninggal: <b id="kpi-8-mati">-</b></div>
+          <div class="zoo-sub">Konfirmasi: <b id="kpi-8-kon">-</b> &bull; Meninggal: <b id="kpi-8-mati">-</b> &bull; CFR: <b id="kpi-8-cfr">-</b></div>
           <i class="fa fa-paw zoo-icon"></i>
         </div>
       </div>
@@ -58,7 +58,7 @@
         <div class="zoo-card card-avian">
           <div class="zoo-num" id="kpi-11-total">-</div>
           <div class="zoo-label">Suspek Flu Burung Pada Manusia</div>
-          <div class="zoo-sub">Konfirmasi: <b id="kpi-11-kon">-</b> &bull; Meninggal: <b id="kpi-11-mati">-</b></div>
+          <div class="zoo-sub">Konfirmasi: <b id="kpi-11-kon">-</b> &bull; Meninggal: <b id="kpi-11-mati">-</b> &bull; CFR: <b id="kpi-11-cfr">-</b></div>
           <i class="fa fa-dove zoo-icon"></i>
         </div>
       </div>
@@ -66,7 +66,7 @@
         <div class="zoo-card card-anthrax">
           <div class="zoo-num" id="kpi-14-total">-</div>
           <div class="zoo-label">Suspek Antrax</div>
-          <div class="zoo-sub">Konfirmasi: <b id="kpi-14-kon">-</b> &bull; Meninggal: <b id="kpi-14-mati">-</b></div>
+          <div class="zoo-sub">Konfirmasi: <b id="kpi-14-kon">-</b> &bull; Meninggal: <b id="kpi-14-mati">-</b> &bull; CFR: <b id="kpi-14-cfr">-</b></div>
           <i class="fa fa-biohazard zoo-icon"></i>
         </div>
       </div>
@@ -74,7 +74,7 @@
         <div class="zoo-card card-lepto">
           <div class="zoo-num" id="kpi-26-total">-</div>
           <div class="zoo-label">Suspek Leptospirosis</div>
-          <div class="zoo-sub">Konfirmasi: <b id="kpi-26-kon">-</b> &bull; Meninggal: <b id="kpi-26-mati">-</b></div>
+          <div class="zoo-sub">Konfirmasi: <b id="kpi-26-kon">-</b> &bull; Meninggal: <b id="kpi-26-mati">-</b> &bull; CFR: <b id="kpi-26-cfr">-</b></div>
           <i class="fa fa-tint zoo-icon"></i>
         </div>
       </div>
@@ -152,6 +152,7 @@ function loadDashboard() {
             $('#kpi-'+id_p+'-total').text(row.total || 0);
             $('#kpi-'+id_p+'-kon').text(row.konfirmasi || 0);
             $('#kpi-'+id_p+'-mati').text(row.meninggal || 0);
+            $('#kpi-'+id_p+'-cfr').text(row.cfr ? row.cfr+'%' : '0%');
         });
     }, 'json');
 }

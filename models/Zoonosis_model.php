@@ -15,10 +15,11 @@ class Zoonosis_model extends CI_Model {
                 COUNT(*) AS total,
                 SUM(CASE WHEN status_kasus=2 THEN 1 ELSE 0 END) AS konfirmasi,
                 SUM(CASE WHEN akhir_no=2     THEN 1 ELSE 0 END) AS meninggal,
-                SUM(CASE WHEN diperiksa_lab=1 THEN 1 ELSE 0 END) AS diperiksa_lab
+                SUM(CASE WHEN diperiksa_lab=1 THEN 1 ELSE 0 END) AS diperiksa_lab,
+                ROUND(SUM(CASE WHEN akhir_no=2 THEN 1 ELSE 0 END)/NULLIF(COUNT(*),0)*100,1) AS cfr
               FROM ewarn_ghs_zoonosis_pe z
               WHERE z.id_penyakit=".intval($id_penyakit)."
-                AND z.tgl_sakit BETWEEN '{$tgl1}' AND '{$tgl2}'";
+                AND COALESCE(z.tgl_bergejala, z.tgl_sakit, z.tgl_laporan, z.tgl_pe) BETWEEN '{$tgl1}' AND '{$tgl2}'";
         $this->_where_wilayah($q, $id_prop, $id_kota);
         return $this->db->query($q)->row_array();
     }
@@ -34,7 +35,7 @@ class Zoonosis_model extends CI_Model {
               FROM ewarn_minggu m
               LEFT JOIN ewarn_ghs_zoonosis_pe z
                 ON z.id_penyakit=".intval($id_penyakit)."
-                AND z.tgl_sakit BETWEEN m.week_date AND DATE_ADD(m.week_date, INTERVAL 6 DAY)";
+                AND z.tgl_laporan BETWEEN DATE_SUB(m.week_date, INTERVAL 6 DAY) AND m.week_date";
         if ($id_kota)       $q .= " AND z.id_kota=".intval($id_kota);
         elseif ($id_prop)   $q .= " AND z.id_prop=".intval($id_prop);
         $q .= " WHERE m.week_year={$tahun}
