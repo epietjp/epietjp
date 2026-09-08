@@ -354,12 +354,8 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="date" name="tgl_meninggal" class="form-control" value="<?=fv($v,'tgl_meninggal')?>">
           </div>
         </div>
-        <div class="col-sm-9">
-          <div class="form-group">
-            <label>Gejala</label>
-            <input type="text" name="gejala" class="form-control" placeholder="Pisahkan dengan koma" value="<?=fv($v,'gejala')?>">
-          </div>
-        </div>
+        <!-- field gejala free text disembunyikan, digantikan checklist per penyakit -->
+        <input type="hidden" name="gejala" value="<?=fv($v,'gejala')?>">
       </div>
     </div>
 
