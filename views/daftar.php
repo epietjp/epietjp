@@ -24,18 +24,40 @@
           </select>
         </div>
         <div class="col-sm-2">
+          <label style="font-size:0.82em;margin-bottom:3px">Level Wilayah</label>
+          <select id="f_level" class="form-control input-sm" onchange="setLevelDaftar()">
+            <option value="0">Nasional</option>
+            <option value="1">Provinsi</option>
+            <option value="2">Kab/Kota</option>
+            <option value="3">Kecamatan</option>
+            <option value="4">Unit Pelapor</option>
+          </select>
+        </div>
+        <div class="col-sm-2" id="wrap-prop" style="display:none">
           <label style="font-size:0.82em;margin-bottom:3px">Provinsi</label>
-          <select id="f_prop" class="form-control input-sm">
-            <option value="0">-- Semua --</option>
+          <select id="f_prop" class="form-control input-sm" onchange="loadKotaDaftar()">
+            <option value="0">-- Pilih Provinsi --</option>
             <?php foreach($list_prop as $pr): ?>
             <option value="<?=$pr['id']?>"><?=htmlspecialchars($pr['propinsi'])?></option>
             <?php endforeach; ?>
           </select>
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-2" id="wrap-kota" style="display:none">
           <label style="font-size:0.82em;margin-bottom:3px">Kab/Kota</label>
-          <select id="f_kota" class="form-control input-sm">
-            <option value="0">-- Semua --</option>
+          <select id="f_kota" class="form-control input-sm" onchange="loadKecDaftar()">
+            <option value="0">-- Pilih Kab/Kota --</option>
+          </select>
+        </div>
+        <div class="col-sm-2" id="wrap-kec" style="display:none">
+          <label style="font-size:0.82em;margin-bottom:3px">Kecamatan</label>
+          <select id="f_kec" class="form-control input-sm" onchange="loadPuskDaftar()">
+            <option value="0">-- Pilih Kecamatan --</option>
+          </select>
+        </div>
+        <div class="col-sm-2" id="wrap-pusk" style="display:none">
+          <label style="font-size:0.82em;margin-bottom:3px">Unit Pelapor</label>
+          <select id="f_pusk" class="form-control input-sm">
+            <option value="0">-- Pilih Unit Pelapor --</option>
           </select>
         </div>
         <div class="col-sm-2">
@@ -129,6 +151,44 @@ $('#f_prop').change(function() {
     },'json');
 });
 
+function setLevelDaftar() {
+    var lv = parseInt($('#f_level').val());
+    $('#wrap-prop').toggle(lv>0);
+    $('#wrap-kota').toggle(lv>1);
+    $('#wrap-kec').toggle(lv>2);
+    $('#wrap-pusk').toggle(lv>3);
+    if (lv==0) { $('#f_prop,#f_kota,#f_kec,#f_pusk').val(0); }
+    if (lv<2)  { $('#f_kota,#f_kec,#f_pusk').val(0); }
+    if (lv<3)  { $('#f_kec,#f_pusk').val(0); }
+    if (lv<4)  { $('#f_pusk').val(0); }
+}
+function loadKotaDaftar() {
+    var id = $('#f_prop').val();
+    $('#f_kota').html('<option value="0">-- Pilih Kab/Kota --</option>');
+    $('#f_kec').html('<option value="0">-- Pilih Kecamatan --</option>');
+    $('#f_pusk').html('<option value="0">-- Pilih Unit Pelapor --</option>');
+    if (!id||id==0) return;
+    $.get(BASE+'zoonosis/get_kota/'+id,function(rows){
+        $.each(rows,function(i,r){ $('#f_kota').append('<option value="'+r.id+'">'+r.kota+'</option>'); });
+    },'json');
+}
+function loadKecDaftar() {
+    var id = $('#f_kota').val();
+    $('#f_kec').html('<option value="0">-- Pilih Kecamatan --</option>');
+    $('#f_pusk').html('<option value="0">-- Pilih Unit Pelapor --</option>');
+    if (!id||id==0) return;
+    $.get(BASE+'zoonosis/get_kecamatan/'+id,function(rows){
+        $.each(rows,function(i,r){ $('#f_kec').append('<option value="'+r.id+'">'+r.distrik+'</option>'); });
+    },'json');
+}
+function loadPuskDaftar() {
+    var id = $('#f_kec').val();
+    $('#f_pusk').html('<option value="0">-- Pilih Unit Pelapor --</option>');
+    if (!id||id==0) return;
+    $.get(BASE+'zoonosis/get_puskesmas_by_kec/'+id,function(rows){
+        $.each(rows,function(i,r){ $('#f_pusk').append('<option value="'+r.id+'">'+r.puskesmas+'</option>'); });
+    },'json');
+}
 function setTahun() {
     var y = $("#f_tahun").val();
     $("#f_tgl1").val(y+"-01-01");
@@ -140,6 +200,8 @@ function loadDaftar() {
         id_penyakit: $('#f_penyakit').val(),
         id_prop:     $('#f_prop').val(),
         id_kota:     $('#f_kota').val(),
+        id_kec:      $('#f_kec').val() || 0,
+        id_pusk:     $('#f_pusk').val() || 0,
         tgl1:        $('#f_tgl1').val(),
         tgl2:        $('#f_tgl2').val(),
         cari:        $('#f_cari').val()
@@ -184,11 +246,12 @@ function loadDaftar() {
                 +'<a href="'+BASE+'zoonosis/hapus/'+r.id+'" class="btn btn-xs btn-danger" title="Hapus" onclick="return confirm(\'Hapus data ini?\')"><i class="fa fa-trash"></i></a>'
                 +'</td></tr>';
         });
-        $('#tbody-daftar').html(html);
-        // Init DataTables
+        // Destroy DataTables dulu sebelum update HTML
         if ($.fn.DataTable.isDataTable('#tblDaftar')) {
             $('#tblDaftar').DataTable().destroy();
         }
+        $('#tbody-daftar').html(html);
+        // Init DataTables
         $('#tblDaftar').DataTable({
             paging:   true,
             ordering: true,
@@ -216,5 +279,13 @@ function exportCsv() {
     window.location = BASE+'zoonosis/export_csv'+p;
 }
 
-$(function() { loadDaftar(); });
+$(function() {
+    loadDaftar();
+    $('#f_penyakit').change(function(){ loadDaftar(); });
+    $('#f_prop').change(function(){ loadKotaDaftar(); loadDaftar(); });
+    $('#f_kota').change(function(){ loadKecDaftar(); loadDaftar(); });
+    $('#f_kec').change(function(){ loadPuskDaftar(); loadDaftar(); });
+    $('#f_pusk').change(function(){ loadDaftar(); });
+    $('#f_level').change(function(){ setLevelDaftar(); });
+});
 </script>

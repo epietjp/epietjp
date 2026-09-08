@@ -44,7 +44,7 @@ class Zoonosis_model extends CI_Model {
     }
 
     // Daftar PE untuk tabel
-    public function get_daftar($id_penyakit=0, $id_prop=0, $id_kota=0, $tgl1='', $tgl2='', $cari='', $kel_place=0, $detail_place=array()) {
+    public function get_daftar($id_penyakit=0, $id_prop=0, $id_kota=0, $id_kec=0, $id_pusk=0, $tgl1='', $tgl2='', $cari='', $kel_place=0, $detail_place=array()) {
         $tgl1 = $this->db->escape_str($tgl1 ?: date('Y-01-01'));
         $tgl2 = $this->db->escape_str($tgl2 ?: date('Y-m-d'));
         $q = "SELECT z.*,
@@ -59,6 +59,11 @@ class Zoonosis_model extends CI_Model {
               LEFT JOIN ewarn_puskesmas pk ON pk.id = z.id_puskesmas
               WHERE COALESCE(z.tgl_laporan, z.tgl_sakit, z.tgl_pe, z.create_date) BETWEEN '{$tgl1}' AND '{$tgl2}'";
         if ($id_penyakit) $q .= " AND z.id_penyakit=".intval($id_penyakit);
+        // Filter wilayah dari parameter user
+        if ($id_pusk)      $q .= " AND z.id_puskesmas=".intval($id_pusk);
+        elseif ($id_kec)   $q .= " AND z.id_kecamatan=".intval($id_kec);
+        elseif ($id_kota)  $q .= " AND z.id_kota=".intval($id_kota);
+        elseif ($id_prop)  $q .= " AND z.id_prop=".intval($id_prop);
         // Filter wilayah berdasarkan level user
         if ($kel_place == 2 && !empty($detail_place['id_kota'])) {
             $q .= " AND z.id_kota=".intval($detail_place['id_kota']);

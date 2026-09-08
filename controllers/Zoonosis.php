@@ -147,10 +147,12 @@ class Zoonosis extends BackendController {
         $id_penyakit = (int)$this->input->get('id_penyakit');
         $id_prop     = (int)$this->input->get('id_prop');
         $id_kota     = (int)$this->input->get('id_kota');
+        $id_kec      = (int)$this->input->get('id_kec');
+        $id_pusk     = (int)$this->input->get('id_pusk');
         $tgl1        = $this->input->get('tgl1') ?: date('Y-01-01');
         $tgl2        = $this->input->get('tgl2') ?: date('Y-m-d');
         $cari        = $this->input->get('cari');
-        echo json_encode($this->zm->get_daftar($id_penyakit, $id_prop, $id_kota, $tgl1, $tgl2, $cari, $this->kel_place, $this->detail_place));
+        echo json_encode($this->zm->get_daftar($id_penyakit, $id_prop, $id_kota, $id_kec, $id_pusk, $tgl1, $tgl2, $cari, $this->kel_place, $this->detail_place));
     }
 
     // FORM PE
