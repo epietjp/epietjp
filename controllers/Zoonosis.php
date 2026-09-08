@@ -59,10 +59,31 @@ class Zoonosis extends BackendController {
         $tgl2    = $this->input->get('tgl2') ?: date('Y-m-d');
         $id_prop = (int)$this->input->get('id_prop');
         $id_kota = (int)$this->input->get('id_kota');
+        // Minggu aktif
+        $minggu = $this->db->query(
+            "SELECT week, week_year, week_date, DATE_SUB(week_date, INTERVAL 6 DAY) as week_start
+             FROM ewarn_minggu
+             WHERE week_date >= CURDATE()
+             ORDER BY week_date ASC LIMIT 1"
+        )->row_array();
+
         $out = array();
         foreach ($this->PENYAKIT_ZOO as $id_p => $info) {
             $out[$id_p] = $this->zm->get_ringkasan($id_p, $tgl1, $tgl2, $id_prop, $id_kota);
             $out[$id_p]['info'] = $info;
+            // Kasus minggu aktif
+            if ($minggu) {
+                $week_start = $minggu['week_start'];
+                $week_end   = $minggu['week_date'];
+                $qm = "SELECT COUNT(*) AS n FROM ewarn_ghs_zoonosis_pe
+                     WHERE id_penyakit=".intval($id_p)."
+                     AND tgl_laporan BETWEEN '{$week_start}' AND '{$week_end}'";
+                if ($id_kota)     $qm .= " AND id_kota=".intval($id_kota);
+                elseif ($id_prop) $qm .= " AND id_prop=".intval($id_prop);
+                $r = $this->db->query($qm)->row_array();
+                $out[$id_p]['minggu_ini'] = (int)$r['n'];
+                $out[$id_p]['minggu_no']  = $minggu['week'];
+            }
         }
         echo json_encode($out);
     }
