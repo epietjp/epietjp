@@ -68,6 +68,9 @@
 }
 .box { border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
 .box-header { border-radius:10px 10px 0 0; }
+#map-zoo{height:380px;border-radius:6px;border:1px solid #ddd;}
+.map-legend{background:white;padding:8px 12px;border-radius:4px;font-size:11px;line-height:2;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+.map-legend i{width:14px;height:14px;display:inline-block;margin-right:5px;border-radius:2px;vertical-align:middle;}
 </style>
 <div class="content-wrapper">
   <section class="content-header">
@@ -185,6 +188,26 @@
       </div>
     </div>
 
+    <!-- MAP PETA SEBARAN -->
+    <div class="section-title"><i class="fa fa-map"></i> Peta Sebaran Kasus</div>
+    <div style="margin-bottom:8px">
+      <select id="f_map_penyakit" class="form-control input-sm" style="width:180px;display:inline-block">
+        <?php foreach($penyakit as $id_p=>$info): ?>
+        <option value="<?=$id_p?>"><?=htmlspecialchars($info['singkat'])?></option>
+        <?php endforeach; ?>
+      </select>
+      <button class="btn btn-sm btn-primary" onclick="loadMap()" style="margin-left:6px">
+        <i class="fa fa-map-marker"></i> Tampilkan
+      </button>
+    </div>
+    <div class="row">
+      <div class="col-sm-8"><div id="map-zoo"></div></div>
+      <div class="col-sm-4">
+        <div style="font-weight:bold;margin-bottom:6px;font-size:13px">Top 10 Wilayah</div>
+        <div id="map-zoo-legend" style="font-size:12px"></div>
+      </div>
+    </div>
+    <br>
     <!-- Trend Chart -->
     <div class="row">
       <div class="col-sm-8">
@@ -243,7 +266,9 @@
 </div>
 </div>
 
-<script src="<?=base_url('assets/plugins/chartjs/Chart.min.js')?>"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 var BASE = '<?=base_url()?>';
 var chartTrend = null;
@@ -340,6 +365,83 @@ function loadTrend() {
             }
         });
     }, 'json');
+}
+
+var _mapZoo = null;
+function loadMap() {
+    var id_p = $("#f_map_penyakit").val();
+    var tgl1 = $("#f_tgl1").val();
+    var tgl2 = $("#f_tgl2").val();
+    var id_prop = $("#f_prop").val() || 0;
+
+    $.ajax({url:BASE+"zoonosis/get_map_data", data:{id_penyakit:id_p,tgl1:tgl1,tgl2:tgl2,level:1,id_prop:id_prop}, dataType:"json",
+    success:function(data){
+        console.log("MapData OK:", Object.keys(data||{}).length+" keys");
+        if (_mapZoo) { _mapZoo.remove(); _mapZoo = null; }
+        _mapZoo = L.map("map-zoo", {scrollWheelZoom:false}).setView([-2.5, 118], 4);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution:"(c) OSM", maxZoom:10, opacity:0.4
+        }).addTo(_mapZoo);
+
+        var lookup = {}, maxV = 0;
+        $.each(data, function(k, v) {
+            var nm = (v.nama||k).toUpperCase()
+                .replace(/^KAB\. /,"").replace(/^KABUPATEN /,"")
+                .replace(/PROP\. |PROVINSI |^DI |^DKI /g,"").trim();
+            lookup[nm] = v.n;
+            if (v.n > maxV) maxV = v.n;
+        });
+        var _nameMap = {"IRIAN JAYA TIMUR":"PAPUA","IRIAN JAYA BARAT":"PAPUA BARAT","DKI JAKARTA":"JAKARTA","D.I. ACEH":"ACEH","BANGKA-BELITUNG":"BANGKA BELITUNG","NUSATENGGARA BARAT":"NUSA TENGGARA BARAT","NUSATENGGARA TIMUR":"NUSA TENGGARA TIMUR"};
+        function getClr(n) {
+            if (!n||n==0) return "#f5f5f5";
+            var p=n/maxV;
+            if (p>0.75) return "#800026";
+            if (p>0.5)  return "#BD0026";
+            if (p>0.25) return "#E31A1C";
+            return "#FC4E2A";
+        }
+        function matchJml(nm) {
+            var k=nm.toUpperCase().trim();
+            if (_nameMap[k]) k=_nameMap[k];
+            k=k.replace(/PROP\. |PROVINSI |^DI |^DKI /g,"").trim();
+            var best=0;
+            Object.keys(lookup).forEach(function(lk){
+                var lk2=lk.replace(/^DI |^DKI /g,"").trim();
+                if (k==lk2||k==lk||k.indexOf(lk2)>=0||lk2.indexOf(k)>=0) best=lookup[lk];
+            });
+            return best;
+        }
+        fetch(BASE+"buletin/geojson?level=0&id_prop=0")
+        .then(function(r){return r.json();})
+        .then(function(geo){
+            var gl=L.geoJSON(geo,{
+                style:function(f){var nm=f.properties.nama||"";return{fillColor:getClr(matchJml(nm)),weight:1,color:"#fff",fillOpacity:0.8};},
+                onEachFeature:function(f,layer){
+                    var nm=f.properties.nama||"";
+                    layer.bindTooltip("<strong>"+nm+"</strong><br>"+matchJml(nm)+" kasus",{sticky:true});
+                    layer.on("mouseover",function(e){e.target.setStyle({weight:2,color:"#333"});});
+                    layer.on("mouseout",function(e){e.target.setStyle({weight:1,color:"#fff"});});
+                }
+            }).addTo(_mapZoo);
+            try{if(gl.getBounds().isValid())_mapZoo.fitBounds(gl.getBounds(),{padding:[5,5]});}catch(e){}
+            var legC=L.control({position:"bottomright"});
+            legC.onAdd=function(){
+                var d=L.DomUtil.create("div","map-legend");
+                [["#800026","Sangat Tinggi"],["#BD0026","Tinggi"],["#E31A1C","Sedang"],["#FC4E2A","Rendah"],["#f5f5f5","Tidak Ada"]].forEach(function(c){
+                    d.innerHTML+="<i style=\"background:"+c[0]+"\"></i>"+c[1]+"<br>";
+                });
+                return d;
+            };
+            legC.addTo(_mapZoo);
+            var sorted=Object.keys(data).map(function(k){return{nm:data[k].nama||k,n:data[k].n};}).sort(function(a,b){return b.n-a.n;}).slice(0,10);
+            var html="<table class=\"table table-condensed\" style=\"margin:0;font-size:11px\">";
+            sorted.forEach(function(d,i){html+="<tr><td>"+(i+1)+".</td><td>"+d.nm+"</td><td><b>"+d.n+"</b></td></tr>";});
+            html+="</table>";
+            $("#map-zoo-legend").html(html);
+        });
+    },
+    error:function(xhr,st,err){ console.log("MapData error:",st,err,xhr.responseText.substr(0,200)); }
+    });
 }
 
 $(function() {

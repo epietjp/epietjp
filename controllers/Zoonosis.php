@@ -813,6 +813,29 @@ class Zoonosis extends BackendController {
         echo json_encode($rows);
     }
 
+
+    public function get_map_data() {
+        $this->_auth();
+        $id_penyakit = (int)$this->input->get('id_penyakit');
+        $tgl1        = $this->input->get('tgl1') ?: date('Y-01-01');
+        $tgl2        = $this->input->get('tgl2') ?: date('Y-m-d');
+        $id_prop     = (int)$this->input->get('id_prop');
+        $tgl1 = $this->db->escape_str($tgl1);
+        $tgl2 = $this->db->escape_str($tgl2);
+        $q = "SELECT LPAD(p.kode_depdagri,2,'0') as kode,
+                     p.propinsi as nama, COUNT(*) as n
+              FROM ewarn_ghs_zoonosis_pe z
+              JOIN ewarn_propinsi p ON p.id=z.id_prop
+              WHERE z.id_penyakit=".intval($id_penyakit)."
+              AND z.tgl_laporan BETWEEN '{$tgl1}' AND '{$tgl2}'
+              GROUP BY z.id_prop";
+        $rows = $this->db->query($q)->result_array();
+        $out = array();
+        foreach ($rows as $r) {
+            $out[$r['kode']] = array('n'=>(int)$r['n'], 'nama'=>$r['nama']);
+        }
+        echo json_encode($out);
+    }
     // Halaman daftar cluster
     public function cluster() {
         $this->_auth();
