@@ -819,16 +819,72 @@ class Zoonosis extends BackendController {
         $id_penyakit = (int)$this->input->get('id_penyakit');
         $tgl1        = $this->input->get('tgl1') ?: date('Y-01-01');
         $tgl2        = $this->input->get('tgl2') ?: date('Y-m-d');
+        $level       = (int)$this->input->get('level') ?: 1;
         $id_prop     = (int)$this->input->get('id_prop');
+        $id_kota     = (int)$this->input->get('id_kota');
         $tgl1 = $this->db->escape_str($tgl1);
         $tgl2 = $this->db->escape_str($tgl2);
-        $q = "SELECT LPAD(p.kode_depdagri,2,'0') as kode,
-                     p.propinsi as nama, COUNT(*) as n
-              FROM ewarn_ghs_zoonosis_pe z
-              JOIN ewarn_propinsi p ON p.id=z.id_prop
-              WHERE z.id_penyakit=".intval($id_penyakit)."
-              AND z.tgl_laporan BETWEEN '{$tgl1}' AND '{$tgl2}'
-              GROUP BY z.id_prop";
+
+        if ($level == 4) {
+            // Per Unit Pelapor - koordinat dari kecamatan
+            $q = "SELECT pk.id, pk.puskesmas as nama, d.lat, d.lng, COUNT(z.id) as n
+                  FROM ewarn_puskesmas pk
+                  JOIN ewarn_distrik d ON d.id = pk.id_distrik
+                  JOIN ewarn_kota k ON k.id = d.id_kota
+                  LEFT JOIN ewarn_ghs_zoonosis_pe z ON z.id_puskesmas=pk.id AND z.id_penyakit=".intval($id_penyakit)." AND z.tgl_laporan BETWEEN '{$tgl1}' AND '{$tgl2}'
+                  WHERE ".($id_kota?"k.id=".intval($id_kota):"k.id_prop=".intval($id_prop))." AND pk.aktif='Y' GROUP BY pk.id";
+            $rows = $this->db->query($q)->result_array();
+            $out = array();
+            foreach ($rows as $r) { $out[] = array("id"=>$r["id"],"nama"=>$r["nama"],"lat"=>(float)$r["lat"],"lng"=>(float)$r["lng"],"n"=>(int)$r["n"]); }
+            echo json_encode($out);
+            return;
+        } else 
+        if ($level == 3) {
+            // Per Kecamatan — pakai koordinat lat/lng dari ewarn_distrik
+            $q = "SELECT d.id, d.distrik as nama, d.lat, d.lng,
+                         COUNT(z.id) as n
+                  FROM ewarn_distrik d
+                  LEFT JOIN ewarn_ghs_zoonosis_pe z
+                    ON z.id_kecamatan = d.id
+                    AND z.id_penyakit=".intval($id_penyakit)."
+                    AND z.tgl_laporan BETWEEN '{$tgl1}' AND '{$tgl2}'
+                  WHERE d.id_kota=".intval($id_kota)."
+                  GROUP BY d.id";
+            $rows = $this->db->query($q)->result_array();
+            $out = array();
+            foreach ($rows as $r) {
+                if ($r['n'] > 0 || true) {
+                    $out[] = array(
+                        'id'   => $r['id'],
+                        'nama' => $r['nama'],
+                        'lat'  => (float)$r['lat'],
+                        'lng'  => (float)$r['lng'],
+                        'n'    => (int)$r['n'],
+                    );
+                }
+            }
+            echo json_encode($out);
+            return;
+        } elseif ($level == 2) {
+            // Per Kab/Kota
+            $q = "SELECT CONCAT(LEFT(k.kode_depdagri,2),'.',RIGHT(k.kode_depdagri,2)) as kode,
+                         k.kota as nama, COUNT(*) as n
+                  FROM ewarn_ghs_zoonosis_pe z
+                  JOIN ewarn_kota k ON k.id=z.id_kota
+                  WHERE z.id_penyakit=".intval($id_penyakit)."
+                  AND z.tgl_laporan BETWEEN '{$tgl1}' AND '{$tgl2}'";
+            if ($id_prop) $q .= " AND z.id_prop=".intval($id_prop);
+            $q .= " GROUP BY z.id_kota";
+        } else {
+            // Per Provinsi
+            $q = "SELECT LPAD(p.kode_depdagri,2,'0') as kode,
+                         p.propinsi as nama, COUNT(*) as n
+                  FROM ewarn_ghs_zoonosis_pe z
+                  JOIN ewarn_propinsi p ON p.id=z.id_prop
+                  WHERE z.id_penyakit=".intval($id_penyakit)."
+                  AND z.tgl_laporan BETWEEN '{$tgl1}' AND '{$tgl2}'
+                  GROUP BY z.id_prop";
+        }
         $rows = $this->db->query($q)->result_array();
         $out = array();
         foreach ($rows as $r) {

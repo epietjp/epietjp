@@ -190,13 +190,28 @@
 
     <!-- MAP PETA SEBARAN -->
     <div class="section-title"><i class="fa fa-map"></i> Peta Sebaran Kasus</div>
-    <div style="margin-bottom:8px">
-      <select id="f_map_penyakit" class="form-control input-sm" style="width:180px;display:inline-block">
+    <div style="margin-bottom:8px;display:flex;align-items:center;flex-wrap:wrap;gap:4px">
+      <select id="f_map_penyakit" class="form-control input-sm" style="width:180px">
         <?php foreach($penyakit as $id_p=>$info): ?>
         <option value="<?=$id_p?>"><?=htmlspecialchars($info['singkat'])?></option>
         <?php endforeach; ?>
       </select>
-      <button class="btn btn-sm btn-primary" onclick="loadMap()" style="margin-left:6px">
+      <select id="f_map_level" class="form-control input-sm" style="width:130px" onchange="onMapLevelChange()">
+        <option value="1">Provinsi</option>
+        <option value="2">Kab/Kota</option>
+        <option value="3">Kecamatan</option>
+        <option value="4">Unit Pelapor</option>
+      </select>
+      <select id="f_map_prop" class="form-control input-sm" style="width:160px;display:none" onchange="loadMapKota()">
+        <option value="0">-- Pilih Provinsi --</option>
+        <?php foreach($list_prop as $pr): ?>
+        <option value="<?=$pr['id']?>"><?=htmlspecialchars($pr['propinsi'])?></option>
+        <?php endforeach; ?>
+      </select>
+      <select id="f_map_kota" class="form-control input-sm" style="width:160px;display:none">
+        <option value="0">-- Pilih Kab/Kota --</option>
+      </select>
+      <button class="btn btn-sm btn-primary" onclick="loadMap()">
         <i class="fa fa-map-marker"></i> Tampilkan
       </button>
     </div>
@@ -368,15 +383,63 @@ function loadTrend() {
 }
 
 var _mapZoo = null;
+function onMapLevelChange() {
+    var lv = parseInt($('#f_map_level').val());
+    $('#f_map_prop').toggle(lv >= 2);
+    $('#f_map_kota').toggle(lv >= 3);
+}
+function loadMapKota() {
+    var id = $('#f_map_prop').val();
+    $('#f_map_kota').html('<option value="0">-- Pilih Kab/Kota --</option>');
+    if (!id || id==0) return;
+    $.get(BASE+'zoonosis/get_kota/'+id, function(rows) {
+        $.each(rows, function(i,r){ $('#f_map_kota').append('<option value="'+r.id+'">'+r.kota+'</option>'); });
+    },'json');
+}
 function loadMap() {
     var id_p = $("#f_map_penyakit").val();
     var tgl1 = $("#f_tgl1").val();
     var tgl2 = $("#f_tgl2").val();
     var id_prop = $("#f_prop").val() || 0;
 
-    $.ajax({url:BASE+"zoonosis/get_map_data", data:{id_penyakit:id_p,tgl1:tgl1,tgl2:tgl2,level:1,id_prop:id_prop}, dataType:"json",
+    var map_level = parseInt($('#f_map_level').val()) || 1;
+    var map_prop  = $('#f_map_prop').val() || id_prop;
+    var map_kota  = $('#f_map_kota').val() || 0;
+    $.ajax({url:BASE+"zoonosis/get_map_data", data:{id_penyakit:id_p,tgl1:tgl1,tgl2:tgl2,level:map_level,id_prop:map_prop,id_kota:map_kota}, dataType:"json",
     success:function(data){
-        console.log("MapData OK:", Object.keys(data||{}).length+" keys");
+        // Level kecamatan/unit pelapor - bubble marker
+        if (map_level == 3 || map_level == 4) {
+            if (_mapZoo) { _mapZoo.remove(); _mapZoo = null; }
+            _mapZoo = L.map("map-zoo", {scrollWheelZoom:false}).setView([-2.5, 118], 4);
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution:"(c) OSM", maxZoom:15, opacity:0.4
+            }).addTo(_mapZoo);
+            var maxV = 0;
+            data.forEach(function(r){ if(r.n > maxV) maxV = r.n; });
+            var markers = [];
+            data.forEach(function(r) {
+                if (!r.lat || !r.lng) return;
+                var rad = r.n > 0 ? Math.max(5, Math.min(25, r.n/Math.max(maxV,1)*25)) : 4;
+                var m = L.circleMarker([r.lat, r.lng], {
+                    radius: rad,
+                    fillColor: r.n > 0 ? "#800026" : "#bdbdbd",
+                    color: "#fff", weight: 1, fillOpacity: 0.85
+                }).bindTooltip("<b>"+r.nama+"</b><br>"+r.n+" kasus", {sticky:true});
+                m.addTo(_mapZoo);
+                markers.push(m);
+            });
+            if (markers.length) {
+                var grp = L.featureGroup(markers);
+                try { _mapZoo.fitBounds(grp.getBounds(), {padding:[10,10]}); } catch(e) {}
+            }
+            // Top 10
+            var sorted = data.slice().sort(function(a,b){return b.n-a.n;}).slice(0,10);
+            var html = '<table class="table table-condensed" style="margin:0;font-size:11px">';
+            sorted.forEach(function(d,i){ if(d.n>0) html += '<tr><td>'+(i+1)+'.</td><td>'+d.nama+'</td><td><b>'+d.n+'</b></td></tr>'; });
+            html += '</table>';
+            $("#map-zoo-legend").html(html);
+            return; // stop - jangan lanjut ke choropleth
+        }
         if (_mapZoo) { _mapZoo.remove(); _mapZoo = null; }
         _mapZoo = L.map("map-zoo", {scrollWheelZoom:false}).setView([-2.5, 118], 4);
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -411,7 +474,9 @@ function loadMap() {
             });
             return best;
         }
-        fetch(BASE+"buletin/geojson?level=0&id_prop=0")
+        var geoLv = map_level==1 ? 0 : (map_level==3 ? 2 : 1);
+        var geoId = map_level==3 ? map_kota : (map_level==2 ? map_prop : 0);
+        fetch(BASE+"buletin/geojson?level="+geoLv+"&id_prop="+map_prop+"&id_kota="+geoId)
         .then(function(r){return r.json();})
         .then(function(geo){
             var gl=L.geoJSON(geo,{
