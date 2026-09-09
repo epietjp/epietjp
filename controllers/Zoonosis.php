@@ -878,12 +878,51 @@ class Zoonosis extends BackendController {
         } else {
             // Per Provinsi
             $q = "SELECT LPAD(p.kode_depdagri,2,'0') as kode,
-                         p.propinsi as nama, COUNT(*) as n
+                         p.id as id_prop, p.propinsi as nama, COUNT(*) as n
                   FROM ewarn_ghs_zoonosis_pe z
                   JOIN ewarn_propinsi p ON p.id=z.id_prop
                   WHERE z.id_penyakit=".intval($id_penyakit)."
                   AND z.tgl_laporan BETWEEN '{$tgl1}' AND '{$tgl2}'
                   GROUP BY z.id_prop";
+            $rows = $this->db->query($q)->result_array();
+            // Ambil EBS stats per provinsi
+            if ($rows) {
+                $ids = implode(',', array_column($rows, 'id_prop'));
+                $tahun = date('Y');
+                // Minggu aktif
+                $mg = $this->db->query("SELECT week, DATE_SUB(week_date, INTERVAL 6 DAY) as w_start, week_date as w_end FROM ewarn_minggu WHERE week_date >= CURDATE() ORDER BY week_date ASC LIMIT 1")->row_array();
+                $w_start = $mg ? $mg['w_start'] : date('Y-m-d', strtotime('monday this week'));
+                $w_end   = $mg ? $mg['w_end']   : date('Y-m-d');
+                $minggu_no = $mg ? $mg['week'] : '-';
+                // EBS total (new + old)
+                $ebs_total_new = array(); $tmp = $this->db->query("SELECT id_prop as id_wil, COUNT(id) as jml FROM ewarn_view_form_ebs_new WHERE id_prop IN ($ids) AND diagnosa_no IN(18,31,226,32,294,222,24) GROUP BY id_prop")->result_array();
+                foreach ($tmp as $r) $ebs_total_new[$r['id_wil']] = (int)$r['jml'];
+                $ebs_total_old = array(); $tmp2 = $this->db->query("SELECT id_prop as id_wil, COUNT(id) as jml FROM ewarn_view_form_ebs WHERE id_prop IN ($ids) AND diagnosa_no IN(18,31,226,32,294,222,24) AND create_date < '2026-03-29' GROUP BY id_prop")->result_array();
+                foreach ($tmp2 as $r) $ebs_total_old[$r['id_wil']] = (int)$r['jml'];
+                // EBS tahun ini
+                $ebs_yr_new = array(); $tmp3 = $this->db->query("SELECT id_prop as id_wil, COUNT(id) as jml FROM ewarn_view_form_ebs_new WHERE id_prop IN ($ids) AND diagnosa_no IN(18,31,226,32,294,222,24) AND tahun=$tahun GROUP BY id_prop")->result_array();
+                foreach ($tmp3 as $r) $ebs_yr_new[$r['id_wil']] = (int)$r['jml'];
+                $ebs_yr_old = array(); $tmp4 = $this->db->query("SELECT id_prop as id_wil, COUNT(id) as jml FROM ewarn_view_form_ebs WHERE id_prop IN ($ids) AND diagnosa_no IN(18,31,226,32,294,222,24) AND tahun=$tahun AND create_date < '2026-03-29' GROUP BY id_prop")->result_array();
+                foreach ($tmp4 as $r) $ebs_yr_old[$r['id_wil']] = (int)$r['jml'];
+                // EBS minggu aktif (realtime)
+                $ebs_mg = array(); $tmp5 = $this->db->query("SELECT id_prop as id_wil, COUNT(id) as jml FROM ewarn_view_form_ebs_new WHERE id_prop IN ($ids) AND diagnosa_no IN(18,31,226,32,294,222,24) AND tgl_laporan BETWEEN '$w_start' AND '$w_end 23:59:59' GROUP BY id_prop")->result_array();
+                foreach ($tmp5 as $r) $ebs_mg[$r['id_wil']] = (int)$r['jml'];
+
+                $out = array();
+                foreach ($rows as $r) {
+                    $ip = $r['id_prop'];
+                    $out[$r['kode']] = array(
+                        'n'         => (int)$r['n'],
+                        'nama'      => $r['nama'],
+                        'ebs_total' => isset($ebs_total_new[$ip])?$ebs_total_new[$ip]:0 + isset($ebs_total_old[$ip])?$ebs_total_old[$ip]:0,
+                        'ebs_yr'    => isset($ebs_yr_new[$ip])?$ebs_yr_new[$ip]:0 + isset($ebs_yr_old[$ip])?$ebs_yr_old[$ip]:0,
+                        'ebs_mg'    => isset($ebs_mg[$ip])?$ebs_mg[$ip]:0,
+                        'minggu_no' => $minggu_no,
+                    );
+                }
+                echo json_encode($out);
+                return;
+            }
         }
         $rows = $this->db->query($q)->result_array();
         $out = array();
