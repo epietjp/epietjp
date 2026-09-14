@@ -931,6 +931,13 @@ class Zoonosis extends BackendController {
         }
         echo json_encode($out);
     }
+
+    public function get_ebs_id($no_ebs="") {
+        $this->_auth();
+        $no = $this->db->escape_str($no_ebs);
+        $r = $this->db->query("SELECT id FROM ewarn_form_ebs_new WHERE no_ebs='$no' LIMIT 1")->row_array();
+        echo json_encode($r ? $r["id"] : 0);
+    }
     // Halaman daftar cluster
     public function cluster() {
         $this->_auth();

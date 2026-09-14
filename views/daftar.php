@@ -228,7 +228,7 @@ function loadDaftar() {
                 : '<i class="fa fa-times-circle text-muted"></i>';
             html += '<tr>'
                 +'<td><small>'+(r.no_pe||'-')+'</small></td>'
-                +'<td><small>'+(r.no_ebs||'-')+'</small></td>'
+                +'<td><small>'+(r.no_ebs ? '<a href="#" onclick="openEbs(\'' + r.no_ebs + '\');return false;">'+r.no_ebs+'</a>' : '-')+'</small></td>'
                 +'<td><small>'+(r.nama_penyakit||'-')+'</small></td>'
                 +'<td><small>'+(r.propinsi||'-')+'</small></td>'
                 +'<td><small>'+(r.kota||'-')+'</small></td>'
@@ -279,6 +279,15 @@ function exportCsv() {
     window.location = BASE+'zoonosis/export_csv'+p;
 }
 
+function openEbs(no_ebs) {
+    $.get(BASE+'zoonosis/get_ebs_id/'+no_ebs, function(id) {
+        if (id && id > 0) {
+            window.open(BASE+'form-ebs-new/view/'+id, '_blank');
+        } else {
+            alert('EBS tidak ditemukan: '+no_ebs);
+        }
+    }, 'json');
+}
 $(function() {
     loadDaftar();
     $('#f_penyakit').change(function(){ loadDaftar(); });
