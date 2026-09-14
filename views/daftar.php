@@ -117,10 +117,10 @@
         <table class="table table-bordered table-striped tbl-zoo" id="tblDaftar">
           <thead>
             <tr style="background:#2c3e50;color:#fff">
-              <th>No PE</th><th>Penyakit</th><th>Provinsi</th><th>Kab/Kota</th>
+              <th>No PE</th><th>No EBS</th><th>Penyakit</th><th>Provinsi</th><th>Kab/Kota</th>
               <th>Nama Pasien</th><th>Kelamin</th><th>Umur</th>
               <th>Tgl Sakit</th><th>Tgl PE</th><th>Status</th><th>Kondisi</th>
-              <th>Lab</th><th>No EBS</th><th>Aksi</th>
+              <th>Lab</th><th>Aksi</th>
             </tr>
           </thead>
           <tbody id="tbody-daftar">
@@ -227,7 +227,8 @@ function loadDaftar() {
                 ? '<i class="fa fa-check-circle text-success"></i>'
                 : '<i class="fa fa-times-circle text-muted"></i>';
             html += '<tr>'
-                +'<td>'+(r.no_pe||'-')+'</td>'
+                +'<td><small>'+(r.no_pe||'-')+'</small></td>'
+                +'<td><small>'+(r.no_ebs||'-')+'</small></td>'
                 +'<td><small>'+(r.nama_penyakit||'-')+'</small></td>'
                 +'<td><small>'+(r.propinsi||'-')+'</small></td>'
                 +'<td><small>'+(r.kota||'-')+'</small></td>'
@@ -239,7 +240,6 @@ function loadDaftar() {
                 +'<td class="text-center">'+badge_s+'</td>'
                 +'<td class="text-center">'+badge_a+'</td>'
                 +'<td class="text-center">'+lab_icon+'</td>'
-                +'<td><small>'+(r.no_ebs||'-')+'</small></td>'
                 +'<td class="text-center" style="white-space:nowrap">'
                 +'<a href="'+BASE+'zoonosis/detail/'+r.id+'" class="btn btn-xs btn-info" title="Detail"><i class="fa fa-eye"></i></a> '
                 +'<a href="'+BASE+'zoonosis/form_edit/'+r.id+'" class="btn btn-xs btn-warning" title="Edit"><i class="fa fa-pencil"></i></a> '
