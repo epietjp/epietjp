@@ -4,6 +4,7 @@ $db->set_charset('utf8');
 $db->query('SET SESSION wait_timeout=300');
 $db->query('SET SESSION interactive_timeout=300');
 $penyakit_map = array(18=>8,31=>8,226=>11,32=>11,294=>14,222=>26,24=>26);
+$diagnosa_label = array(18=>'GHPR',31=>'RAB',226=>'AVIAN',32=>'AVIAN',294=>'ANT',222=>'LEPTO',24=>'LEPTO');
 function get_umur_kelamin($row){$m=array('umur7'=>0,'umur28'=>0,'umur1'=>0,'umur4'=>2,'umur9'=>7,'umur14'=>12,'umur19'=>17,'umur44'=>32,'umur54'=>47,'umur69'=>62,'umur70'=>71,'umur7w'=>0,'umur28w'=>0,'umur1w'=>0,'umur4w'=>2,'umur9w'=>7,'umur14w'=>12,'umur19w'=>17,'umur44w'=>32,'umur54w'=>47,'umur69w'=>62,'umur70w'=>71);foreach($m as $f=>$u){if(!empty($row[$f])&&$row[$f]>0){return array($u,strpos($f,'w')!==false?'P':'L');}}return array(NULL,NULL);}
 $sql="SELECT e.*,d.id_kota as dist_id_kota,k.id_prop as kota_id_prop,pk.id_distrik as pusk_id_distrik FROM ewarn_form_ebs_new e LEFT JOIN ewarn_distrik d ON d.id=e.id_distrik LEFT JOIN ewarn_kota k ON k.id=d.id_kota LEFT JOIN ewarn_puskesmas pk ON pk.id=e.id_puskesmas LEFT JOIN ewarn_ghs_zoonosis_pe pe2 ON pe2.no_ebs=e.no_ebs WHERE e.create_date >= DATE_SUB(NOW(), INTERVAL 48 HOUR) AND e.diagnosa_no IN(18,31,226,32,294,222,24) AND pe2.id IS NULL ORDER BY e.id";
 $result=$db->query($sql);
@@ -42,7 +43,7 @@ while($row=$result->fetch_assoc()){
     $cd=$row['create_date']?:date('Y-m-d H:i:s');
     $f=function($v){return $v!==NULL?"'$v'":'NULL';};
     $fi=function($v){return $v!==NULL?"$v":'NULL';};
-    $ins="INSERT IGNORE INTO ewarn_ghs_zoonosis_pe(id_penyakit,diagnosa_no,no_ebs,id_prop,id_kota,id_puskesmas,id_kecamatan,kd_prop_kasus,kd_kota_kasus,tgl_laporan,tgl_pe,tgl_sakit,tgl_bergejala,tgl_meninggal,tgl_datang_faskes,tgl_masuk_rs,tgl_ambil_sample,tgl_kirim_sample,tgl_hasil_lab,umur_thn,kelamin,nama_petugas,telp_petugas,gejala,ket_lain,faktor_resiko,jml_kasus,akhir_no,status_kasus,create_user,create_date)VALUES({$fi($idp)},{$fi($dn)},{$f($ne)},{$fi($ip)},{$fi($ik)},{$fi($ipk)},{$fi($ikec)},{$fi($kpp)},{$fi($kkp)},{$f($tl)},{$f($tp)},{$f($ts)},{$f($tb)},{$f($tm)},{$f($td)},{$f($td)},{$f($ta)},{$f($tk)},{$f($th)},{$fi($umur)},{$f($kel)},{$f($np)},{$f($tp2)},{$f($g)},{$f($kl)},{$f($fr)},{$fi($jk)},{$fi($ak)},0,'backfill_ebs','$cd')";
+    $ins="INSERT IGNORE INTO ewarn_ghs_zoonosis_pe(no_pe,id_penyakit,diagnosa_no,no_ebs,id_prop,id_kota,id_puskesmas,id_kecamatan,kd_prop_kasus,kd_kota_kasus,tgl_laporan,tgl_pe,tgl_sakit,tgl_bergejala,tgl_meninggal,tgl_datang_faskes,tgl_masuk_rs,tgl_ambil_sample,tgl_kirim_sample,tgl_hasil_lab,umur_thn,kelamin,nama_petugas,telp_petugas,gejala,ket_lain,faktor_resiko,jml_kasus,akhir_no,status_kasus,create_user,create_date)VALUES({$f('BF-'.(isset($diagnosa_label[$dn])?$diagnosa_label[$dn]:'ZOO').'-'.$ql)},{$fi($idp)},{$fi($dn)},{$f($ne)},{$fi($ip)},{$fi($ik)},{$fi($ipk)},{$fi($ikec)},{$fi($kpp)},{$fi($kkp)},{$f($tl)},{$f($tp)},{$f($ts)},{$f($tb)},{$f($tm)},{$f($td)},{$f($td)},{$f($ta)},{$f($tk)},{$f($th)},{$fi($umur)},{$f($kel)},{$f($np)},{$f($tp2)},{$f($g)},{$f($kl)},{$f($fr)},{$fi($jk)},{$fi($ak)},0,'backfill_ebs','$cd')";
     if($db->query($ins))$inserted++;else $errors++;
 }
 $db->commit();
