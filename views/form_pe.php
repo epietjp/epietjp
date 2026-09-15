@@ -314,10 +314,16 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="text" name="alamat_kerja" class="form-control" value="<?=fv($v,'alamat_kerja')?>">
           </div>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <div class="form-group">
-            <label>Saudara Dekat yang Dapat Dihubungi</label>
-            <input type="text" name="kontak_darurat" class="form-control" value="<?=fv($v,'kontak_darurat')?>">
+            <label>Nama Saudara Dekat yang Dapat Dihubungi</label>
+            <input type="text" name="kontak_darurat" class="form-control" placeholder="Nama kontak darurat" value="<?=fv($v,'kontak_darurat')?>">
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="form-group">
+            <label>No Telp Kontak Darurat</label>
+            <input type="text" name="telp_kontak_darurat" class="form-control" placeholder="No HP/Telp" value="<?=fv($v,'telp_kontak_darurat')?>">
           </div>
         </div>
       </div>
@@ -449,7 +455,10 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
           </div>
         </div>
         <?php endif; ?>
-        <?php if($id_penyakit==11): // Avian Flu only ?>
+        <?php // oseltamivir dipindah ke seksi Klinis ?>
+      </div>
+      <?php if($id_penyakit==11): ?>
+      <div class="row">
         <div class="col-sm-3">
           <div class="form-group">
             <label>Diberikan Oseltamivir?</label>
@@ -466,8 +475,8 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="date" name="tgl_oseltamivir" class="form-control" value="<?=fv($v,'tgl_oseltamivir')?>">
           </div>
         </div>
-        <?php endif; ?>
       </div>
+      <?php endif; ?>
     </div>
 
     <!-- LABORATORIUM -->
@@ -796,20 +805,24 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-hospital-o"></i> Rawat Inap / RS</div>
-      <div class="row">
-        <div class="col-sm-6">
-          <div class="form-group">
-            <label>Nama RS/Klinik yang Merawat</label>
-            <input type="text" name="nama_rs" class="form-control" value="<?=fv($v,'nama_rs')?>">
+      <small class="text-muted">Nama RS/Klinik | Tanggal Masuk | Keterangan</small>
+      <div id="tbl-rawat-inap">
+        <div class="row rawat-row" style="margin-bottom:6px">
+          <div class="col-sm-5">
+            <input type="text" name="rs_nama[]" class="form-control input-sm" placeholder="Nama RS/Klinik" value="<?=fv($v,'nama_rs')?>">
           </div>
-        </div>
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Tanggal Masuk RS/Klinik</label>
-            <input type="date" name="tgl_masuk_rs" class="form-control" value="<?=fv($v,'tgl_masuk_rs')?>">
+          <div class="col-sm-3">
+            <input type="date" name="rs_tgl[]" class="form-control input-sm" value="<?=fv($v,'tgl_masuk_rs')?>">
+          </div>
+          <div class="col-sm-3">
+            <input type="text" name="rs_ket[]" class="form-control input-sm" placeholder="Keterangan">
+          </div>
+          <div class="col-sm-1">
+            <button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.rawat-row').remove()"><i class="fa fa-times"></i></button>
           </div>
         </div>
       </div>
+      <button type="button" class="btn btn-xs btn-default" onclick="tambahRawatInap()"><i class="fa fa-plus"></i> Tambah RS/Klinik</button>
     </div>
     <!-- ANGGOTA SERUMAH -->
     <div class="form-section">
@@ -1622,6 +1635,9 @@ $('#formPE').submit(function(e) {
 $(function() {
     if (initProp) { $('#sel_prop').val(initProp).trigger('change'); }
 });
+function tambahRawatInap() {
+    $('#tbl-rawat-inap').append('<div class="row rawat-row" style="margin-bottom:6px"><div class="col-sm-5"><input type="text" name="rs_nama[]" class="form-control input-sm" placeholder="Nama RS/Klinik"></div><div class="col-sm-3"><input type="date" name="rs_tgl[]" class="form-control input-sm"></div><div class="col-sm-3"><input type="text" name="rs_ket[]" class="form-control input-sm" placeholder="Keterangan"></div><div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest(\'.rawat-row\').remove()"><i class="fa fa-times"></i></button></div></div>');
+}
 function tambahSpesimen() {
     var idx = $('#tbl-spesimen .spesimen-row').length;
     var opts = '<option value="">-- Jenis --</option><option value="serum_darah">Serum Darah</option><option value="urine">Urine</option><option value="usap_nasofaring">Usap Nasofaring</option><option value="usap_tenggorok">Usap Tenggorok</option><option value="kulit_lesi">Kulit/Lesi</option><option value="jaringan">Jaringan/Eksudat</option><option value="otak_hewan">Otak Hewan (GHPR)</option><option value="lainnya">Lainnya</option>';

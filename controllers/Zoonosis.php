@@ -335,6 +335,20 @@ class Zoonosis extends BackendController {
         }
         $this->zm->save_kontak_pneumonia($id, $kontak_pn);
 
+        // Save Rawat Inap repeatable via EAV
+        if (isset($_POST['rs_nama'])) {
+            // Hapus data rawat inap lama dari EAV
+            $this->db->where('id_pe', $id)->where('submodule', 'Rawat Inap RS')->delete('ghs_zoonosis_pe_detail');
+            $rs_rows = array();
+            foreach ($_POST['rs_nama'] as $ri => $rsnm) {
+                if (!trim($rsnm)) continue;
+                $rs_rows[] = array('id_pe'=>$id,'submodule'=>'Rawat Inap RS','var_key'=>'rs'.$ri.'_nama','var_label'=>'Nama RS '.($ri+1),'var_value'=>trim($rsnm),'var_type'=>'text');
+                $rs_rows[] = array('id_pe'=>$id,'submodule'=>'Rawat Inap RS','var_key'=>'rs'.$ri.'_tgl','var_label'=>'Tgl Masuk RS '.($ri+1),'var_value'=>isset($_POST['rs_tgl'][$ri])?$_POST['rs_tgl'][$ri]:'','var_type'=>'date');
+                $rs_rows[] = array('id_pe'=>$id,'submodule'=>'Rawat Inap RS','var_key'=>'rs'.$ri.'_ket','var_label'=>'Keterangan RS '.($ri+1),'var_value'=>isset($_POST['rs_ket'][$ri])?trim($_POST['rs_ket'][$ri]):'','var_type'=>'text');
+            }
+            if ($rs_rows) $this->db->insert_batch('ghs_zoonosis_pe_detail', $rs_rows);
+        }
+
         // Save Kontak Penyelidikan
         $kontak_pe = array();
         if (isset($_POST['kpe_nama'])) {
@@ -641,14 +655,14 @@ class Zoonosis extends BackendController {
     // UPLOAD EXCEL
     // ================================================================
     private $ALL_FIELDS = array(
-        'no_pe','diagnosa_no','tgl_laporan','tgl_pe','no_ebs','nama_petugas','telp_petugas',
+        'no_pe','diagnosa_no','tgl_laporan','tgl_pe','no_ebs','nama_petugas','jabatan_petugas','telp_petugas',
         'id_prop','id_kota','id_puskesmas','id_kecamatan',
         'kd_prop_kasus','kd_kota_kasus','id_kecamatan_kasus',
         'nama_pasien','nama_kk','nik','kelamin','umur_thn','umur_bln','tgl_lahir','pekerjaan','telp_pasien',
-        'alamat','alamat_kerja','kontak_darurat','kelurahan','kecamatan',
+        'alamat','alamat_kerja','kontak_darurat','telp_kontak_darurat','kelurahan','kecamatan',
         'tgl_bergejala','tgl_sakit','tgl_pajanan','status_kasus','akhir_no','tgl_meninggal','gejala',
         'riwayat_kontak_hewan','jenis_hewan','tgl_kontak','lokasi_kontak',
-        'riwayat_vaksinasi','jenis_vaksin','oseltamivir','tgl_oseltamivir',
+        'riwayat_vaksinasi','jenis_vaksin','tgl_vaksinasi_hewan','nama_pemilik_hewan','alamat_pemilik_hewan','oseltamivir','tgl_oseltamivir',
         'nama_rs','tgl_masuk_rs','diperiksa_lab','jenis_sample','tgl_ambil_sample','tgl_kirim_sample','tgl_hasil_lab','tgl_vaksin_influenza',
         'nama_lab','hasil_lab','ket_lab','ket_lain',
     );
