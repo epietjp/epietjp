@@ -1388,6 +1388,47 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; ?>
 
+    <!-- ANTHRAKS: Pemeriksaan Lingkungan Rumah -->
+    <?php if($id_penyakit==14): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-home"></i> Pemeriksaan Lingkungan Rumah (Anthraks)</div>
+      <div class="row">
+        <?php
+        $lingk_anthrax = array(
+          'atx_lingk_piaraan'    => 'Ada hewan piaraan di rumah (kambing/sapi/kuda/dll)',
+          'atx_lingk_peternakan' => 'Ada peternakan hewan di sekitar rumah',
+          'atx_lingk_pasar'      => 'Ada pasar hewan di sekitar rumah',
+        );
+        foreach($lingk_anthrax as $lk=>$ll):
+          $lv=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']==$lk){$lv=$ed['var_value'];break;}}
+        ?>
+        <div class="col-sm-4" style="margin-bottom:8px">
+          <label style="font-size:12px"><?=$ll?></label>
+          <input type="hidden" name="dkey[]" value="<?=$lk?>">
+          <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($ll)?>">
+          <input type="hidden" name="dsub[]" value="Lingkungan Anthraks">
+          <input type="hidden" name="dtype[]" value="select">
+          <select name="dval[]" class="form-control input-sm">
+            <option value="">-- Pilih --</option>
+            <option value="ya" <?=$lv=='ya'?'selected':''?>>Ya</option>
+            <option value="tidak" <?=$lv=='tidak'?'selected':''?>>Tidak</option>
+            <option value="tidak_tahu" <?=$lv=='tidak_tahu'?'selected':''?>>Tidak Tahu</option>
+          </select>
+        </div>
+        <?php endforeach; ?>
+      </div>
+      <div class="form-group">
+        <label style="font-size:12px">Keterangan sumber penularan potensial</label>
+        <input type="hidden" name="dkey[]" value="atx_lingk_ket">
+        <input type="hidden" name="dlabel[]" value="Keterangan lingkungan sumber penularan Anthraks">
+        <input type="hidden" name="dsub[]" value="Lingkungan Anthraks">
+        <input type="hidden" name="dtype[]" value="text">
+        <?php $atx_lket=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_lingk_ket'){$atx_lket=$ed['var_value'];break;}} ?>
+        <input type="text" name="dval[]" class="form-control" placeholder="Keterangan tambahan lingkungan" value="<?=htmlspecialchars($atx_lket)?>">
+      </div>
+    </div>
+    <?php endif; ?>
+
     <!-- KETERANGAN -->
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-sticky-note"></i> Keterangan Lain</div>
