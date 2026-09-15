@@ -212,19 +212,36 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <label>Pekerjaan</label>
             <select name="pekerjaan" class="form-control">
               <option value="">-- Pilih Pekerjaan --</option>
-              <?php foreach(array(
-                'petani'=>'Petani',
-                'peternakan'=>'Peternakan/Peternak',
-                'karyawan'=>'Karyawan/Pekerja Swasta',
-                'ibu_rumah_tanggal'=>'Ibu Rumah Tangga',
-                'tni'=>'TNI',
-                'polri'=>'POLRI',
-                'pelajar'=>'Pelajar/Mahasiswa',
-                'tukang_ledeng'=>'Tukang/Buruh',
-                'nelayan'=>'Nelayan',
-                'pedagang'=>'Pedagang',
-                'lainnya'=>'Lainnya',
-              ) as $val=>$label): ?>
+              <?php
+              // Opsi pekerjaan per penyakit sesuai form PE kertas
+              $pekerjaan_opts = array(
+                8 => array( // GHPR/Rabies
+                  'petani'=>'Petani','peternakan'=>'Peternakan/Peternak',
+                  'karyawan'=>'Karyawan/Pekerja Swasta','ibu_rumah_tangga'=>'Ibu Rumah Tangga',
+                  'tni'=>'TNI','polri'=>'POLRI','pelajar'=>'Pelajar/Mahasiswa',
+                  'tukang'=>'Tukang/Buruh','nelayan'=>'Nelayan','pedagang'=>'Pedagang',
+                  'lainnya'=>'Lainnya',
+                ),
+                11 => array( // Avian Flu
+                  'rs_klinik'=>'RS/Klinik','veterinarian'=>'Veterinarian',
+                  'laboratorium'=>'Laboratorium','peternak_unggas'=>'Peternak Unggas',
+                  'peternak_babi'=>'Peternak Babi','pasar_unggas'=>'Pasar Unggas/Babi',
+                  'lainnya'=>'Lainnya',
+                ),
+                14 => array( // Anthraks
+                  'rs_klinik'=>'RS/Klinik','veterinarian'=>'Veterinarian',
+                  'laboratorium'=>'Laboratorium','peternak'=>'Peternak Hewan',
+                  'pasar_hewan'=>'Pasar Hewan','lainnya'=>'Lainnya',
+                ),
+                26 => array( // Leptospirosis
+                  'petani'=>'Petani','laboratorium'=>'Laboratorium',
+                  'veterinarian'=>'Veterinarian','peternak'=>'Peternak',
+                  'petugas_kebersihan'=>'Petugas Kebersihan/Sanitasi',
+                  'nelayan'=>'Nelayan','lainnya'=>'Lainnya',
+                ),
+              );
+              $opts = isset($pekerjaan_opts[$id_penyakit]) ? $pekerjaan_opts[$id_penyakit] : $pekerjaan_opts[8];
+              foreach($opts as $val=>$label): ?>
               <option value="<?=$val?>" <?=fv($v,'pekerjaan')==$val?'selected':''?>><?=$label?></option>
               <?php endforeach; ?>
             </select>
@@ -373,12 +390,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             </select>
           </div>
         </div>
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Jenis Hewan</label>
-            <input type="text" name="jenis_hewan" class="form-control" value="<?=fv($v,'jenis_hewan')?>">
-          </div>
-        </div>
+<!-- jenis_hewan dihapus, gunakan dp_hpr di variabel tambahan -->
         <div class="col-sm-3">
           <div class="form-group">
             <label>Tanggal Kontak</label>
@@ -559,11 +571,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               'monye_peliharaan'=>'Monyet Peliharaan',
               'hewan_lainnya'=>'Hewan Lainnya',
             ),
-            'dp_satuan_hpr' => array(
-              'peliharaan'=>'Peliharaan',
-              'peliharaan_yang_dilepas_liarkan'=>'Peliharaan yang Dilepas/Diliarkan',
-              'liar'=>'Liar',
-            ),
+/* dp_satuan_hpr dihapus - duplikasi dengan dp_hpr */
             'dp_kondisi' => array(
               'dalam_observasi'=>'Dalam Observasi',
               'lari_hilang'=>'Lari/Hilang',
@@ -763,6 +771,63 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       </div>
       <small class="text-muted">Nama | Umur | Hub. Penderita | Tgl Kontak Awal | Tgl Kontak Akhir | Status Flu</small><br>
       <button type="button" class="btn btn-xs btn-default" onclick="tambahKontakPN()"><i class="fa fa-plus"></i> Tambah Kontak</button>
+    </div>
+    <?php endif; ?>
+    <!-- KEBIASAAN RESPONDEN LEPTO -->
+    <?php if($id_penyakit==26): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-clipboard"></i> Kebiasaan Responden (Faktor Risiko Leptospirosis)</div>
+      <?php
+      $kb_fields = array(
+        array('key'=>'kb_aktivitas_air',    'label'=>'A1. Bekerja/beraktivitas di sawah, ladang, kebun', 'sub'=>'A'),
+        array('key'=>'kb_renang_sungai',    'label'=>'A2. Berenang/mandi di sungai/danau', 'sub'=>'A'),
+        array('key'=>'kb_banjir',           'label'=>'A3. Tinggal/beraktivitas di daerah banjir', 'sub'=>'A'),
+        array('key'=>'kb_genangan_air',     'label'=>'A4. Kontak dengan genangan air/lumpur', 'sub'=>'A'),
+        array('key'=>'kb_parit_selokan',    'label'=>'A5. Tinggal dekat parit/selokan yang kotor', 'sub'=>'A'),
+        array('key'=>'kb_air_tercemar',     'label'=>'A6. Minum/gunakan air yang mungkin tercemar', 'sub'=>'A'),
+        array('key'=>'kb_kontak_hewan',     'label'=>'B1. Kontak langsung dengan hewan (tikus/sapi/babi/anjing)', 'sub'=>'B'),
+        array('key'=>'kb_apd',              'label'=>'B2. Menggunakan APD (sepatu boot/sarung tangan) saat bekerja', 'sub'=>'B'),
+        array('key'=>'kb_cuci_tangan',      'label'=>'C1. Cuci tangan sebelum makan', 'sub'=>'C'),
+        array('key'=>'kb_cuci_luka',        'label'=>'C2. Merawat luka/lecet dengan benar', 'sub'=>'C'),
+        array('key'=>'kb_makan_sembarangan','label'=>'C3. Makan di tempat yang tidak terlindung', 'sub'=>'C'),
+        array('key'=>'kb_minum_mentah',     'label'=>'C4. Minum air mentah/tidak dimasak', 'sub'=>'C'),
+        array('key'=>'kb_tikus_rumah',      'label'=>'D1. Ada tikus di dalam rumah/dapur', 'sub'=>'D'),
+        array('key'=>'kb_makanan_terbuka',  'label'=>'D2. Menyimpan makanan tidak tertutup/terlindung', 'sub'=>'D'),
+        array('key'=>'kb_sampah_terbuka',   'label'=>'D3. Membuang sampah sembarangan di sekitar rumah', 'sub'=>'D'),
+        array('key'=>'kb_drainase_buruk',   'label'=>'D4. Drainase/saluran air di sekitar rumah buruk', 'sub'=>'D'),
+      );
+      $kb_sub_labels = array('A'=>'A. Aktivitas Berhubungan Air', 'B'=>'B. Kontak & APD', 'C'=>'C. Personal Higiene', 'D'=>'D. Ketersediaan Pangan & Sanitasi');
+      $kb_sub_cur = '';
+      foreach($kb_fields as $kb):
+        if($kb['sub'] != $kb_sub_cur):
+          if($kb_sub_cur) echo '</div>';
+          echo '<div style="margin-bottom:10px"><div style="font-weight:600;font-size:12px;color:#1F4E79;margin:8px 0 4px">'.$kb_sub_labels[$kb['sub']].'</div>';
+          $kb_sub_cur = $kb['sub'];
+        endif;
+        // Ambil nilai EAV yang sudah tersimpan
+        $kb_val = '';
+        if(!empty($eav_data)) {
+          foreach($eav_data as $ed) {
+            if($ed['var_key']==$kb['key']) { $kb_val=$ed['var_value']; break; }
+          }
+        }
+      ?>
+      <div class="row" style="margin-bottom:4px">
+        <div class="col-sm-8" style="font-size:12px;padding-top:6px"><?=htmlspecialchars($kb['label'])?></div>
+        <div class="col-sm-4">
+          <input type="hidden" name="dkey[]" value="<?=$kb['key']?>">
+          <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($kb['label'])?>">
+          <input type="hidden" name="dsub[]" value="Kebiasaan Responden Lepto">
+          <input type="hidden" name="dtype[]" value="radio">
+          <select name="dval[]" class="form-control input-sm" style="width:150px">
+            <option value="">-- Pilih --</option>
+            <option value="ya" <?=$kb_val=='ya'?'selected':''?>>Ya</option>
+            <option value="tidak" <?=$kb_val=='tidak'?'selected':''?>>Tidak</option>
+            <option value="tidak_tahu" <?=$kb_val=='tidak_tahu'?'selected':''?>>Tidak Tahu</option>
+          </select>
+        </div>
+      </div>
+      <?php endforeach; echo '</div>'; ?>
     </div>
     <?php endif; ?>
     <!-- KETERANGAN -->
