@@ -910,6 +910,29 @@ function tambahRow() {
 $('#formPE').submit(function(e) {
     e.preventDefault();
     var fd = $(this).serialize();
+    // Validasi sebelum submit
+    var tgl_pe = $('input[name=tgl_pe]').val();
+    var tgl_laporan = $('input[name=tgl_laporan]').val();
+    var nik = $('input[name=nik]').val();
+    var umur_thn = parseInt($('input[name=umur_thn]').val()) || 0;
+    var umur_bln = parseInt($('input[name=umur_bln]').val()) || 0;
+    var errors = [];
+
+    if (!tgl_pe) { errors.push('Tanggal PE wajib diisi'); }
+    if (tgl_pe && tgl_laporan && tgl_pe > tgl_laporan) {
+        errors.push('Tanggal PE tidak boleh lebih dari Tanggal Laporan');
+    }
+    if (nik && (nik.length !== 16 || !/^[0-9]+$/.test(nik))) {
+        errors.push('NIK harus 16 digit angka (isi 0000000000000000 jika tidak ada NIK)');
+    }
+    if (umur_thn > 100) { errors.push('Umur (tahun) tidak boleh lebih dari 100'); }
+    if (umur_bln < 0 || umur_bln > 11) { errors.push('Umur (bulan) harus antara 0-11'); }
+
+    if (errors.length > 0) {
+        alert('Validasi gagal:\n\n' + errors.join('\n'));
+        return;
+    }
+
     $.post(BASE+'zoonosis/simpan', fd, function(res) {
         if (res.status=='ok') {
             alert('Data PE berhasil disimpan.');

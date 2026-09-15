@@ -64,7 +64,7 @@
               <div class="table-responsive" style="max-height:320px;overflow-y:auto">
                 <table class="table table-bordered table-condensed tbl-prop">
                   <thead style="background:#2c3e50;color:#fff;position:sticky;top:0">
-                    <tr><th>Provinsi</th><th>Total</th><th>Konfirmasi</th><th>Meninggal</th><th>Lab</th><th>Distribusi</th></tr>
+                    <tr><th>Provinsi</th><th>Total</th><th>Konfirmasi</th><th>Meninggal</th><th>CFR%</th><th>Lab</th><th>Distribusi</th></tr>
                   </thead>
                   <tbody id="tbody-prop-<?=$id_p?>">
                     <tr><td colspan="6" class="text-center text-muted">Klik Tampilkan</td></tr>
@@ -82,7 +82,7 @@
 </div>
 </div>
 
-<script src="<?=base_url('assets/plugins/chartjs/Chart.min.js')?>"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
 <script>
 var BASE = '<?=base_url()?>';
 var charts = {};
@@ -116,7 +116,7 @@ function loadAnalisa() {
         },'json');
 
         // Per provinsi (tabel)
-        $.get(BASE+'zoonosis/get_analisa_prop', {id_penyakit:id_p, tgl1:tgl1, tgl2:tgl2}, function(rows) {
+        $.get(BASE+'zoonosis/get_analisa_prop', {id_penyakit:id_p, tgl1:tgl1, tgl2:tgl2, id_prop:id_prop}, function(rows) {
             var maxTotal = 0;
             $.each(rows, function(i,r){ if (parseInt(r.total)>maxTotal) maxTotal=parseInt(r.total); });
             var html = '';
@@ -134,6 +134,7 @@ function loadAnalisa() {
                         +'<td class="text-center"><b>'+tot+'</b></td>'
                         +'<td class="text-center"><span class="text-success">'+kon+'</span></td>'
                         +'<td class="text-center">'+(mat>0?'<span class="text-danger"><b>'+mat+'</b></span>':0)+'</td>'
+                        +'<td class="text-center">'+(r.cfr>0?'<span class="text-danger">'+r.cfr+'%</span>':'0%')+'</td>'
                         +'<td class="text-center">'+lab+'</td>'
                         +'<td><span class="bar-prop" style="width:'+pct+'%"></span> '+pct+'%</td>'
                         +'</tr>';

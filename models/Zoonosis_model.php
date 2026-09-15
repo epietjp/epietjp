@@ -138,22 +138,42 @@ class Zoonosis_model extends CI_Model {
     }
 
     // Analisa per provinsi
-    public function get_per_prop($id_penyakit, $tgl1, $tgl2) {
+    public function get_per_prop($id_penyakit, $tgl1, $tgl2, $id_prop=0) {
         $tgl1 = $this->db->escape_str($tgl1);
         $tgl2 = $this->db->escape_str($tgl2);
-        $q = "SELECT pr.propinsi,
-                COUNT(z.id) AS total,
-                SUM(CASE WHEN z.status_kasus=2 THEN 1 ELSE 0 END) AS konfirmasi,
-                SUM(CASE WHEN z.akhir_no=2     THEN 1 ELSE 0 END) AS meninggal,
-                SUM(CASE WHEN z.diperiksa_lab=1 THEN 1 ELSE 0 END) AS diperiksa_lab
-              FROM ewarn_propinsi pr
-              LEFT JOIN ewarn_ghs_zoonosis_pe z
-                ON z.id_prop=pr.id
-                AND z.id_penyakit=".intval($id_penyakit)."
-                AND z.tgl_sakit BETWEEN '{$tgl1}' AND '{$tgl2}'
-              WHERE pr.aktif='Y'
-              GROUP BY pr.id, pr.propinsi
-              ORDER BY total DESC";
+        if ($id_prop) {
+            // Per Kab/Kota dalam provinsi
+            $q = "SELECT k.kota as propinsi,
+                    COUNT(z.id) AS total,
+                    SUM(CASE WHEN z.status_kasus=2 THEN 1 ELSE 0 END) AS konfirmasi,
+                    SUM(CASE WHEN z.akhir_no=2     THEN 1 ELSE 0 END) AS meninggal,
+                    SUM(CASE WHEN z.diperiksa_lab=1 THEN 1 ELSE 0 END) AS diperiksa_lab,
+                    ROUND(SUM(CASE WHEN z.akhir_no=2 THEN 1 ELSE 0 END)/NULLIF(COUNT(z.id),0)*100,1) AS cfr
+                  FROM ewarn_kota k
+                  LEFT JOIN ewarn_ghs_zoonosis_pe z
+                    ON z.id_kota=k.id
+                    AND z.id_penyakit=".intval($id_penyakit)."
+                    AND z.tgl_laporan BETWEEN '{$tgl1}' AND '{$tgl2}'
+                  WHERE k.id_prop=".intval($id_prop)." AND k.aktif='Y'
+                  GROUP BY k.id, k.kota
+                  ORDER BY total DESC";
+        } else {
+            // Per Provinsi nasional
+            $q = "SELECT pr.propinsi,
+                    COUNT(z.id) AS total,
+                    SUM(CASE WHEN z.status_kasus=2 THEN 1 ELSE 0 END) AS konfirmasi,
+                    SUM(CASE WHEN z.akhir_no=2     THEN 1 ELSE 0 END) AS meninggal,
+                    SUM(CASE WHEN z.diperiksa_lab=1 THEN 1 ELSE 0 END) AS diperiksa_lab,
+                    ROUND(SUM(CASE WHEN z.akhir_no=2 THEN 1 ELSE 0 END)/NULLIF(COUNT(z.id),0)*100,1) AS cfr
+                  FROM ewarn_propinsi pr
+                  LEFT JOIN ewarn_ghs_zoonosis_pe z
+                    ON z.id_prop=pr.id
+                    AND z.id_penyakit=".intval($id_penyakit)."
+                    AND z.tgl_laporan BETWEEN '{$tgl1}' AND '{$tgl2}'
+                  WHERE pr.aktif='Y'
+                  GROUP BY pr.id, pr.propinsi
+                  ORDER BY total DESC";
+        }
         return $this->db->query($q)->result_array();
     }
 

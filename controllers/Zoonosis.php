@@ -212,6 +212,14 @@ class Zoonosis extends BackendController {
         $id = (int)$this->input->post('id');
         $id_penyakit = (int)$this->input->post('id_penyakit');
         $p  = $this->input->post(NULL, TRUE);
+        // Validasi server-side
+        $errors = array();
+        if (empty($p["tgl_pe"])) $errors[] = "Tanggal PE wajib diisi";
+        if (!empty($p["tgl_pe"]) && !empty($p["tgl_laporan"]) && $p["tgl_pe"] > $p["tgl_laporan"]) $errors[] = "Tanggal PE tidak boleh lebih dari Tanggal Laporan";
+        if (!empty($p["nik"]) && (strlen($p["nik"]) !== 16 || !ctype_digit($p["nik"]))) $errors[] = "NIK harus 16 digit angka";
+        if (isset($p["umur_thn"]) && (int)$p["umur_thn"] > 100) $errors[] = "Umur tahun tidak boleh lebih dari 100";
+        if (isset($p["umur_bln"]) && ((int)$p["umur_bln"] < 0 || (int)$p["umur_bln"] > 11)) $errors[] = "Umur bulan harus antara 0-11";
+        if (!empty($errors)) { echo json_encode(array("status"=>"error","message"=>implode("; ",$errors))); return; }
         $main = array(
             'id_penyakit'          => $id_penyakit,
             'diagnosa_no'          => $p['diagnosa_no'] !== '' ? (int)$p['diagnosa_no'] : NULL,
@@ -550,7 +558,8 @@ class Zoonosis extends BackendController {
         $id_penyakit = (int)$this->input->get('id_penyakit');
         $tgl1        = $this->input->get('tgl1') ?: date('Y-01-01');
         $tgl2        = $this->input->get('tgl2') ?: date('Y-m-d');
-        echo json_encode($this->zm->get_per_prop($id_penyakit, $tgl1, $tgl2));
+        $id_prop     = (int)$this->input->get('id_prop');
+        echo json_encode($this->zm->get_per_prop($id_penyakit, $tgl1, $tgl2, $id_prop));
     }
 
     public function get_analisa_status() {
@@ -944,6 +953,58 @@ class Zoonosis extends BackendController {
         $no = $this->db->escape_str($no_ebs);
         $r = $this->db->query("SELECT id, no_pe FROM ewarn_ghs_zoonosis_pe WHERE no_ebs='$no' LIMIT 1")->row_array();
         echo json_encode($r ?: null);
+    }
+
+    public function get_disease_summary() {
+        $this->_auth();
+        $id_penyakit = (int)$this->input->get('id_penyakit');
+        $tgl1 = $this->input->get('tgl1') ?: date('Y-01-01');
+        $tgl2 = $this->input->get('tgl2') ?: date('Y-m-d');
+        $id_prop = (int)$this->input->get('id_prop');
+        $tgl1 = $this->db->escape_str($tgl1);
+        $tgl2 = $this->db->escape_str($tgl2);
+        $tahun = date('Y');
+        $where_wil = $id_prop ? " AND z.id_prop=".intval($id_prop) : "";
+
+        // Ringkasan
+        $q = "SELECT COUNT(*) as total,
+                SUM(CASE WHEN akhir_no=2 THEN 1 ELSE 0 END) as meninggal,
+                SUM(CASE WHEN diperiksa_lab=1 THEN 1 ELSE 0 END) as lab,
+                SUM(CASE WHEN status_kasus=1 THEN 1 ELSE 0 END) as suspek,
+                SUM(CASE WHEN status_kasus=2 THEN 1 ELSE 0 END) as konfirmasi,
+                ROUND(SUM(CASE WHEN akhir_no=2 THEN 1 ELSE 0 END)/NULLIF(COUNT(*),0)*100,1) as cfr
+              FROM ewarn_ghs_zoonosis_pe z
+              WHERE z.id_penyakit=".intval($id_penyakit)."
+              AND z.tgl_laporan BETWEEN '{$tgl1}' AND '{$tgl2}' {$where_wil}";
+        $summary = $this->db->query($q)->row_array();
+
+        // Top 5 provinsi
+        $q2 = "SELECT pr.propinsi as nama, COUNT(*) as n,
+                 SUM(CASE WHEN akhir_no=2 THEN 1 ELSE 0 END) as meninggal
+               FROM ewarn_ghs_zoonosis_pe z
+               JOIN ewarn_propinsi pr ON pr.id=z.id_prop
+               WHERE z.id_penyakit=".intval($id_penyakit)."
+               AND z.tgl_laporan BETWEEN '{$tgl1}' AND '{$tgl2}' {$where_wil}
+               GROUP BY z.id_prop ORDER BY n DESC LIMIT 5";
+        $top_prop = $this->db->query($q2)->result_array();
+
+        // Trend 8 minggu terakhir
+        $q3 = "SELECT m.week as minggu, COUNT(z.id) as n
+               FROM ewarn_minggu m
+               LEFT JOIN ewarn_ghs_zoonosis_pe z
+                 ON z.id_penyakit=".intval($id_penyakit)."
+                 AND z.tgl_laporan BETWEEN DATE_SUB(m.week_date, INTERVAL 6 DAY) AND m.week_date
+                 {$where_wil}
+               WHERE m.week_year={$tahun}
+               AND m.week_date <= CURDATE()
+               GROUP BY m.week ORDER BY m.week DESC LIMIT 8";
+        $trend = array_reverse($this->db->query($q3)->result_array());
+
+        echo json_encode(array(
+            'summary'  => $summary,
+            'top_prop' => $top_prop,
+            'trend'    => $trend,
+        ));
     }
     // Halaman daftar cluster
     public function cluster() {

@@ -277,6 +277,25 @@
       </div>
     </div>
 
+
+    <!-- DISEASE-SPECIFIC DASHBOARD -->
+    <div class="section-title"><i class="fa fa-bar-chart"></i> Analisa per Penyakit</div>
+    <div class="row" id="disease-dashboard">
+      <?php foreach($penyakit as $id_p => $info): ?>
+      <div class="col-sm-6" style="margin-bottom:14px">
+        <div class="box box-default" style="border-top:3px solid <?=isset($info['warna'])?$info['warna']:'#3498db'?>">
+          <div class="box-header with-border" style="padding:8px 12px">
+            <h3 class="box-title" style="font-size:13px"><i class="fa fa-<?=isset($info['icon'])?$info['icon']:'bug'?>"></i> <?=htmlspecialchars($info['nama'])?></h3>
+          </div>
+          <div class="box-body" style="padding:10px">
+            <div id="ds-<?=$id_p?>" style="font-size:12px">
+              <i class="fa fa-spinner fa-spin"></i> Memuat...
+            </div>
+          </div>
+        </div>
+      </div>
+      <?php endforeach; ?>
+    </div>
   </section>
 </div>
 </div>
