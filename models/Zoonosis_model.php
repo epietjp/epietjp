@@ -257,6 +257,19 @@ class Zoonosis_model extends CI_Model {
             "SELECT * FROM ewarn_ghs_zoonosis_kontak_pneumonia WHERE id_pe=".intval($id_pe)." ORDER BY id"
         )->result_array();
     }
+
+    public function save_kontak_pe($id_pe, $rows) {
+        $this->db->where('id_pe', $id_pe)->delete('ghs_zoonosis_kontak_pe');
+        if ($rows) $this->db->insert_batch('ghs_zoonosis_kontak_pe',
+            array_map(function($r) use($id_pe){ $r['id_pe']=$id_pe; return $r; }, $rows));
+    }
+
+    public function save_tim_pe($id_pe, $rows) {
+        $this->db->where('id_pe', $id_pe)->delete('ghs_zoonosis_tim_pe');
+        if ($rows) $this->db->insert_batch('ghs_zoonosis_tim_pe',
+            array_map(function($r) use($id_pe){ $r['id_pe']=$id_pe; return $r; }, $rows));
+    }
+
     public function save_kontak_pneumonia($id_pe, $rows) {
         $this->db->where("id_pe", intval($id_pe))->delete("ghs_zoonosis_kontak_pneumonia");
         foreach ($rows as $r) {

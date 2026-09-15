@@ -100,6 +100,12 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="text" name="telp_petugas" class="form-control" value="<?=fv($v,'telp_petugas')?>">
           </div>
         </div>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Jabatan Petugas</label>
+            <input type="text" name="jabatan_petugas" class="form-control" placeholder="Contoh: Sanitarian, Dokter, Perawat" value="<?=fv($v,'jabatan_petugas')?>">
+          </div>
+        </div>
       </div>
     </div>
 
@@ -359,7 +365,9 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="">-- Belum Diketahui --</option>
               <option value="1" <?=fv($v,'akhir_no')=='1'?'selected':''?>>Sembuh</option>
               <option value="2" <?=fv($v,'akhir_no')=='2'?'selected':''?>>Meninggal</option>
-              <option value="3" <?=fv($v,'akhir_no')=='3'?'selected':''?>>Dalam Perawatan</option>
+              <option value="3" <?=fv($v,'akhir_no')=='3'?'selected':''?>>Dirawat RS</option>
+              <option value="4" <?=fv($v,'akhir_no')=='4'?'selected':''?>>Dirawat Klinik</option>
+              <option value="5" <?=fv($v,'akhir_no')=='5'?'selected':''?>>Dirawat di Rumah</option>
             </select>
           </div>
         </div>
@@ -500,6 +508,65 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- SPESIMEN TAMBAHAN -->
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-flask"></i> Spesimen Tambahan (Lab)</div>
+      <div id="tbl-spesimen">
+        <div class="row spesimen-row" style="margin-bottom:6px">
+          <div class="col-sm-2">
+            <input type="hidden" name="dkey[]" value="sp0_jenis">
+            <input type="hidden" name="dlabel[]" value="Jenis Spesimen 1">
+            <input type="hidden" name="dsub[]" value="Spesimen Lab">
+            <input type="hidden" name="dtype[]" value="text">
+            <select name="dval[]" class="form-control input-sm">
+              <option value="">-- Jenis --</option>
+              <option value="serum_darah">Serum Darah</option>
+              <option value="urine">Urine</option>
+              <option value="usap_nasofaring">Usap Nasofaring</option>
+              <option value="usap_tenggorok">Usap Tenggorok</option>
+              <option value="kulit_lesi">Kulit/Lesi</option>
+              <option value="jaringan">Jaringan/Eksudat</option>
+              <option value="otak_hewan">Otak Hewan (GHPR)</option>
+              <option value="lainnya">Lainnya</option>
+            </select>
+          </div>
+          <div class="col-sm-2">
+            <input type="hidden" name="dkey[]" value="sp0_nomor">
+            <input type="hidden" name="dlabel[]" value="Nomor Spesimen 1">
+            <input type="hidden" name="dsub[]" value="Spesimen Lab">
+            <input type="hidden" name="dtype[]" value="text">
+            <input type="text" name="dval[]" class="form-control input-sm" placeholder="Nomor Spesimen">
+          </div>
+          <div class="col-sm-2">
+            <input type="hidden" name="dkey[]" value="sp0_tgl_ambil">
+            <input type="hidden" name="dlabel[]" value="Tgl Ambil 1">
+            <input type="hidden" name="dsub[]" value="Spesimen Lab">
+            <input type="hidden" name="dtype[]" value="date">
+            <input type="date" name="dval[]" class="form-control input-sm" placeholder="Tgl Ambil">
+          </div>
+          <div class="col-sm-2">
+            <input type="hidden" name="dkey[]" value="sp0_tgl_hasil">
+            <input type="hidden" name="dlabel[]" value="Tgl Hasil 1">
+            <input type="hidden" name="dsub[]" value="Spesimen Lab">
+            <input type="hidden" name="dtype[]" value="date">
+            <input type="date" name="dval[]" class="form-control input-sm" placeholder="Tgl Hasil">
+          </div>
+          <div class="col-sm-2">
+            <input type="hidden" name="dkey[]" value="sp0_hasil">
+            <input type="hidden" name="dlabel[]" value="Hasil 1">
+            <input type="hidden" name="dsub[]" value="Spesimen Lab">
+            <input type="hidden" name="dtype[]" value="text">
+            <input type="text" name="dval[]" class="form-control input-sm" placeholder="Hasil">
+          </div>
+          <div class="col-sm-2">
+            <button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.spesimen-row').remove()"><i class="fa fa-times"></i></button>
+          </div>
+        </div>
+      </div>
+      <small class="text-muted">Jenis | Nomor | Tgl Ambil | Tgl Hasil | Hasil</small><br>
+      <button type="button" class="btn btn-xs btn-default" onclick="tambahSpesimen()"><i class="fa fa-plus"></i> Tambah Spesimen</button>
     </div>
 
     <!-- VARIABEL TAMBAHAN PER PENYAKIT -->
@@ -830,6 +897,153 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       <?php endforeach; echo '</div>'; ?>
     </div>
     <?php endif; ?>
+    <!-- KONTAK PENYELIDIKAN & TIM PE -->
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-phone"></i> Kontak Penyelidikan</div>
+      <small class="text-muted">Narasumber (pejabat/petugas/dokter) yang dihubungi saat penyelidikan</small>
+      <div id="tbl-kontak-pe">
+        <div class="row kontak-pe-row" style="margin-bottom:6px">
+          <div class="col-sm-4"><input type="text" name="kpe_nama[]" class="form-control input-sm" placeholder="Nama"></div>
+          <div class="col-sm-4"><input type="text" name="kpe_jabatan[]" class="form-control input-sm" placeholder="Jabatan/Kantor/Alamat"></div>
+          <div class="col-sm-3"><input type="text" name="kpe_telp[]" class="form-control input-sm" placeholder="Telp/HP"></div>
+          <div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.kontak-pe-row').remove()"><i class="fa fa-times"></i></button></div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-xs btn-default" onclick="tambahKontakPE()"><i class="fa fa-plus"></i> Tambah</button>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-users"></i> Tim Penyelidikan Epidemiologi</div>
+      <small class="text-muted">Anggota tim PE yang terlibat dalam penyelidikan</small>
+      <div id="tbl-tim-pe">
+        <?php for($ti=0;$ti<3;$ti++): ?>
+        <div class="row tim-pe-row" style="margin-bottom:6px">
+          <div class="col-sm-4"><input type="text" name="tpe_nama[]" class="form-control input-sm" placeholder="Nama"></div>
+          <div class="col-sm-4"><input type="text" name="tpe_kantor[]" class="form-control input-sm" placeholder="Kantor/Instansi"></div>
+          <div class="col-sm-3"><input type="text" name="tpe_telp[]" class="form-control input-sm" placeholder="Telp/HP"></div>
+          <div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.tim-pe-row').remove()"><i class="fa fa-times"></i></button></div>
+        </div>
+        <?php endfor; ?>
+      </div>
+      <button type="button" class="btn btn-xs btn-default" onclick="tambahTimPE()"><i class="fa fa-plus"></i> Tambah</button>
+    </div>
+
+    <!-- AVIAN: Kunjungan Wabah + Matriks Kontak Unggas -->
+    <?php if($id_penyakit==11): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-map-marker"></i> Riwayat Kunjungan & Kontak Unggas (Avian)</div>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label>Kunjungan 14 hari terakhir ke daerah wabah kematian unggas?</label>
+            <input type="hidden" name="dkey[]" value="av_kunjungan_wabah">
+            <input type="hidden" name="dlabel[]" value="Kunjungan 14 hari ke daerah wabah unggas">
+            <input type="hidden" name="dsub[]" value="Riwayat Avian">
+            <input type="hidden" name="dtype[]" value="select">
+            <?php
+            $av_kunjungan = '';
+            if(!empty($eav_data)) foreach($eav_data as $ed) { if($ed['var_key']=='av_kunjungan_wabah') { $av_kunjungan=$ed['var_value']; break; } }
+            ?>
+            <select name="dval[]" class="form-control">
+              <option value="">-- Pilih --</option>
+              <option value="pernah" <?=$av_kunjungan=='pernah'?'selected':''?>>Pernah</option>
+              <option value="tidak_pernah" <?=$av_kunjungan=='tidak_pernah'?'selected':''?>>Tidak Pernah</option>
+              <option value="tidak_jelas" <?=$av_kunjungan=='tidak_jelas'?'selected':''?>>Tidak Jelas</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label>Keterangan Kunjungan</label>
+            <input type="hidden" name="dkey[]" value="av_kunjungan_ket">
+            <input type="hidden" name="dlabel[]" value="Keterangan kunjungan daerah wabah unggas">
+            <input type="hidden" name="dsub[]" value="Riwayat Avian">
+            <input type="hidden" name="dtype[]" value="text">
+            <?php
+            $av_kunjungan_ket = '';
+            if(!empty($eav_data)) foreach($eav_data as $ed) { if($ed['var_key']=='av_kunjungan_ket') { $av_kunjungan_ket=$ed['var_value']; break; } }
+            ?>
+            <input type="text" name="dval[]" class="form-control" placeholder="Lokasi, tanggal, keterangan" value="<?=htmlspecialchars($av_kunjungan_ket)?>">
+          </div>
+        </div>
+      </div>
+      <!-- Matriks Kontak Unggas -->
+      <div class="form-group">
+        <label><b>Matriks Kontak Unggas 7 Hari Terakhir</b></label>
+        <table class="table table-bordered table-condensed" style="font-size:12px">
+          <thead style="background:#2c3e50;color:#fff">
+            <tr>
+              <th>Jenis Unggas</th>
+              <th>Kondisi Sehat</th>
+              <th>Kondisi Sakit</th>
+              <th>Kondisi Mati</th>
+              <th>Jenis Kontak</th>
+            </tr>
+          </thead>
+          <tbody>
+          <?php
+          $unggas_list = array('ayam'=>'Ayam','bebek'=>'Bebek','puyuh'=>'Puyuh','burung'=>'Burung','babi'=>'Babi');
+          $kontak_types = array('tidak_ada'=>'Tidak Ada','tidak_erat'=>'Kontak Tidak Erat','erat'=>'Kontak Erat','sehari_hari'=>'Kontak Sehari-hari');
+          foreach($unggas_list as $uk=>$ul):
+            $val_sehat = $val_sakit = $val_mati = $val_kontak = '';
+            if(!empty($eav_data)) foreach($eav_data as $ed) {
+              if($ed['var_key']=='av_ung_'.$uk.'_sehat') $val_sehat=$ed['var_value'];
+              if($ed['var_key']=='av_ung_'.$uk.'_sakit') $val_sakit=$ed['var_value'];
+              if($ed['var_key']=='av_ung_'.$uk.'_mati')  $val_mati=$ed['var_value'];
+              if($ed['var_key']=='av_ung_'.$uk.'_kontak') $val_kontak=$ed['var_value'];
+            }
+          ?>
+          <tr>
+            <td><b><?=$ul?></b></td>
+            <td>
+              <input type="hidden" name="dkey[]" value="av_ung_<?=$uk?>_sehat">
+              <input type="hidden" name="dlabel[]" value="Kontak <?=$ul?> Sehat">
+              <input type="hidden" name="dsub[]" value="Matriks Unggas">
+              <input type="hidden" name="dtype[]" value="select">
+              <select name="dval[]" class="form-control input-sm">
+                <option value="tidak">Tidak</option>
+                <option value="ya" <?=$val_sehat=='ya'?'selected':''?>>Ya</option>
+              </select>
+            </td>
+            <td>
+              <input type="hidden" name="dkey[]" value="av_ung_<?=$uk?>_sakit">
+              <input type="hidden" name="dlabel[]" value="Kontak <?=$ul?> Sakit">
+              <input type="hidden" name="dsub[]" value="Matriks Unggas">
+              <input type="hidden" name="dtype[]" value="select">
+              <select name="dval[]" class="form-control input-sm">
+                <option value="tidak">Tidak</option>
+                <option value="ya" <?=$val_sakit=='ya'?'selected':''?>>Ya</option>
+              </select>
+            </td>
+            <td>
+              <input type="hidden" name="dkey[]" value="av_ung_<?=$uk?>_mati">
+              <input type="hidden" name="dlabel[]" value="Kontak <?=$ul?> Mati">
+              <input type="hidden" name="dsub[]" value="Matriks Unggas">
+              <input type="hidden" name="dtype[]" value="select">
+              <select name="dval[]" class="form-control input-sm">
+                <option value="tidak">Tidak</option>
+                <option value="ya" <?=$val_mati=='ya'?'selected':''?>>Ya</option>
+              </select>
+            </td>
+            <td>
+              <input type="hidden" name="dkey[]" value="av_ung_<?=$uk?>_kontak">
+              <input type="hidden" name="dlabel[]" value="Jenis Kontak <?=$ul?>">
+              <input type="hidden" name="dsub[]" value="Matriks Unggas">
+              <input type="hidden" name="dtype[]" value="select">
+              <select name="dval[]" class="form-control input-sm">
+                <?php foreach($kontak_types as $kv=>$kl): ?>
+                <option value="<?=$kv?>" <?=$val_kontak==$kv?'selected':''?>><?=$kl?></option>
+                <?php endforeach; ?>
+              </select>
+            </td>
+          </tr>
+          <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <?php endif; ?>
+
     <!-- KETERANGAN -->
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-sticky-note"></i> Keterangan Lain</div>
@@ -992,6 +1206,18 @@ $('#formPE').submit(function(e) {
     }
     if (umur_thn > 100) { errors.push('Umur (tahun) tidak boleh lebih dari 100'); }
     if (umur_bln < 0 || umur_bln > 11) { errors.push('Umur (bulan) harus antara 0-11'); }
+    // Validasi urutan tanggal kasus
+    var tgl_bergejala = $('input[name=tgl_bergejala]').val();
+    var tgl_masuk_rs  = $('input[name=tgl_masuk_rs]').val();
+    var tgl_meninggal = $('input[name=tgl_meninggal]').val();
+    if (tgl_bergejala && tgl_masuk_rs && tgl_bergejala > tgl_masuk_rs) errors.push('Tanggal bergejala tidak boleh lebih dari tanggal masuk RS');
+    if (tgl_bergejala && tgl_meninggal && tgl_bergejala > tgl_meninggal) errors.push('Tanggal bergejala tidak boleh lebih dari tanggal meninggal');
+    if (tgl_masuk_rs && tgl_meninggal && tgl_masuk_rs > tgl_meninggal) errors.push('Tanggal masuk RS tidak boleh lebih dari tanggal meninggal');
+    var tgl_ambil = $('input[name=tgl_ambil_sample]').val();
+    var tgl_kirim = $('input[name=tgl_kirim_sample]').val();
+    var tgl_hasil = $('input[name=tgl_hasil_lab]').val();
+    if (tgl_ambil && tgl_kirim && tgl_ambil > tgl_kirim) errors.push('Tanggal ambil spesimen tidak boleh lebih dari tanggal kirim');
+    if (tgl_kirim && tgl_hasil && tgl_kirim > tgl_hasil) errors.push('Tanggal kirim tidak boleh lebih dari tanggal hasil lab');
 
     if (errors.length > 0) {
         alert('Validasi gagal:\n\n' + errors.join('\n'));
@@ -1011,8 +1237,27 @@ $('#formPE').submit(function(e) {
 $(function() {
     if (initProp) { $('#sel_prop').val(initProp).trigger('change'); }
 });
+function tambahSpesimen() {
+    var idx = $('#tbl-spesimen .spesimen-row').length;
+    var opts = '<option value="">-- Jenis --</option><option value="serum_darah">Serum Darah</option><option value="urine">Urine</option><option value="usap_nasofaring">Usap Nasofaring</option><option value="usap_tenggorok">Usap Tenggorok</option><option value="kulit_lesi">Kulit/Lesi</option><option value="jaringan">Jaringan/Eksudat</option><option value="otak_hewan">Otak Hewan (GHPR)</option><option value="lainnya">Lainnya</option>';
+    var row = '<div class="row spesimen-row" style="margin-bottom:6px">'
+        + '<div class="col-sm-2"><input type="hidden" name="dkey[]" value="sp'+idx+'_jenis"><input type="hidden" name="dlabel[]" value="Jenis Spesimen '+(idx+1)+'"><input type="hidden" name="dsub[]" value="Spesimen Lab"><input type="hidden" name="dtype[]" value="text"><select name="dval[]" class="form-control input-sm">'+opts+'</select></div>'
+        + '<div class="col-sm-2"><input type="hidden" name="dkey[]" value="sp'+idx+'_nomor"><input type="hidden" name="dlabel[]" value="Nomor Spesimen '+(idx+1)+'"><input type="hidden" name="dsub[]" value="Spesimen Lab"><input type="hidden" name="dtype[]" value="text"><input type="text" name="dval[]" class="form-control input-sm" placeholder="Nomor"></div>'
+        + '<div class="col-sm-2"><input type="hidden" name="dkey[]" value="sp'+idx+'_tgl_ambil"><input type="hidden" name="dlabel[]" value="Tgl Ambil '+(idx+1)+'"><input type="hidden" name="dsub[]" value="Spesimen Lab"><input type="hidden" name="dtype[]" value="date"><input type="date" name="dval[]" class="form-control input-sm"></div>'
+        + '<div class="col-sm-2"><input type="hidden" name="dkey[]" value="sp'+idx+'_tgl_hasil"><input type="hidden" name="dlabel[]" value="Tgl Hasil '+(idx+1)+'"><input type="hidden" name="dsub[]" value="Spesimen Lab"><input type="hidden" name="dtype[]" value="date"><input type="date" name="dval[]" class="form-control input-sm"></div>'
+        + '<div class="col-sm-2"><input type="hidden" name="dkey[]" value="sp'+idx+'_hasil"><input type="hidden" name="dlabel[]" value="Hasil '+(idx+1)+'"><input type="hidden" name="dsub[]" value="Spesimen Lab"><input type="hidden" name="dtype[]" value="text"><input type="text" name="dval[]" class="form-control input-sm" placeholder="Hasil"></div>'
+        + '<div class="col-sm-2"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest(\'.spesimen-row\').remove()"><i class="fa fa-times"></i></button></div>'
+        + '</div>';
+    $('#tbl-spesimen').append(row);
+}
 function tambahAnggota() {
     $("#tbl-anggota").append('<div class="row anggota-row" style="margin-bottom:6px"><div class="col-sm-5"><input type="text" name="as_nama[]" class="form-control input-sm" placeholder="Nama"></div><div class="col-sm-5"><input type="text" name="as_tempat[]" class="form-control input-sm" placeholder="Tempat Kerja"></div><div class="col-sm-2"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest(\".anggota-row\").remove()"><i class="fa fa-times"></i></button></div></div>');
+}
+function tambahKontakPE() {
+    $('#tbl-kontak-pe').append('<div class="row kontak-pe-row" style="margin-bottom:6px"><div class="col-sm-4"><input type="text" name="kpe_nama[]" class="form-control input-sm" placeholder="Nama"></div><div class="col-sm-4"><input type="text" name="kpe_jabatan[]" class="form-control input-sm" placeholder="Jabatan/Kantor/Alamat"></div><div class="col-sm-3"><input type="text" name="kpe_telp[]" class="form-control input-sm" placeholder="Telp/HP"></div><div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest(\'.kontak-pe-row\').remove()"><i class="fa fa-times"></i></button></div></div>');
+}
+function tambahTimPE() {
+    $('#tbl-tim-pe').append('<div class="row tim-pe-row" style="margin-bottom:6px"><div class="col-sm-4"><input type="text" name="tpe_nama[]" class="form-control input-sm" placeholder="Nama"></div><div class="col-sm-4"><input type="text" name="tpe_kantor[]" class="form-control input-sm" placeholder="Kantor/Instansi"></div><div class="col-sm-3"><input type="text" name="tpe_telp[]" class="form-control input-sm" placeholder="Telp/HP"></div><div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest(\'.tim-pe-row\').remove()"><i class="fa fa-times"></i></button></div></div>');
 }
 function tambahKontakPN() {
     $("#tbl-kontak-pn").append('<div class="row kontak-pn-row" style="margin-bottom:6px"><div class="col-sm-2"><input type="text" name="kp_nama[]" class="form-control input-sm" placeholder="Nama"></div><div class="col-sm-1"><input type="number" name="kp_umur[]" class="form-control input-sm" placeholder="Umur"></div><div class="col-sm-2"><input type="text" name="kp_hub[]" class="form-control input-sm" placeholder="Hub."></div><div class="col-sm-2"><input type="date" name="kp_tgl_awal[]" class="form-control input-sm"></div><div class="col-sm-2"><input type="date" name="kp_tgl_akhir[]" class="form-control input-sm"></div><div class="col-sm-2"><input type="text" name="kp_status[]" class="form-control input-sm" placeholder="Status"></div><div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest(\".kontak-pn-row\").remove()"><i class="fa fa-times"></i></button></div></div>');

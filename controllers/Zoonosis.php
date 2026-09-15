@@ -245,6 +245,7 @@ class Zoonosis extends BackendController {
             'tgl_laporan'          => $p['tgl_laporan']       ?: NULL,
             'tgl_pe'               => $p['tgl_pe']            ?: NULL,
             'nama_petugas'         => $p['nama_petugas'],
+            'jabatan_petugas'      => isset($p['jabatan_petugas']) ? $p['jabatan_petugas'] : NULL,
             'telp_petugas'         => $p['telp_petugas'],
             'status_kasus'         => (int)$p['status_kasus'],
             'akhir_no'             => $p['akhir_no'] !== '' ? (int)$p['akhir_no'] : NULL,
@@ -330,6 +331,33 @@ class Zoonosis extends BackendController {
             }
         }
         $this->zm->save_kontak_pneumonia($id, $kontak_pn);
+
+        // Save Kontak Penyelidikan
+        $kontak_pe = array();
+        if (isset($_POST['kpe_nama'])) {
+            foreach ($_POST['kpe_nama'] as $idx => $nama) {
+                if (trim($nama)) $kontak_pe[] = array(
+                    'nama'    => trim($nama),
+                    'jabatan' => isset($_POST['kpe_jabatan'][$idx]) ? trim($_POST['kpe_jabatan'][$idx]) : '',
+                    'telp'    => isset($_POST['kpe_telp'][$idx])    ? trim($_POST['kpe_telp'][$idx])    : '',
+                );
+            }
+        }
+        $this->zm->save_kontak_pe($id, $kontak_pe);
+
+        // Save Tim PE
+        $tim_pe = array();
+        if (isset($_POST['tpe_nama'])) {
+            foreach ($_POST['tpe_nama'] as $idx => $nama) {
+                if (trim($nama)) $tim_pe[] = array(
+                    'nama'   => trim($nama),
+                    'kantor' => isset($_POST['tpe_kantor'][$idx]) ? trim($_POST['tpe_kantor'][$idx]) : '',
+                    'telp'   => isset($_POST['tpe_telp'][$idx])   ? trim($_POST['tpe_telp'][$idx])   : '',
+                );
+            }
+        }
+        $this->zm->save_tim_pe($id, $tim_pe);
+
         echo json_encode(array('status'=>'ok', 'id'=>$id));
     }
 
