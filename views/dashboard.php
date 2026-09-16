@@ -143,6 +143,12 @@
           <a href="<?=site_url('zoonosis/cluster')?>" class="btn btn-warning btn-sm">
             <i class="fa fa-object-group"></i> Cluster
           </a>
+          <button class="btn btn-success btn-sm" onclick="exportDashboard('csv')" title="Export CSV">
+            <i class="fa fa-file-text-o"></i> CSV
+          </button>
+          <button class="btn btn-info btn-sm" onclick="exportDashboard('xls')" title="Export Excel">
+            <i class="fa fa-file-excel-o"></i> XLS
+          </button>
         </div>
       </div>
     </div>
@@ -397,6 +403,29 @@ function loadMapKota() {
         $.each(rows, function(i,r){ $('#f_map_kota').append('<option value="'+r.id+'">'+r.kota+'</option>'); });
     },'json');
 }
+function loadAlertOverlay(map_obj) {
+    if (!map_obj) return;
+    var id_p  = $("#f_map_penyakit").val();
+    var id_prop = $("#f_prop").val() || 0;
+    $.get(BASE+'zoonosis/get_alert_ebs', {id_penyakit:id_p, id_prop:id_prop, window_jam:72}, function(rows) {
+        if (!rows || !rows.length) return;
+        $.each(rows, function(i, r) {
+            if (!r.lat || !r.lng) return;
+            var m = L.circleMarker([parseFloat(r.lat), parseFloat(r.lng)], {
+                radius: 8, color:'#e74c3c', fillColor:'#e74c3c',
+                fillOpacity:0.9, weight:2
+            }).addTo(map_obj);
+            m.bindPopup('<b style="color:#e74c3c"><i class="fa fa-bell"></i> ALERT EBS AKTIF</b><br>'
+                +'<b>No PE:</b> '+r.no_pe+'<br>'
+                +'<b>No EBS:</b> '+r.no_ebs+'<br>'
+                +'<b>Penyakit:</b> '+(r.nama_penyakit||'-')+'<br>'
+                +'<b>Wilayah:</b> '+(r.propinsi||'-')+' / '+(r.kota||'-')+'<br>'
+                +'<b>EBS dibuat:</b> '+r.ebs_create_date+' ('+r.jam_lalu+' jam lalu)<br>'
+                +'<a href="'+BASE+'zoonosis/detail/'+r.id+'" target="_blank" class="btn btn-xs btn-danger">Detail PE</a>');
+        });
+    }, 'json');
+}
+
 function loadMap() {
     var id_p = $("#f_map_penyakit").val();
     var tgl1 = $("#f_tgl1").val();
@@ -432,6 +461,7 @@ function loadMap() {
             if (markers.length) {
                 var grp = L.featureGroup(markers);
                 try { _mapZoo.fitBounds(grp.getBounds(), {padding:[10,10]}); } catch(e) {}
+            loadAlertOverlay(_mapZoo);
             }
             // Top 10
             var sorted = data.slice().sort(function(a,b){return b.n-a.n;}).slice(0,10);
@@ -490,6 +520,7 @@ function loadMap() {
                 }
             }).addTo(_mapZoo);
             try{if(gl.getBounds().isValid())_mapZoo.fitBounds(gl.getBounds(),{padding:[5,5]});}catch(e){}
+            loadAlertOverlay(_mapZoo);
             var legC=L.control({position:"bottomright"});
             legC.onAdd=function(){
                 var d=L.DomUtil.create("div","map-legend");
@@ -508,6 +539,22 @@ function loadMap() {
     },
     error:function(xhr,st,err){ console.log("MapData error:",st,err,xhr.responseText.substr(0,200)); }
     });
+}
+
+function exportDashboard(fmt) {
+    var tgl1   = $('#f_tgl1').val();
+    var tgl2   = $('#f_tgl2').val();
+    var id_prop = $('#f_prop').val() || 0;
+    var id_kota = $('#f_kota').val() || 0;
+    var id_kec  = $('#f_kec').val()  || 0;
+    var id_pusk = $('#f_pusk').val() || 0;
+    var id_penyakit = $('#f_penyakit').val() || 0;
+    var url = BASE + 'zoonosis/export_dashboard_' + fmt
+        + '?tgl1=' + tgl1 + '&tgl2=' + tgl2
+        + '&id_prop=' + id_prop + '&id_kota=' + id_kota
+        + '&id_kec=' + id_kec + '&id_pusk=' + id_pusk
+        + '&id_penyakit=' + id_penyakit;
+    window.open(url, '_blank');
 }
 
 $(function() {
