@@ -362,6 +362,42 @@ class Zoonosis extends BackendController {
         }
         $this->zm->save_kontak_pe($id, $kontak_pe);
 
+        // Save Kontak Kasus Lain (Lepto + Anthraks)
+        $kontak_kasus = array();
+        if (isset($_POST['kk_nama'])) {
+            foreach ($_POST['kk_nama'] as $idx => $nama) {
+                if (trim($nama)) $kontak_kasus[] = array(
+                    'id_pe'        => $id,
+                    'nama'         => trim($nama),
+                    'umur'         => isset($_POST['kk_umur'][$idx]) ? (int)$_POST['kk_umur'][$idx] : NULL,
+                    'alamat'       => isset($_POST['kk_alamat'][$idx]) ? trim($_POST['kk_alamat'][$idx]) : '',
+                    'hub_penderita'=> isset($_POST['kk_hub'][$idx])    ? trim($_POST['kk_hub'][$idx])    : '',
+                    'tgl_kontak'   => isset($_POST['kk_tgl'][$idx])    ? $_POST['kk_tgl'][$idx]          : NULL,
+                    'status'       => isset($_POST['kk_status'][$idx]) ? trim($_POST['kk_status'][$idx]) : '',
+                );
+            }
+        }
+        $this->db->where('id_pe', $id)->delete('ghs_zoonosis_kontak_kasus');
+        if ($kontak_kasus) $this->db->insert_batch('ghs_zoonosis_kontak_kasus', $kontak_kasus);
+
+        // Save Kontak Gejala Sama (Avian)
+        $kontak_gs = array();
+        if (isset($_POST['kg_nama'])) {
+            foreach ($_POST['kg_nama'] as $idx => $nama) {
+                if (trim($nama)) $kontak_gs[] = array(
+                    'id_pe'        => $id,
+                    'nama'         => trim($nama),
+                    'umur'         => isset($_POST['kg_umur'][$idx]) ? (int)$_POST['kg_umur'][$idx] : NULL,
+                    'alamat'       => isset($_POST['kg_alamat'][$idx]) ? trim($_POST['kg_alamat'][$idx]) : '',
+                    'hub_penderita'=> isset($_POST['kg_hub'][$idx])    ? trim($_POST['kg_hub'][$idx])    : '',
+                    'tgl_kontak'   => isset($_POST['kg_tgl'][$idx])    ? $_POST['kg_tgl'][$idx]          : NULL,
+                    'status'       => isset($_POST['kg_status'][$idx]) ? trim($_POST['kg_status'][$idx]) : '',
+                );
+            }
+        }
+        $this->db->where('id_pe', $id)->delete('ghs_zoonosis_kontak_gejala');
+        if ($kontak_gs) $this->db->insert_batch('ghs_zoonosis_kontak_gejala', $kontak_gs);
+
         // Save Tim PE
         $tim_pe = array();
         if (isset($_POST['tpe_nama'])) {
@@ -663,7 +699,7 @@ class Zoonosis extends BackendController {
         'tgl_bergejala','tgl_sakit','tgl_pajanan','status_kasus','akhir_no','tgl_meninggal','gejala',
         'riwayat_kontak_hewan','jenis_hewan','tgl_kontak','lokasi_kontak',
         'riwayat_vaksinasi','jenis_vaksin','tgl_vaksinasi_hewan','nama_pemilik_hewan','alamat_pemilik_hewan','oseltamivir','tgl_oseltamivir',
-        'nama_rs','tgl_masuk_rs','diperiksa_lab','jenis_sample','tgl_ambil_sample','tgl_kirim_sample','tgl_hasil_lab','tgl_vaksin_influenza',
+        'nama_rs','tgl_masuk_rs','jumlah_anggota_serumah','diperiksa_lab','jenis_sample','tgl_ambil_sample','tgl_kirim_sample','tgl_hasil_lab','tgl_vaksin_influenza',
         'nama_lab','hasil_lab','ket_lab','ket_lain',
     );
     private $DATE_FIELDS_UPL = array(

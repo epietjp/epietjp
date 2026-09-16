@@ -827,6 +827,45 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- ANGGOTA SERUMAH -->
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-users"></i> Anggota Serumah</div>
+      <div class="row" style="margin-bottom:8px">
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label style="font-size:12px">Jumlah Anggota Serumah (orang)</label>
+            <input type="number" name="jumlah_anggota_serumah" class="form-control input-sm" min="0" max="30" value="<?=fv($v,'jumlah_anggota_serumah')?>">
+          </div>
+        </div>
+        <?php if(in_array($id_penyakit, array(11,14))): ?>
+        <div class="col-sm-9">
+          <label style="font-size:12px">Tempat Kerja Anggota Serumah yang Berisiko</label>
+          <div class="row">
+            <?php
+            $tempat_kerja_risiko = array(
+              11 => array('rs_klinik'=>'RS/Klinik','lab'=>'Laboratorium','veterinarian'=>'Veterinarian','peternak_unggas'=>'Peternak Unggas','peternak_babi'=>'Peternak Babi','pasar_unggas'=>'Pasar Unggas/Babi'),
+              14 => array('rs_klinik'=>'RS/Klinik','lab'=>'Laboratorium','veterinarian'=>'Veterinarian','peternakan'=>'Peternakan Hewan','pasar_hewan'=>'Pasar Hewan'),
+            );
+            $opts_tk = isset($tempat_kerja_risiko[$id_penyakit]) ? $tempat_kerja_risiko[$id_penyakit] : array();
+            $saved_tk = array();
+            if(!empty($eav_data)) foreach($eav_data as $ed) { if($ed['var_key']=='as_tempat_risiko') { $saved_tk=explode(',',$ed['var_value']); break; } }
+            foreach($opts_tk as $tk=>$tl):
+            ?>
+            <div class="col-sm-4" style="margin-bottom:4px">
+              <div class="checkbox" style="margin:0">
+                <label style="font-size:11px">
+                  <input type="checkbox" name="as_tempat_risiko[]" value="<?=$tk?>" <?=in_array($tk,$saved_tk)?'checked':''?>>
+                  <?=$tl?>
+                </label>
+              </div>
+            </div>
+            <?php endforeach; ?>
+            <input type="hidden" name="dkey[]" value="as_tempat_risiko">
+            <input type="hidden" name="dlabel[]" value="Tempat kerja anggota serumah berisiko">
+            <input type="hidden" name="dsub[]" value="Anggota Serumah">
+            <input type="hidden" name="dtype[]" value="text">
+            <input type="hidden" name="dval[]" id="as_tempat_risiko_val" value="<?=isset($saved_tk)?implode(',',$saved_tk):''?>">
+          </div>
+        </div>
+        <?php endif; ?>
+      </div>
       <div id="tbl-anggota">
         <?php foreach($anggota as $idx => $as): ?>
         <div class="row anggota-row" style="margin-bottom:6px">
@@ -877,6 +916,26 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       <button type="button" class="btn btn-xs btn-default" onclick="tambahKontakPN()"><i class="fa fa-plus"></i> Tambah Kontak</button>
     </div>
     <?php endif; ?>
+    <!-- KONTAK GEJALA SAMA (Avian - terpisah dari Kontak Pneumonia) -->
+    <?php if($id_penyakit==11): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-users"></i> Kontak Gejala Sama (Keluarga/Tetangga Bergejala)</div>
+      <small class="text-muted">Nama | Umur | Alamat | Hubungan | Tgl Kontak | Status Flu Burung</small>
+      <div id="tbl-kontak-gs">
+        <div class="row kontak-gs-row" style="margin-bottom:6px">
+          <div class="col-sm-2"><input type="text" name="kg_nama[]" class="form-control input-sm" placeholder="Nama"></div>
+          <div class="col-sm-1"><input type="number" name="kg_umur[]" class="form-control input-sm" placeholder="Umur"></div>
+          <div class="col-sm-3"><input type="text" name="kg_alamat[]" class="form-control input-sm" placeholder="Alamat"></div>
+          <div class="col-sm-2"><input type="text" name="kg_hub[]" class="form-control input-sm" placeholder="Hubungan"></div>
+          <div class="col-sm-2"><input type="date" name="kg_tgl[]" class="form-control input-sm"></div>
+          <div class="col-sm-1"><input type="text" name="kg_status[]" class="form-control input-sm" placeholder="Status"></div>
+          <div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.kontak-gs-row').remove()"><i class="fa fa-times"></i></button></div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-xs btn-default" onclick="tambahKontakGS()"><i class="fa fa-plus"></i> Tambah</button>
+    </div>
+    <?php endif; ?>
+
     <!-- KEBIASAAN RESPONDEN LEPTO -->
     <?php if($id_penyakit==26): ?>
     <div class="form-section">
@@ -1442,6 +1501,33 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; ?>
 
+    <!-- KONTAK KASUS LAIN (Lepto + Anthraks) -->
+    <?php if(in_array($id_penyakit, array(26,14))): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-users"></i> Kontak Kasus Lain / Gejala Sama</div>
+      <small class="text-muted">Nama | Umur | Alamat | Hubungan | Tgl Kontak | Status (suspek/konfirmasi/tidak tahu)</small>
+      <div id="tbl-kontak-kasus">
+        <div class="row kontak-kasus-row" style="margin-bottom:6px">
+          <div class="col-sm-2"><input type="text" name="kk_nama[]" class="form-control input-sm" placeholder="Nama"></div>
+          <div class="col-sm-1"><input type="number" name="kk_umur[]" class="form-control input-sm" placeholder="Umur"></div>
+          <div class="col-sm-3"><input type="text" name="kk_alamat[]" class="form-control input-sm" placeholder="Alamat"></div>
+          <div class="col-sm-2"><input type="text" name="kk_hub[]" class="form-control input-sm" placeholder="Hub. Penderita"></div>
+          <div class="col-sm-2"><input type="date" name="kk_tgl[]" class="form-control input-sm"></div>
+          <div class="col-sm-1">
+            <select name="kk_status[]" class="form-control input-sm">
+              <option value="">--</option>
+              <option value="suspek">Suspek</option>
+              <option value="konfirmasi">Konfirmasi</option>
+              <option value="tidak_tahu">Tidak Tahu</option>
+            </select>
+          </div>
+          <div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.kontak-kasus-row').remove()"><i class="fa fa-times"></i></button></div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-xs btn-default" onclick="tambahKontakKasus()"><i class="fa fa-plus"></i> Tambah</button>
+    </div>
+    <?php endif; ?>
+
     <!-- KETERANGAN -->
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-sticky-note"></i> Keterangan Lain</div>
@@ -1653,6 +1739,19 @@ function tambahSpesimen() {
 }
 function tambahAnggota() {
     $("#tbl-anggota").append('<div class="row anggota-row" style="margin-bottom:6px"><div class="col-sm-5"><input type="text" name="as_nama[]" class="form-control input-sm" placeholder="Nama"></div><div class="col-sm-5"><input type="text" name="as_tempat[]" class="form-control input-sm" placeholder="Tempat Kerja"></div><div class="col-sm-2"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest(\".anggota-row\").remove()"><i class="fa fa-times"></i></button></div></div>');
+}
+// Update hidden field for checklist tempat risiko
+$(document).on('change', 'input[name="as_tempat_risiko[]"]', function(){
+    var vals = [];
+    $('input[name="as_tempat_risiko[]"]:checked').each(function(){ vals.push($(this).val()); });
+    $('#as_tempat_risiko_val').val(vals.join(','));
+});
+function tambahKontakKasus() {
+    var opts = '<option value="">--</option><option value="suspek">Suspek</option><option value="konfirmasi">Konfirmasi</option><option value="tidak_tahu">Tidak Tahu</option>';
+    $('#tbl-kontak-kasus').append('<div class="row kontak-kasus-row" style="margin-bottom:6px"><div class="col-sm-2"><input type="text" name="kk_nama[]" class="form-control input-sm" placeholder="Nama"></div><div class="col-sm-1"><input type="number" name="kk_umur[]" class="form-control input-sm" placeholder="Umur"></div><div class="col-sm-3"><input type="text" name="kk_alamat[]" class="form-control input-sm" placeholder="Alamat"></div><div class="col-sm-2"><input type="text" name="kk_hub[]" class="form-control input-sm" placeholder="Hub. Penderita"></div><div class="col-sm-2"><input type="date" name="kk_tgl[]" class="form-control input-sm"></div><div class="col-sm-1"><select name="kk_status[]" class="form-control input-sm">'+opts+'</select></div><div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest(\'.kontak-kasus-row\').remove()"><i class="fa fa-times"></i></button></div></div>');
+}
+function tambahKontakGS() {
+    $('#tbl-kontak-gs').append('<div class="row kontak-gs-row" style="margin-bottom:6px"><div class="col-sm-2"><input type="text" name="kg_nama[]" class="form-control input-sm" placeholder="Nama"></div><div class="col-sm-1"><input type="number" name="kg_umur[]" class="form-control input-sm" placeholder="Umur"></div><div class="col-sm-3"><input type="text" name="kg_alamat[]" class="form-control input-sm" placeholder="Alamat"></div><div class="col-sm-2"><input type="text" name="kg_hub[]" class="form-control input-sm" placeholder="Hubungan"></div><div class="col-sm-2"><input type="date" name="kg_tgl[]" class="form-control input-sm"></div><div class="col-sm-1"><input type="text" name="kg_status[]" class="form-control input-sm" placeholder="Status"></div><div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest(\'.kontak-gs-row\').remove()"><i class="fa fa-times"></i></button></div></div>');
 }
 function tambahKontakPE() {
     $('#tbl-kontak-pe').append('<div class="row kontak-pe-row" style="margin-bottom:6px"><div class="col-sm-4"><input type="text" name="kpe_nama[]" class="form-control input-sm" placeholder="Nama"></div><div class="col-sm-4"><input type="text" name="kpe_jabatan[]" class="form-control input-sm" placeholder="Jabatan/Kantor/Alamat"></div><div class="col-sm-3"><input type="text" name="kpe_telp[]" class="form-control input-sm" placeholder="Telp/HP"></div><div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest(\'.kontak-pe-row\').remove()"><i class="fa fa-times"></i></button></div></div>');
