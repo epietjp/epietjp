@@ -609,12 +609,20 @@ class Zoonosis extends BackendController {
         $pe = $this->zm->get_pe_by_id($id);
         if (!$pe) { redirect('zoonosis/daftar'); }
         $data = array(
-            'title'    => 'Detail PE #'.$pe['no_pe'],
-            'pe'       => $pe,
-            'detail'   => $this->zm->get_detail_by_pe($id),
-            'penyakit' => $this->PENYAKIT_ZOO,
-            'user'     => $this->_user(),
-            'level'    => $this->_level(),
+            'title'      => 'Detail PE #'.$pe['no_pe'],
+            'pe'         => $pe,
+            'detail'     => $this->zm->get_detail_by_pe($id),
+            'penyakit'   => $this->PENYAKIT_ZOO,
+            'user'       => $this->_user(),
+            'level'      => $this->_level(),
+            'anggota'    => $this->zm->get_anggota_serumah($id),
+            'kontak_pn'  => $this->zm->get_kontak_pneumonia($id),
+            'kontak_pe'  => $this->db->where('id_pe',$id)->get('ghs_zoonosis_kontak_pe')->result_array(),
+            'tim_pe'     => $this->db->where('id_pe',$id)->get('ghs_zoonosis_tim_pe')->result_array(),
+            'kontak_kasus' => $this->db->where('id_pe',$id)->get('ghs_zoonosis_kontak_kasus')->result_array(),
+            'kontak_gs'  => $this->db->where('id_pe',$id)->get('ghs_zoonosis_kontak_gejala')->result_array(),
+            'rawat_inap' => $this->db->where('id_pe',$id)->where('submodule','Rawat Inap RS')->get('ghs_zoonosis_pe_detail')->result_array(),
+            'spesimen'   => $this->db->where('id_pe',$id)->where('submodule','Spesimen Lab')->get('ghs_zoonosis_pe_detail')->result_array(),
         );
         $this->template->build('detail_pe', $data);
     }

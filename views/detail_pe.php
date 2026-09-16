@@ -78,6 +78,7 @@ $p_nama = isset($penyakit[$id_p]) ? $penyakit[$id_p]['nama'] : 'Zoonosis';
             ?></dd>
             <dt>Alamat Tempat Kerja</dt><dd><?=htmlspecialchars($pe['alamat_kerja'] ?: '-')?></dd>
             <dt>Saudara Dekat</dt><dd><?=htmlspecialchars($pe['kontak_darurat'] ?: '-')?></dd>
+            <dt>Telp Kontak Darurat</dt><dd><?=htmlspecialchars($pe['telp_kontak_darurat'] ?: '-')?></dd>
           </dl>
         </div>
         <div class="section-box">
@@ -116,7 +117,8 @@ $p_nama = isset($penyakit[$id_p]) ? $penyakit[$id_p]['nama'] : 'Zoonosis';
             <dt>Tgl Laporan</dt><dd><?=htmlspecialchars($pe['tgl_laporan'] ?: '-')?></dd>
             <dt>Tgl PE</dt><dd><?=htmlspecialchars($pe['tgl_pe'] ?: '-')?></dd>
             <dt>Petugas PE</dt><dd><?=htmlspecialchars($pe['nama_petugas'] ?: '-')?>
-              <?php if($pe['telp_petugas']): ?> <small class="text-muted">(<?=htmlspecialchars($pe['telp_petugas'])?>)</small><?php endif; ?>
+              <?php if($pe['telp_petugas']): ?> <small class="text-muted">(<?=htmlspecialchars($pe['telp_petugas'])?>)</small><?php endif; ?></dd>
+            <dt>Jabatan Petugas</dt><dd><?=htmlspecialchars($pe['jabatan_petugas'] ?: '-')?>
             </dd>
           </dl>
         </div>
@@ -130,6 +132,9 @@ $p_nama = isset($penyakit[$id_p]) ? $penyakit[$id_p]['nama'] : 'Zoonosis';
             <dt>Lokasi Kontak</dt><dd><?=htmlspecialchars($pe['lokasi_kontak'] ?: '-')?></dd>
             <dt>Vaksinasi</dt>
             <dd><?=$pe['riwayat_vaksinasi']===NULL?'-':($pe['riwayat_vaksinasi']?'Ya':'Tidak')?></dd>
+            <dt>Tgl Vaksinasi Hewan</dt><dd><?=htmlspecialchars($pe['tgl_vaksinasi_hewan'] ?: '-')?></dd>
+            <dt>Nama Pemilik Hewan</dt><dd><?=htmlspecialchars($pe['nama_pemilik_hewan'] ?: '-')?></dd>
+            <dt>Alamat Pemilik Hewan</dt><dd><?=htmlspecialchars($pe['alamat_pemilik_hewan'] ?: '-')?></dd>
             <dt>Jenis Vaksin</dt><dd><?=htmlspecialchars($pe['jenis_vaksin'] ?: '-')?></dd>
             <?php if($id_p==11): ?>
             <dt>Oseltamivir</dt>
@@ -149,6 +154,7 @@ $p_nama = isset($penyakit[$id_p]) ? $penyakit[$id_p]['nama'] : 'Zoonosis';
             <dt>Ket Lab</dt><dd><?=htmlspecialchars($pe['ket_lab'] ?: '-')?></dd>
             <dt>Nama RS/Klinik</dt><dd><?=htmlspecialchars($pe['nama_rs'] ?: '-')?></dd>
             <dt>Tgl Masuk RS</dt><dd><?=htmlspecialchars($pe['tgl_masuk_rs'] ?: '-')?></dd>
+            <dt>Jumlah Anggota Serumah</dt><dd><?=htmlspecialchars($pe['jumlah_anggota_serumah'] ?: '-')?></dd>
           </dl>
         </div>
       </div>
@@ -183,10 +189,164 @@ $p_nama = isset($penyakit[$id_p]) ? $penyakit[$id_p]['nama'] : 'Zoonosis';
     </div>
     <?php endif; ?>
 
+
+    <!-- SPESIMEN TAMBAHAN -->
+    <?php
+    // Kelompokkan spesimen
+    $sp_groups = array();
+    foreach($spesimen as $sp) {
+        if(preg_match('/^sp(\d+)_(.+)$/', $sp['var_key'], $m)) {
+            $sp_groups[$m[1]][$m[2]] = $sp['var_value'];
+        }
+    }
+    ?>
+    <?php if(!empty($sp_groups)): ?>
+    <div class="section-box">
+      <div class="section-box-title"><i class="fa fa-flask"></i> Spesimen Lab Tambahan</div>
+      <table class="table table-bordered table-condensed" style="font-size:11px">
+        <thead style="background:#2c3e50;color:#fff">
+          <tr><th>#</th><th>Jenis</th><th>Nomor</th><th>Tgl Ambil</th><th>Tgl Hasil</th><th>Hasil</th></tr>
+        </thead>
+        <tbody>
+        <?php foreach($sp_groups as $si=>$sp): ?>
+        <tr>
+          <td><?=$si+1?></td>
+          <td><?=htmlspecialchars(isset($sp['jenis'])?$sp['jenis']:'-')?></td>
+          <td><?=htmlspecialchars(isset($sp['nomor'])?$sp['nomor']:'-')?></td>
+          <td><?=htmlspecialchars(isset($sp['tgl_ambil'])?$sp['tgl_ambil']:'-')?></td>
+          <td><?=htmlspecialchars(isset($sp['tgl_hasil'])?$sp['tgl_hasil']:'-')?></td>
+          <td><?=htmlspecialchars(isset($sp['hasil'])?$sp['hasil']:'-')?></td>
+        </tr>
+        <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+    <?php endif; ?>
+
+    <!-- RAWAT INAP REPEATABLE -->
+    <?php
+    $rs_groups = array();
+    foreach($rawat_inap as $ri) {
+        if(preg_match('/^rs(\d+)_(.+)$/', $ri['var_key'], $m)) {
+            $rs_groups[$m[1]][$m[2]] = $ri['var_value'];
+        }
+    }
+    ?>
+    <?php if(!empty($rs_groups)): ?>
+    <div class="section-box">
+      <div class="section-box-title"><i class="fa fa-hospital-o"></i> Riwayat Rawat Inap</div>
+      <table class="table table-bordered table-condensed" style="font-size:11px">
+        <thead style="background:#2c3e50;color:#fff">
+          <tr><th>#</th><th>Nama RS/Klinik</th><th>Tgl Masuk</th><th>Keterangan</th></tr>
+        </thead>
+        <tbody>
+        <?php foreach($rs_groups as $ri=>$rs): ?>
+        <tr>
+          <td><?=$ri+1?></td>
+          <td><?=htmlspecialchars(isset($rs['nama'])?$rs['nama']:'-')?></td>
+          <td><?=htmlspecialchars(isset($rs['tgl'])?$rs['tgl']:'-')?></td>
+          <td><?=htmlspecialchars(isset($rs['ket'])?$rs['ket']:'-')?></td>
+        </tr>
+        <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+    <?php endif; ?>
+
+    <!-- KONTAK KASUS LAIN -->
+    <?php if(!empty($kontak_kasus)): ?>
+    <div class="section-box">
+      <div class="section-box-title"><i class="fa fa-users"></i> Kontak Kasus Lain</div>
+      <table class="table table-bordered table-condensed" style="font-size:11px">
+        <thead style="background:#2c3e50;color:#fff">
+          <tr><th>Nama</th><th>Umur</th><th>Alamat</th><th>Hub.</th><th>Tgl Kontak</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+        <?php foreach($kontak_kasus as $kk): ?>
+        <tr>
+          <td><?=htmlspecialchars($kk['nama'])?></td>
+          <td><?=htmlspecialchars($kk['umur'])?></td>
+          <td><?=htmlspecialchars($kk['alamat'])?></td>
+          <td><?=htmlspecialchars($kk['hub_penderita'])?></td>
+          <td><?=htmlspecialchars($kk['tgl_kontak'])?></td>
+          <td><?=htmlspecialchars($kk['status'])?></td>
+        </tr>
+        <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+    <?php endif; ?>
+
+    <!-- KONTAK GEJALA SAMA -->
+    <?php if(!empty($kontak_gs)): ?>
+    <div class="section-box">
+      <div class="section-box-title"><i class="fa fa-users"></i> Kontak Gejala Sama</div>
+      <table class="table table-bordered table-condensed" style="font-size:11px">
+        <thead style="background:#2c3e50;color:#fff">
+          <tr><th>Nama</th><th>Umur</th><th>Alamat</th><th>Hub.</th><th>Tgl Kontak</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+        <?php foreach($kontak_gs as $kg): ?>
+        <tr>
+          <td><?=htmlspecialchars($kg['nama'])?></td>
+          <td><?=htmlspecialchars($kg['umur'])?></td>
+          <td><?=htmlspecialchars($kg['alamat'])?></td>
+          <td><?=htmlspecialchars($kg['hub_penderita'])?></td>
+          <td><?=htmlspecialchars($kg['tgl_kontak'])?></td>
+          <td><?=htmlspecialchars($kg['status'])?></td>
+        </tr>
+        <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+    <?php endif; ?>
+
+    <!-- KONTAK PENYELIDIKAN -->
+    <?php if(!empty($kontak_pe)): ?>
+    <div class="section-box">
+      <div class="section-box-title"><i class="fa fa-phone"></i> Kontak Penyelidikan</div>
+      <table class="table table-bordered table-condensed" style="font-size:11px">
+        <thead style="background:#2c3e50;color:#fff">
+          <tr><th>Nama</th><th>Jabatan/Kantor</th><th>Telp</th></tr>
+        </thead>
+        <tbody>
+        <?php foreach($kontak_pe as $kp): ?>
+        <tr>
+          <td><?=htmlspecialchars($kp['nama'])?></td>
+          <td><?=htmlspecialchars($kp['jabatan'])?></td>
+          <td><?=htmlspecialchars($kp['telp'])?></td>
+        </tr>
+        <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+    <?php endif; ?>
+
+    <!-- TIM PE -->
+    <?php if(!empty($tim_pe)): ?>
+    <div class="section-box">
+      <div class="section-box-title"><i class="fa fa-users"></i> Tim Penyelidikan Epidemiologi</div>
+      <table class="table table-bordered table-condensed" style="font-size:11px">
+        <thead style="background:#2c3e50;color:#fff">
+          <tr><th>Nama</th><th>Kantor</th><th>Telp</th></tr>
+        </thead>
+        <tbody>
+        <?php foreach($tim_pe as $tp): ?>
+        <tr>
+          <td><?=htmlspecialchars($tp['nama'])?></td>
+          <td><?=htmlspecialchars($tp['kantor'])?></td>
+          <td><?=htmlspecialchars($tp['telp'])?></td>
+        </tr>
+        <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+    <?php endif; ?>
+
     <?php if($pe['ket_lain']): ?>
     <div class="section-box">
       <div class="section-box-title"><i class="fa fa-sticky-note"></i> Keterangan Lain</div>
-      <p style="font-size:0.9em"><?=nl2br(htmlspecialchars($pe['ket_lain']))?></p>
+      <div style="font-size:0.9em"><?=$pe['ket_lain']?></div>
     </div>
     <?php endif; ?>
 
