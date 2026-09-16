@@ -412,8 +412,8 @@ function loadAlertOverlay(map_obj) {
         $.each(rows, function(i, r) {
             if (!r.lat || !r.lng) return;
             var m = L.circleMarker([parseFloat(r.lat), parseFloat(r.lng)], {
-                radius: 8, color:'#e74c3c', fillColor:'#e74c3c',
-                fillOpacity:0.9, weight:2
+                radius: 10, color:'#f39c12', fillColor:'#f1c40f',
+                fillOpacity:0.95, weight:3
             }).addTo(map_obj);
             m.bindPopup('<b style="color:#e74c3c"><i class="fa fa-bell"></i> ALERT EBS AKTIF</b><br>'
                 +'<b>No PE:</b> '+r.no_pe+'<br>'
@@ -561,5 +561,9 @@ $(function() {
     loadDashboard();
     loadTrend();
     $('#f_trend_p, #f_trend_tahun').change(loadTrend);
+    // Default: tampilkan peta GHPR level provinsi
+    $('#f_map_penyakit').val('8');
+    $('#f_map_level').val('1');
+    loadMap();
 });
 </script>
