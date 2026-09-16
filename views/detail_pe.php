@@ -1,4 +1,4 @@
-<div class="content-wrapper">
+<div class="content-wrapper" id="detail-pe-content">
   <section class="content-header">
     <h1><i class="fa fa-file-text-o"></i> <?=htmlspecialchars($title)?></h1>
     <ol class="breadcrumb">
@@ -357,6 +357,9 @@ $p_nama = isset($penyakit[$id_p]) ? $penyakit[$id_p]['nama'] : 'Zoonosis';
       <a href="<?=site_url('zoonosis/daftar')?>" class="btn btn-default">
         <i class="fa fa-arrow-left"></i> Kembali ke Daftar
       </a>
+      <button onclick="printPE()" class="btn btn-info">
+        <i class="fa fa-print"></i> Print / PDF
+      </button>
       <a href="<?=site_url('zoonosis/hapus/'.$pe['id'])?>" class="btn btn-danger pull-right"
          onclick="return confirm('Hapus data PE ini secara permanen?')">
         <i class="fa fa-trash"></i> Hapus
@@ -367,6 +370,20 @@ $p_nama = isset($penyakit[$id_p]) ? $penyakit[$id_p]['nama'] : 'Zoonosis';
 </div>
 <script>
 var BASE = "<?=base_url()?>";
+function printPE() {
+    var printContent = document.getElementById('detail-pe-content').innerHTML;
+    var w = window.open('', '_blank', 'width=900,height=700');
+    w.document.write('<html><head><title>PE <?=$pe["no_pe"]?></title>');
+    w.document.write('<link rel="stylesheet" href="'+BASE+'themes/default/assets/frontend/css/bootstrap.min.css">');
+    w.document.write('<style>');
+    w.document.write('body{padding:20px;font-size:12px}.section-box{border:1px solid #ddd;border-radius:4px;margin-bottom:12px;padding:0}.section-box-title{background:#2c3e50;color:#fff;padding:6px 12px;font-size:12px;font-weight:700}.section-box dl{padding:8px 12px;margin:0}dt{font-weight:600;color:#555;font-size:11px;float:left;width:35%;clear:left}dd{margin-left:37%;font-size:12px;margin-bottom:4px}.table-condensed>tbody>tr>td,.table-condensed>thead>tr>th{padding:4px 6px}@media print{.no-print{display:none}button{display:none}}');
+    w.document.write('</style></head><body>');
+    w.document.write('<h4 style="margin-bottom:16px"><b>Form Penyelidikan Epidemiologi (PE)</b><br><small><?=$pe["no_pe"]?> &mdash; <?=isset($this->PENYAKIT_ZOO[$pe["id_penyakit"]]["nama"])?$this->PENYAKIT_ZOO[$pe["id_penyakit"]]["nama"]:""?></small></h4>');
+    w.document.write(printContent);
+    w.document.write('</body></html>');
+    w.document.close();
+    setTimeout(function(){ w.print(); }, 800);
+}
 function buatEBS(btn) {
     if (!confirm("Buat laporan EBS baru dari data PE ini?")) return;
     var id_pe = $(btn).data("id");
