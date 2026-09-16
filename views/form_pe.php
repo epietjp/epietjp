@@ -479,125 +479,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       <?php endif; ?>
     </div>
 
-    <!-- LABORATORIUM -->
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-flask"></i> Pemeriksaan Laboratorium</div>
-      <div class="row">
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Diperiksa Lab?</label>
-            <select name="diperiksa_lab" class="form-control">
-              <option value="0" <?=fv($v,'diperiksa_lab','0')=='0'?'selected':''?>>Tidak</option>
-              <option value="1" <?=fv($v,'diperiksa_lab')=='1'?'selected':''?>>Ya</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Jenis Spesimen</label>
-            <input type="text" name="jenis_sample" class="form-control" value="<?=fv($v,'jenis_sample')?>">
-          </div>
-        </div>
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Tanggal Ambil Spesimen</label>
-            <input type="date" name="tgl_ambil_sample" class="form-control" value="<?=fv($v,'tgl_ambil_sample')?>">
-          </div>
-        </div>
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Tanggal Kirim Spesimen</label>
-            <input type="date" name="tgl_kirim_sample" class="form-control" value="<?=fv($v,'tgl_kirim_sample')?>">
-          </div>
-        </div>
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Tanggal Hasil Lab</label>
-            <input type="date" name="tgl_hasil_lab" class="form-control" value="<?=fv($v,'tgl_hasil_lab')?>">
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Nama Laboratorium</label>
-            <input type="text" name="nama_lab" class="form-control" value="<?=fv($v,'nama_lab')?>">
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Hasil Lab</label>
-            <input type="text" name="hasil_lab" class="form-control" value="<?=fv($v,'hasil_lab')?>">
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Keterangan Lab</label>
-            <input type="text" name="ket_lab" class="form-control" value="<?=fv($v,'ket_lab')?>">
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SPESIMEN TAMBAHAN -->
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-flask"></i> Spesimen Tambahan (Lab)</div>
-      <div id="tbl-spesimen">
-        <div class="row spesimen-row" style="margin-bottom:6px">
-          <div class="col-sm-2">
-            <input type="hidden" name="dkey[]" value="sp0_jenis">
-            <input type="hidden" name="dlabel[]" value="Jenis Spesimen 1">
-            <input type="hidden" name="dsub[]" value="Spesimen Lab">
-            <input type="hidden" name="dtype[]" value="text">
-            <select name="dval[]" class="form-control input-sm">
-              <option value="">-- Jenis --</option>
-              <option value="serum_darah">Serum Darah</option>
-              <option value="urine">Urine</option>
-              <option value="usap_nasofaring">Usap Nasofaring</option>
-              <option value="usap_tenggorok">Usap Tenggorok</option>
-              <option value="kulit_lesi">Kulit/Lesi</option>
-              <option value="jaringan">Jaringan/Eksudat</option>
-              <option value="otak_hewan">Otak Hewan (GHPR)</option>
-              <option value="lainnya">Lainnya</option>
-            </select>
-          </div>
-          <div class="col-sm-2">
-            <input type="hidden" name="dkey[]" value="sp0_nomor">
-            <input type="hidden" name="dlabel[]" value="Nomor Spesimen 1">
-            <input type="hidden" name="dsub[]" value="Spesimen Lab">
-            <input type="hidden" name="dtype[]" value="text">
-            <input type="text" name="dval[]" class="form-control input-sm" placeholder="Nomor Spesimen">
-          </div>
-          <div class="col-sm-2">
-            <input type="hidden" name="dkey[]" value="sp0_tgl_ambil">
-            <input type="hidden" name="dlabel[]" value="Tgl Ambil 1">
-            <input type="hidden" name="dsub[]" value="Spesimen Lab">
-            <input type="hidden" name="dtype[]" value="date">
-            <input type="date" name="dval[]" class="form-control input-sm" placeholder="Tgl Ambil">
-          </div>
-          <div class="col-sm-2">
-            <input type="hidden" name="dkey[]" value="sp0_tgl_hasil">
-            <input type="hidden" name="dlabel[]" value="Tgl Hasil 1">
-            <input type="hidden" name="dsub[]" value="Spesimen Lab">
-            <input type="hidden" name="dtype[]" value="date">
-            <input type="date" name="dval[]" class="form-control input-sm" placeholder="Tgl Hasil">
-          </div>
-          <div class="col-sm-2">
-            <input type="hidden" name="dkey[]" value="sp0_hasil">
-            <input type="hidden" name="dlabel[]" value="Hasil 1">
-            <input type="hidden" name="dsub[]" value="Spesimen Lab">
-            <input type="hidden" name="dtype[]" value="text">
-            <input type="text" name="dval[]" class="form-control input-sm" placeholder="Hasil">
-          </div>
-          <div class="col-sm-2">
-            <button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.spesimen-row').remove()"><i class="fa fa-times"></i></button>
-          </div>
-        </div>
-      </div>
-      <small class="text-muted">Jenis | Nomor | Tgl Ambil | Tgl Hasil | Hasil</small><br>
-      <button type="button" class="btn btn-xs btn-default" onclick="tambahSpesimen()"><i class="fa fa-plus"></i> Tambah Spesimen</button>
-    </div>
-
     <!-- VARIABEL TAMBAHAN PER PENYAKIT -->
     <?php if(!empty($detail)): ?>
     <?php
@@ -609,6 +490,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     }
     ?>
     <?php foreach($detail_by_sub as $submodule => $rows): ?>
+    <?php $rows = array_filter($rows, function($d){ return $d['var_key'] !== 'lokasi_gigitan'; }); if(empty($rows)) continue; ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-list-alt"></i> <?=htmlspecialchars($submodule)?></div>
       <?php if(strpos($submodule,'Gejala')===0): ?>
@@ -649,15 +531,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               'bokong'=>'Bokong',
               'genitalia'=>'Genitalia',
             ),
-            'lokasi_gigitan' => array(
-              'ekstrimitas_bawah'=>'Ekstrimitas Bawah (Kaki/Tungkai)',
-              'ekstrimitas_atas'=>'Ekstrimitas Atas (Tangan/Lengan)',
-              'kepala'=>'Kepala/Wajah',
-              'leher'=>'Leher',
-              'badan'=>'Badan/Perut/Dada',
-              'bokong'=>'Bokong',
-              'genitalia'=>'Genitalia',
-            ),
+            /* lokasi_gigitan dihapus - pakai dp_lokasi */
             'dp_hpr' => array(
               'anjing'=>'Anjing',
               'kucing'=>'Kucing',
@@ -802,6 +676,126 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endforeach; ?>
     <?php endif; ?>
+
+
+    <!-- LABORATORIUM -->
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-flask"></i> Pemeriksaan Laboratorium</div>
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Diperiksa Lab?</label>
+            <select name="diperiksa_lab" class="form-control">
+              <option value="0" <?=fv($v,'diperiksa_lab','0')=='0'?'selected':''?>>Tidak</option>
+              <option value="1" <?=fv($v,'diperiksa_lab')=='1'?'selected':''?>>Ya</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Jenis Spesimen</label>
+            <input type="text" name="jenis_sample" class="form-control" value="<?=fv($v,'jenis_sample')?>">
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Tanggal Ambil Spesimen</label>
+            <input type="date" name="tgl_ambil_sample" class="form-control" value="<?=fv($v,'tgl_ambil_sample')?>">
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Tanggal Kirim Spesimen</label>
+            <input type="date" name="tgl_kirim_sample" class="form-control" value="<?=fv($v,'tgl_kirim_sample')?>">
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Tanggal Hasil Lab</label>
+            <input type="date" name="tgl_hasil_lab" class="form-control" value="<?=fv($v,'tgl_hasil_lab')?>">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Nama Laboratorium</label>
+            <input type="text" name="nama_lab" class="form-control" value="<?=fv($v,'nama_lab')?>">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Hasil Lab</label>
+            <input type="text" name="hasil_lab" class="form-control" value="<?=fv($v,'hasil_lab')?>">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Keterangan Lab</label>
+            <input type="text" name="ket_lab" class="form-control" value="<?=fv($v,'ket_lab')?>">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SPESIMEN TAMBAHAN -->
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-flask"></i> Spesimen Tambahan (Lab)</div>
+      <div id="tbl-spesimen">
+        <div class="row spesimen-row" style="margin-bottom:6px">
+          <div class="col-sm-2">
+            <input type="hidden" name="dkey[]" value="sp0_jenis">
+            <input type="hidden" name="dlabel[]" value="Jenis Spesimen 1">
+            <input type="hidden" name="dsub[]" value="Spesimen Lab">
+            <input type="hidden" name="dtype[]" value="text">
+            <select name="dval[]" class="form-control input-sm">
+              <option value="">-- Jenis --</option>
+              <option value="serum_darah">Serum Darah</option>
+              <option value="urine">Urine</option>
+              <option value="usap_nasofaring">Usap Nasofaring</option>
+              <option value="usap_tenggorok">Usap Tenggorok</option>
+              <option value="kulit_lesi">Kulit/Lesi</option>
+              <option value="jaringan">Jaringan/Eksudat</option>
+              <option value="otak_hewan">Otak Hewan (GHPR)</option>
+              <option value="lainnya">Lainnya</option>
+            </select>
+          </div>
+          <div class="col-sm-2">
+            <input type="hidden" name="dkey[]" value="sp0_nomor">
+            <input type="hidden" name="dlabel[]" value="Nomor Spesimen 1">
+            <input type="hidden" name="dsub[]" value="Spesimen Lab">
+            <input type="hidden" name="dtype[]" value="text">
+            <input type="text" name="dval[]" class="form-control input-sm" placeholder="Nomor Spesimen">
+          </div>
+          <div class="col-sm-2">
+            <input type="hidden" name="dkey[]" value="sp0_tgl_ambil">
+            <input type="hidden" name="dlabel[]" value="Tgl Ambil 1">
+            <input type="hidden" name="dsub[]" value="Spesimen Lab">
+            <input type="hidden" name="dtype[]" value="date">
+            <input type="date" name="dval[]" class="form-control input-sm" placeholder="Tgl Ambil">
+          </div>
+          <div class="col-sm-2">
+            <input type="hidden" name="dkey[]" value="sp0_tgl_hasil">
+            <input type="hidden" name="dlabel[]" value="Tgl Hasil 1">
+            <input type="hidden" name="dsub[]" value="Spesimen Lab">
+            <input type="hidden" name="dtype[]" value="date">
+            <input type="date" name="dval[]" class="form-control input-sm" placeholder="Tgl Hasil">
+          </div>
+          <div class="col-sm-2">
+            <input type="hidden" name="dkey[]" value="sp0_hasil">
+            <input type="hidden" name="dlabel[]" value="Hasil 1">
+            <input type="hidden" name="dsub[]" value="Spesimen Lab">
+            <input type="hidden" name="dtype[]" value="text">
+            <input type="text" name="dval[]" class="form-control input-sm" placeholder="Hasil">
+          </div>
+          <div class="col-sm-2">
+            <button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.spesimen-row').remove()"><i class="fa fa-times"></i></button>
+          </div>
+        </div>
+      </div>
+      <small class="text-muted">Jenis | Nomor | Tgl Ambil | Tgl Hasil | Hasil</small><br>
+      <button type="button" class="btn btn-xs btn-default" onclick="tambahSpesimen()"><i class="fa fa-plus"></i> Tambah Spesimen</button>
+    </div>
 
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-hospital-o"></i> Rawat Inap / RS</div>
