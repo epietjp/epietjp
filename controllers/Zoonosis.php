@@ -1087,6 +1087,36 @@ class Zoonosis extends BackendController {
             'trend'    => $trend,
         ));
     }
+
+    public function get_alert_ebs() {
+        $this->_auth();
+        $id_penyakit = (int)$this->input->get('id_penyakit');
+        $id_prop     = (int)$this->input->get('id_prop');
+        $window_jam  = 72; // 72 jam terakhir
+
+        $where_penyakit = $id_penyakit ? " AND z.id_penyakit=".intval($id_penyakit) : "";
+        $where_prop     = $id_prop     ? " AND z.id_prop=".intval($id_prop)          : "";
+
+        // PE yang punya no_ebs dan EBS-nya dibuat dalam window_jam terakhir
+        $q = "SELECT z.id, z.no_pe, z.no_ebs, z.tgl_pe, z.tgl_laporan,
+                     p.nama_penyakit, pr.propinsi, k.kota,
+                     e.create_date as ebs_create_date,
+                     TIMESTAMPDIFF(HOUR, e.create_date, NOW()) as jam_lalu
+              FROM ewarn_ghs_zoonosis_pe z
+              LEFT JOIN ewarn_penyakit p ON p.id=z.id_penyakit
+              LEFT JOIN ewarn_propinsi pr ON pr.id=z.id_prop
+              LEFT JOIN ewarn_kota k ON k.id=z.id_kota
+              LEFT JOIN ewarn_form_ebs_new e ON e.no_ebs=z.no_ebs
+              WHERE z.no_ebs IS NOT NULL
+              AND z.no_ebs != ''
+              AND e.create_date >= DATE_SUB(NOW(), INTERVAL {$window_jam} HOUR)
+              {$where_penyakit} {$where_prop}
+              ORDER BY e.create_date DESC
+              LIMIT 50";
+
+        $rows = $this->db->query($q)->result_array();
+        echo json_encode($rows);
+    }
     // Halaman daftar cluster
     public function cluster() {
         $this->_auth();

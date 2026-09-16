@@ -75,6 +75,31 @@
           </div>
         </div>
         <?php $first=false; endforeach; ?>
+
+    <!-- ALERT VISUALIZATION -->
+    <div class="box box-danger" style="margin-top:16px">
+      <div class="box-header with-border" style="padding:8px 14px;background:#c0392b">
+        <h3 class="box-title" style="font-size:13px;color:#fff"><i class="fa fa-bell"></i> <b>Alert PE Terhubung Sinyal EBS Aktif (72 Jam Terakhir)</b></h3>
+        <div class="box-tools pull-right">
+          <span id="alert-count" class="badge" style="background:#fff;color:#c0392b">0</span>
+        </div>
+      </div>
+      <div class="box-body" style="padding:10px">
+        <div id="alert-loading" style="text-align:center;color:#999;padding:10px"><i class="fa fa-spinner fa-spin"></i> Memuat...</div>
+        <div id="alert-empty" style="display:none;text-align:center;color:#27ae60;padding:10px">
+          <i class="fa fa-check-circle fa-2x"></i><br>Tidak ada PE terhubung sinyal EBS aktif dalam 72 jam terakhir
+        </div>
+        <div class="table-responsive" style="display:none" id="alert-table-wrap">
+          <table class="table table-bordered table-condensed" style="font-size:11px;margin:0">
+            <thead style="background:#c0392b;color:#fff">
+              <tr><th>No PE</th><th>No EBS</th><th>Penyakit</th><th>Provinsi</th><th>Kab/Kota</th><th>Tgl PE</th><th>EBS Dibuat</th><th>Jam Lalu</th><th>Aksi</th></tr>
+            </thead>
+            <tbody id="alert-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
       </div>
     </div>
 
@@ -145,5 +170,39 @@ function loadAnalisa() {
     });
 }
 
-$(function() { loadAnalisa(); });
+function loadAlert() {
+    var id_prop = $('#f_prop').val() || 0;
+    $.get(BASE+'zoonosis/get_alert_ebs', {id_prop:id_prop}, function(rows) {
+        $('#alert-loading').hide();
+        $('#alert-count').text(rows.length);
+        if (!rows || !rows.length) {
+            $('#alert-empty').show();
+            $('#alert-table-wrap').hide();
+            return;
+        }
+        $('#alert-empty').hide();
+        $('#alert-table-wrap').show();
+        var html = '';
+        $.each(rows, function(i, r) {
+            var jam = parseInt(r.jam_lalu) || 0;
+            var badgeColor = jam < 24 ? '#e74c3c' : '#e67e22';
+            html += '<tr style="background:'+(i%2===0?'#fff8f8':'#fff')+'">'
+                + '<td><a href="'+BASE+'zoonosis/detail/'+r.id+'" target="_blank">'+r.no_pe+'</a></td>'
+                + '<td><a href="'+BASE+'form-ebs-new/view/'+r.no_ebs+'" target="_blank">'+r.no_ebs+'</a></td>'
+                + '<td><span class="label label-warning" style="font-size:10px">'+(r.nama_penyakit||'-')+'</span></td>'
+                + '<td>'+(r.propinsi||'-')+'</td>'
+                + '<td>'+(r.kota||'-')+'</td>'
+                + '<td>'+(r.tgl_pe||'-')+'</td>'
+                + '<td>'+(r.ebs_create_date||'-')+'</td>'
+                + '<td><span class="badge" style="background:'+badgeColor+'">'+jam+' jam</span></td>'
+                + '<td><a href="'+BASE+'zoonosis/detail/'+r.id+'" target="_blank" class="btn btn-xs btn-danger"><i class="fa fa-eye"></i></a></td>'
+                + '</tr>';
+        });
+        $('#alert-tbody').html(html);
+    }, 'json').fail(function(){
+        $('#alert-loading').html('<span class="text-danger">Gagal memuat data alert</span>');
+    });
+}
+
+$(function() { loadAnalisa(); loadAlert(); });
 </script>
