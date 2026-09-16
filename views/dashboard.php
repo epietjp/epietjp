@@ -524,7 +524,7 @@ function loadMap() {
             var legC=L.control({position:"bottomright"});
             legC.onAdd=function(){
                 var d=L.DomUtil.create("div","map-legend");
-                [["#800026","Sangat Tinggi"],["#BD0026","Tinggi"],["#E31A1C","Sedang"],["#FC4E2A","Rendah"],["#f5f5f5","Tidak Ada"]].forEach(function(c){
+                [["#800026","> 5.000"],["#BD0026","3.001 - 5.000"],["#E31A1C","1.001 - 3.000"],["#FC4E2A","301 - 1.000"],["#FD8D3C","1 - 300"],["#f5f5f5","Tidak Ada"]].forEach(function(c){
                     d.innerHTML+="<i style='background:"+c[0]+"'></i>"+c[1]+"<br>";
                 });
                 return d;
