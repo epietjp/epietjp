@@ -205,6 +205,12 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="number" name="umur_bln" class="form-control" min="0" max="11" value="<?=fv($v,'umur_bln',0)?>">
           </div>
         </div>
+        <div class="col-sm-2">
+          <div class="form-group">
+            <label>Umur (Hari)</label>
+            <input type="number" name="umur_hari" class="form-control" min="0" max="30" placeholder="0-30" value="<?=fv($v,'umur_hari',0)?>">
+          </div>
+        </div>
       </div>
       <div class="row">
         <div class="col-sm-3">
@@ -390,6 +396,34 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       </div>
     </div>
 
+    <!-- GEJALA INLINE setelah onset (khusus GHPR dan Lepto) -->
+    <?php if(in_array($id_penyakit, array(8,26))): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-stethoscope"></i> Gejala &amp; Tanda Sakit</div>
+      <div class="row">
+      <?php
+      $gejala_inline = array();
+      foreach($detail as $d) {
+        if(strpos($d['submodule'],'Gejala')===0) $gejala_inline[] = $d;
+      }
+      foreach($gejala_inline as $gi):
+      ?>
+      <div class="col-sm-3" style="padding:4px 15px">
+        <label style="font-weight:normal;margin:0;font-size:12px">
+          <input type="hidden" name="dsub[]" value="<?=htmlspecialchars($gi['submodule'])?>">
+          <input type="hidden" name="dkey[]" value="<?=htmlspecialchars($gi['var_key'])?>">
+          <input type="hidden" name="dtype[]" value="<?=htmlspecialchars($gi['var_type'])?>">
+          <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($gi['var_label'])?>">
+          <input type="checkbox" name="dval[]" value="Ya" <?=$gi['var_value']=='Ya'?'checked':''?> style="margin-right:4px">
+          <?=htmlspecialchars($gi['var_label'])?>
+        </label>
+      </div>
+      <?php endforeach; ?>
+      </div>
+    </div>
+    <?php endif; ?>
+
+
     <!-- KONTAK HEWAN -->
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-paw"></i> Riwayat Kontak Hewan</div>
@@ -405,6 +439,8 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
           </div>
         </div>
 <!-- jenis_hewan dihapus, gunakan dp_hpr di variabel tambahan -->
+      </div>
+      <div class="row" id="detail-kontak-hewan">
         <div class="col-sm-3">
           <div class="form-group">
             <label>Tanggal Kontak</label>
@@ -419,6 +455,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         </div>
       </div>
       <div class="row">
+      <div class="row">
         <div class="col-sm-3">
           <div class="form-group">
             <label>Riwayat Vaksinasi</label>
@@ -429,7 +466,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             </select>
           </div>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-3" id="detail-vaksinasi">
           <div class="form-group">
             <label>Jenis Vaksin</label>
             <input type="text" name="jenis_vaksin" class="form-control" value="<?=fv($v,'jenis_vaksin')?>">
@@ -1683,6 +1720,16 @@ $('#formPE').submit(function(e) {
         errors.push('NIK harus 16 digit angka (isi 0000000000000000 jika tidak ada NIK)');
     }
     if (umur_thn > 100) { errors.push('Umur (tahun) tidak boleh lebih dari 100'); }
+
+    // Validasi No HP
+    var telp_pasien = $('input[name=telp_pasien]').val();
+    var telp_petugas = $('input[name=telp_petugas]').val();
+    if (telp_pasien && (!/^[0-9]{10,13}$/.test(telp_pasien))) {
+        errors.push('No HP Pasien harus numeric 10-13 digit');
+    }
+    if (telp_petugas && (!/^[0-9]{10,13}$/.test(telp_petugas))) {
+        errors.push('No HP Petugas harus numeric 10-13 digit');
+    }
     if (umur_bln < 0 || umur_bln > 11) { errors.push('Umur (bulan) harus antara 0-11'); }
     // Validasi urutan tanggal kasus
     var tgl_bergejala = $('input[name=tgl_bergejala]').val();
@@ -1715,6 +1762,36 @@ $('#formPE').submit(function(e) {
 $(function() {
     if (initProp) { $('#sel_prop').val(initProp).trigger('change'); }
 });
+// Set max date = today untuk semua input date
+$(function(){
+    var today = new Date().toISOString().split('T')[0];
+    $('input[type=date]').attr('max', today);
+
+    // Skip logic: detail kontak hewan hanya tampil jika Ya
+    function toggleKontakHewan() {
+        var val = $('select[name=riwayat_kontak_hewan]').val();
+        if (val === '0') {
+            $('#detail-kontak-hewan').hide();
+        } else {
+            $('#detail-kontak-hewan').show();
+        }
+    }
+    $('select[name=riwayat_kontak_hewan]').on('change', toggleKontakHewan);
+    toggleKontakHewan();
+
+    // Skip logic: detail riwayat vaksinasi hanya tampil jika riwayat_vaksinasi = Ya
+    function toggleVaksinasi() {
+        var val = $('select[name=riwayat_vaksinasi]').val();
+        if (val === '1') {
+            $('#detail-vaksinasi').show();
+        } else {
+            $('#detail-vaksinasi').hide();
+        }
+    }
+    $('select[name=riwayat_vaksinasi]').on('change', toggleVaksinasi);
+    toggleVaksinasi();
+});
+
 function tambahRawatInap() {
     $('#tbl-rawat-inap').append('<div class="row rawat-row" style="margin-bottom:6px"><div class="col-sm-5"><input type="text" name="rs_nama[]" class="form-control input-sm" placeholder="Nama RS/Klinik"></div><div class="col-sm-3"><input type="date" name="rs_tgl[]" class="form-control input-sm"></div><div class="col-sm-3"><input type="text" name="rs_ket[]" class="form-control input-sm" placeholder="Keterangan"></div><div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest(\'.rawat-row\').remove()"><i class="fa fa-times"></i></button></div></div>');
 }

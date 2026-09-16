@@ -702,7 +702,7 @@ class Zoonosis extends BackendController {
         'no_pe','diagnosa_no','tgl_laporan','tgl_pe','no_ebs','nama_petugas','jabatan_petugas','telp_petugas',
         'id_prop','id_kota','id_puskesmas','id_kecamatan',
         'kd_prop_kasus','kd_kota_kasus','id_kecamatan_kasus',
-        'nama_pasien','nama_kk','nik','kelamin','umur_thn','umur_bln','tgl_lahir','pekerjaan','telp_pasien',
+        'nama_pasien','nama_kk','nik','kelamin','umur_thn','umur_bln','umur_hari','tgl_lahir','pekerjaan','telp_pasien',
         'alamat','alamat_kerja','kontak_darurat','telp_kontak_darurat','kelurahan','kecamatan',
         'tgl_bergejala','tgl_sakit','tgl_pajanan','status_kasus','akhir_no','tgl_meninggal','gejala',
         'riwayat_kontak_hewan','jenis_hewan','tgl_kontak','lokasi_kontak',
