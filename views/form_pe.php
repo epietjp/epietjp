@@ -1,3 +1,29 @@
+<style>
+.form-section {
+    margin-top: 28px;
+    margin-bottom: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0;
+}
+.form-section-title {
+    background: #2c3e50;
+    color: #fff !important;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 3px 3px 0 0;
+    margin-bottom: 12px;
+}
+.form-section-title b {
+    color: #fff;
+    font-weight: 700;
+}
+.form-section > .row,
+.form-section > div:not(.form-section-title) {
+    padding: 8px 12px;
+}
+</style>
 <div class="content-wrapper">
   <section class="content-header">
     <h1><i class="fa fa-file-text"></i> <?=htmlspecialchars($title)?></h1>
@@ -28,7 +54,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 
     <?php if(!empty($list_diagnosa)): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-stethoscope"></i> Diagnosa</div>
+      <div class="form-section-title"><i class="fa fa-stethoscope"></i> <b>A. Diagnosa</b></div>
       <div class="row">
         <div class="col-sm-4">
           <div class="form-group">
@@ -49,7 +75,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 
     <!-- IDENTITAS PELAPOR -->
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-user-md"></i> Identitas Pelapor &amp; Laporan</div>
+      <div class="form-section-title"><i class="fa fa-user-md"></i> <b>B. Identitas Pelapor &amp; Laporan</b></div>
       <div class="row">
         <div class="col-sm-3">
           <div class="form-group">
@@ -112,7 +138,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- WILAYAH -->
     <div class="form-section">
       <?php $has_wilayah = !empty($v["id_prop"]); ?>
-      <div class="form-section-title"><i class="fa fa-map-marker"></i> Wilayah Unit Pelapor</div>
+      <div class="form-section-title"><i class="fa fa-map-marker"></i> <b>C. Wilayah Unit Pelapor</b></div>
       <div class="row">
         <div class="col-sm-3">
           <div class="form-group">
@@ -164,7 +190,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 
     <!-- IDENTITAS PASIEN -->
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-user"></i> Identitas Pasien</div>
+      <div class="form-section-title"><i class="fa fa-user"></i> <b>D. Identitas Pasien</b></div>
       <div class="row">
         <div class="col-sm-4">
           <div class="form-group">
@@ -336,7 +362,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 
     <!-- KLINIS -->
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-heartbeat"></i> Informasi Klinis</div>
+      <div class="form-section-title"><i class="fa fa-heartbeat"></i> <b>E. Informasi Klinis</b></div>
       <div class="row">
         <div class="col-sm-3">
           <div class="form-group">
@@ -399,7 +425,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- GEJALA INLINE setelah onset (khusus GHPR dan Lepto) -->
     <?php if(in_array($id_penyakit, array(8,26))): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-stethoscope"></i> Gejala &amp; Tanda Sakit</div>
+      <div class="form-section-title"><i class="fa fa-stethoscope"></i> <b>F. Gejala &amp; Tanda Sakit</b></div>
       <div class="row">
       <?php
       $gejala_inline = array();
@@ -426,7 +452,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 
     <!-- KONTAK HEWAN -->
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-paw"></i> Riwayat Kontak Hewan</div>
+      <div class="form-section-title"><i class="fa fa-paw"></i> <b>G. Riwayat Kontak Hewan</b></div>
       <div class="row">
         <div class="col-sm-3">
           <div class="form-group">
@@ -717,7 +743,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 
     <!-- LABORATORIUM -->
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-flask"></i> Pemeriksaan Laboratorium</div>
+      <div class="form-section-title"><i class="fa fa-flask"></i> <b>H. Pemeriksaan Laboratorium</b></div>
       <div class="row">
         <div class="col-sm-3">
           <div class="form-group">
@@ -777,7 +803,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 
     <!-- SPESIMEN TAMBAHAN -->
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-flask"></i> Spesimen Tambahan (Lab)</div>
+      <div class="form-section-title"><i class="fa fa-flask"></i> <b>I. Spesimen Tambahan (Lab)</b></div>
       <div id="tbl-spesimen">
         <div class="row spesimen-row" style="margin-bottom:6px">
           <div class="col-sm-2">
@@ -835,7 +861,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
 
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-hospital-o"></i> Rawat Inap / RS</div>
+      <div class="form-section-title"><i class="fa fa-hospital-o"></i> <b>J. Rawat Inap / RS</b></div>
       <small class="text-muted">Nama RS/Klinik | Tanggal Masuk | Keterangan</small>
       <div id="tbl-rawat-inap">
         <div class="row rawat-row" style="margin-bottom:6px">
@@ -857,7 +883,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <!-- ANGGOTA SERUMAH -->
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-users"></i> Anggota Serumah</div>
+      <div class="form-section-title"><i class="fa fa-users"></i> <b>K. Anggota Serumah</b></div>
       <div class="row" style="margin-bottom:8px">
         <div class="col-sm-3">
           <div class="form-group">
@@ -918,7 +944,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- KONTAK PNEUMONIA (khusus Avian) -->
     <?php if($id_penyakit==11): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-user-md"></i> Kontak dengan Penderita Pneumonia</div>
+      <div class="form-section-title"><i class="fa fa-user-md"></i> <b>L. Kontak dengan Penderita Pneumonia</b></div>
       <div id="tbl-kontak-pn">
         <?php foreach($kontak_pn as $idx => $kp): ?>
         <div class="row kontak-pn-row" style="margin-bottom:6px">
@@ -950,7 +976,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- KONTAK GEJALA SAMA (Avian - terpisah dari Kontak Pneumonia) -->
     <?php if($id_penyakit==11): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-users"></i> Kontak Gejala Sama (Keluarga/Tetangga Bergejala)</div>
+      <div class="form-section-title"><i class="fa fa-users"></i> <b>M. Kontak Gejala Sama (Keluarga/Tetangga Bergejala)</b></div>
       <small class="text-muted">Nama | Umur | Alamat | Hubungan | Tgl Kontak | Status Flu Burung</small>
       <div id="tbl-kontak-gs">
         <div class="row kontak-gs-row" style="margin-bottom:6px">
@@ -970,7 +996,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- KEBIASAAN RESPONDEN LEPTO -->
     <?php if($id_penyakit==26): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-clipboard"></i> Kebiasaan Responden (Faktor Risiko Leptospirosis)</div>
+      <div class="form-section-title"><i class="fa fa-clipboard"></i> <b>N. Kebiasaan Responden (Faktor Risiko Leptospirosis)</b></div>
       <?php
       $kb_fields = array(
         array('key'=>'kb_aktivitas_air',    'label'=>'A1. Bekerja/beraktivitas di sawah, ladang, kebun', 'sub'=>'A'),
@@ -1026,7 +1052,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <?php endif; ?>
     <!-- KONTAK PENYELIDIKAN & TIM PE -->
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-phone"></i> Kontak Penyelidikan</div>
+      <div class="form-section-title"><i class="fa fa-phone"></i> <b>O. Kontak Penyelidikan</b></div>
       <small class="text-muted">Narasumber (pejabat/petugas/dokter) yang dihubungi saat penyelidikan</small>
       <div id="tbl-kontak-pe">
         <div class="row kontak-pe-row" style="margin-bottom:6px">
@@ -1040,7 +1066,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
 
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-users"></i> Tim Penyelidikan Epidemiologi</div>
+      <div class="form-section-title"><i class="fa fa-users"></i> <b>P. Tim Penyelidikan Epidemiologi</b></div>
       <small class="text-muted">Anggota tim PE yang terlibat dalam penyelidikan</small>
       <div id="tbl-tim-pe">
         <?php for($ti=0;$ti<3;$ti++): ?>
@@ -1058,7 +1084,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- AVIAN: Kunjungan Wabah + Matriks Kontak Unggas -->
     <?php if($id_penyakit==11): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-map-marker"></i> Riwayat Kunjungan & Kontak Unggas (Avian)</div>
+      <div class="form-section-title"><i class="fa fa-map-marker"></i> <b>Q. Riwayat Kunjungan & Kontak Unggas (Avian)</b></div>
       <div class="row">
         <div class="col-sm-6">
           <div class="form-group">
@@ -1174,7 +1200,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- AVIAN: Pemeriksaan Lingkungan Rumah -->
     <?php if($id_penyakit==11): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-home"></i> Pemeriksaan Lingkungan Rumah (Avian)</div>
+      <div class="form-section-title"><i class="fa fa-home"></i> <b>R. Pemeriksaan Lingkungan Rumah (Avian)</b></div>
       <div class="row">
         <?php
         $lingk_avian = array(
@@ -1221,7 +1247,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- ANTHRAKS: Gejala per Tipe Manifestasi -->
     <?php if($id_penyakit==14): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-stethoscope"></i> Gejala per Tipe Manifestasi (Anthraks)</div>
+      <div class="form-section-title"><i class="fa fa-stethoscope"></i> <b>S. Gejala per Tipe Manifestasi (Anthraks)</b></div>
       <?php
       $anthrax_gejala = array(
         'Kulit' => array(
@@ -1274,7 +1300,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- ANTHRAKS: Kunjungan 7 hari -->
     <?php if($id_penyakit==14): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-map-marker"></i> Riwayat Kunjungan Daerah Wabah (Anthraks)</div>
+      <div class="form-section-title"><i class="fa fa-map-marker"></i> <b>T. Riwayat Kunjungan Daerah Wabah (Anthraks)</b></div>
       <div class="row">
         <div class="col-sm-4">
           <div class="form-group">
@@ -1310,7 +1336,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- LEPTO: Kondisi Lingkungan Rumah -->
     <?php if($id_penyakit==26): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-home"></i> Kondisi Lingkungan Rumah (Leptospirosis)</div>
+      <div class="form-section-title"><i class="fa fa-home"></i> <b>U. Kondisi Lingkungan Rumah (Leptospirosis)</b></div>
       <div class="row">
         <?php
         $lepto_lingk = array(
@@ -1356,7 +1382,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 
     <!-- LEPTO: Riwayat Kontak Faktor Risiko -->
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-exclamation-triangle"></i> Riwayat Kontak Faktor Risiko (Leptospirosis)</div>
+      <div class="form-section-title"><i class="fa fa-exclamation-triangle"></i> <b>V. Riwayat Kontak Faktor Risiko (Leptospirosis)</b></div>
       <div class="row">
         <?php
         $lepto_risiko = array(
@@ -1398,7 +1424,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- GHPR: Riwayat Pengobatan -->
     <?php if($id_penyakit==8): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-medkit"></i> Riwayat Pengobatan Luka (GHPR)</div>
+      <div class="form-section-title"><i class="fa fa-medkit"></i> <b>W. Riwayat Pengobatan Luka (GHPR)</b></div>
       <div class="row">
         <div class="col-sm-4">
           <div class="form-group">
@@ -1494,7 +1520,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- ANTHRAKS: Pemeriksaan Lingkungan Rumah -->
     <?php if($id_penyakit==14): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-home"></i> Pemeriksaan Lingkungan Rumah (Anthraks)</div>
+      <div class="form-section-title"><i class="fa fa-home"></i> <b>X. Pemeriksaan Lingkungan Rumah (Anthraks)</b></div>
       <div class="row">
         <?php
         $lingk_anthrax = array(
@@ -1535,7 +1561,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- KONTAK KASUS LAIN (Lepto + Anthraks) -->
     <?php if(in_array($id_penyakit, array(26,14))): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-users"></i> Kontak Kasus Lain / Gejala Sama</div>
+      <div class="form-section-title"><i class="fa fa-users"></i> <b>Y. Kontak Kasus Lain / Gejala Sama</b></div>
       <small class="text-muted">Nama | Umur | Alamat | Hubungan | Tgl Kontak | Status (suspek/konfirmasi/tidak tahu)</small>
       <div id="tbl-kontak-kasus">
         <div class="row kontak-kasus-row" style="margin-bottom:6px">
@@ -1561,7 +1587,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 
     <!-- KETERANGAN -->
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-sticky-note"></i> Keterangan Lain</div>
+      <div class="form-section-title"><i class="fa fa-sticky-note"></i> <b>Z. Keterangan Lain</b></div>
       <div class="form-group">
         <textarea name="ket_lain" class="form-control" rows="3" placeholder="Keterangan tambahan..."><?=fv($v,'ket_lain')?></textarea>
       </div>
