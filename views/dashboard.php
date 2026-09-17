@@ -72,6 +72,10 @@
 .map-legend{background:white;padding:8px 12px;border-radius:4px;font-size:11px;line-height:2;box-shadow:0 1px 4px rgba(0,0,0,.2);}
 .map-legend i{width:14px;height:14px;display:inline-block;margin-right:5px;border-radius:2px;vertical-align:middle;}
 </style>
+<style>
+.content { padding-left: 10px !important; padding-right: 10px !important; }
+.content { padding: 8px 10px !important; }
+</style>
 <div class="content-wrapper">
   <section class="content-header">
     <h1><i class="fa fa-bug"></i> Dashboard Zoonosis

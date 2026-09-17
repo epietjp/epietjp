@@ -7,10 +7,10 @@ class Zoonosis extends BackendController {
     public function __construct() {
         parent::__construct();
         $this->PENYAKIT_ZOO = array(
-            8  => array('nama'=>'GHPR / Rabies (diagnosa_no: 18=GHPR, 31=Rabies)',             'singkat'=>'GHPR',    'warna'=>'danger', 'sheet'=>'GHPR'),
-            11 => array('nama'=>'Flu Burung (diagnosa_no: 226=Suspek, 32=Konfirmasi)',          'singkat'=>'Avian Flu','warna'=>'warning','sheet'=>'Avian Flu'),
-            14 => array('nama'=>'Anthraks (diagnosa_no: 294)',                                  'singkat'=>'Anthraks', 'warna'=>'dark',   'sheet'=>'Anthrax'),
-            26 => array('nama'=>'Leptospirosis (diagnosa_no: 222=Suspek klinis, 24=Konfirmasi)','singkat'=>'Lepto',   'warna'=>'info',   'sheet'=>'Leptospirosis'),
+            8  => array('nama'=>'GHPR / Rabies',             'singkat'=>'GHPR',    'warna'=>'danger', 'sheet'=>'GHPR'),
+            11 => array('nama'=>'Avian Influenza / Flu Burung',          'singkat'=>'Avian Flu','warna'=>'warning','sheet'=>'Avian Flu'),
+            14 => array('nama'=>'Anthraks',                                  'singkat'=>'Anthraks', 'warna'=>'dark',   'sheet'=>'Anthrax'),
+            26 => array('nama'=>'Leptospirosis','singkat'=>'Lepto',   'warna'=>'info',   'sheet'=>'Leptospirosis'),
         );
         $this->load->model('Zoonosis_model', 'zm');
         $this->load->helper('url');
