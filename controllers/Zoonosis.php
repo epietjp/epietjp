@@ -144,6 +144,8 @@ class Zoonosis extends BackendController {
 
     public function get_daftar() {
         $this->_auth();
+        $start  = (int)$this->input->get('start');
+        $length = (int)$this->input->get('length') ?: 25;
         $id_penyakit = (int)$this->input->get('id_penyakit');
         $id_prop     = (int)$this->input->get('id_prop');
         $id_kota     = (int)$this->input->get('id_kota');
@@ -152,7 +154,11 @@ class Zoonosis extends BackendController {
         $tgl1        = $this->input->get('tgl1') ?: date('Y-01-01');
         $tgl2        = $this->input->get('tgl2') ?: date('Y-m-d');
         $cari        = $this->input->get('cari');
-        echo json_encode($this->zm->get_daftar($id_penyakit, $id_prop, $id_kota, $id_kec, $id_pusk, $tgl1, $tgl2, $cari, $this->kel_place, $this->detail_place));
+        $start  = (int)$this->input->get('start');
+        $length = (int)$this->input->get('length') ?: 25;
+        $draw   = (int)$this->input->get('draw');
+        $result = $this->zm->get_daftar($id_penyakit, $id_prop, $id_kota, $id_kec, $id_pusk, $tgl1, $tgl2, $cari, $this->kel_place, $this->detail_place, $length, $start);
+        echo json_encode(array('draw'=>$draw,'recordsTotal'=>$result['total'],'recordsFiltered'=>$result['total'],'data'=>$result['data']));
     }
 
     // FORM PE
@@ -763,7 +769,7 @@ class Zoonosis extends BackendController {
         }
         $result = $this->_parse_xlsx($tmp, $id_penyakit);
         @unlink($tmp);
-        echo json_encode($result);
+
     }
 
     public function proses_excel() {

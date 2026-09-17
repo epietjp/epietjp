@@ -44,7 +44,7 @@ class Zoonosis_model extends CI_Model {
     }
 
     // Daftar PE untuk tabel
-    public function get_daftar($id_penyakit=0, $id_prop=0, $id_kota=0, $id_kec=0, $id_pusk=0, $tgl1='', $tgl2='', $cari='', $kel_place=0, $detail_place=array()) {
+    public function get_daftar($id_penyakit=0, $id_prop=0, $id_kota=0, $id_kec=0, $id_pusk=0, $tgl1='', $tgl2='', $cari='', $kel_place=0, $detail_place=array(), $limit=25, $offset=0) {
         $tgl1 = $this->db->escape_str($tgl1 ?: date('Y-01-01'));
         $tgl2 = $this->db->escape_str($tgl2 ?: date('Y-m-d'));
         $q = "SELECT z.*,
@@ -76,8 +76,21 @@ class Zoonosis_model extends CI_Model {
             $c = $this->db->escape_str($cari);
             $q .= " AND (z.nama_pasien LIKE '%{$c}%' OR z.no_pe LIKE '%{$c}%' OR z.nik LIKE '%{$c}%')";
         }
-        $q .= " ORDER BY z.tgl_sakit DESC, z.id DESC LIMIT 5000";
-        return $this->db->query($q)->result_array();
+        $limit  = isset($params['limit'])  ? (int)$params['limit']  : 25;
+        $offset = isset($params['offset']) ? (int)$params['offset'] : 0;
+
+        // Count total
+        $q_count = str_replace("SELECT z.*,
+                p.nama_penyakit,
+                pr.propinsi,
+                k.kota,
+                pk.puskesmas AS unit_pelapor", "SELECT COUNT(*) as n", $q);
+        $total = $this->db->query($q_count)->row_array();
+
+        $q .= " ORDER BY z.tgl_sakit DESC, z.id DESC LIMIT {$limit} OFFSET {$offset}";
+        $rows = $this->db->query($q)->result_array();
+
+        return array('data'=>$rows, 'total'=>(int)$total['n']);
     }
 
     // Ambil satu PE by id

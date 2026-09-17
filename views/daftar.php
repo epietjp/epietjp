@@ -124,7 +124,7 @@
             </tr>
           </thead>
           <tbody id="tbody-daftar">
-            <tr><td colspan="14" class="text-center text-muted">Klik Cari untuk memuat data</td></tr>
+            
           </tbody>
         </table>
       </div>
@@ -196,78 +196,9 @@ function setTahun() {
     loadDaftar();
 }
 function loadDaftar() {
-    var params = {
-        id_penyakit: $('#f_penyakit').val(),
-        id_prop:     $('#f_prop').val(),
-        id_kota:     $('#f_kota').val(),
-        id_kec:      $('#f_kec').val() || 0,
-        id_pusk:     $('#f_pusk').val() || 0,
-        tgl1:        $('#f_tgl1').val(),
-        tgl2:        $('#f_tgl2').val(),
-        cari:        $('#f_cari').val()
-    };
-    $('#tbody-daftar').html('<tr><td colspan="14" class="text-center"><i class="fa fa-spinner fa-spin"></i> Memuat...</td></tr>');
-    $.get(BASE+'zoonosis/get_daftar', params, function(rows) {
-        $('#jml-total').text(rows.length);
-        if (!rows.length) {
-            $('#tbody-daftar').html('<tr><td colspan="14" class="text-center text-muted">Tidak ada data</td></tr>');
-            return;
-        }
-        var html = '';
-        $.each(rows, function(i,r) {
-            var umur = r.umur_thn+'thn';
-            if (r.umur_bln > 0) umur += ' '+r.umur_bln+'bln';
-            var sk = parseInt(r.status_kasus);
-            var ak = parseInt(r.akhir_no);
-            var badge_s = '<span class="badge '+(STATUS_CLASS[sk]||'')+'">'+( STATUS_LABEL[sk]||'-')+'</span>';
-            var badge_a = ak==2
-                ? '<span class="badge badge-meninggal">Meninggal</span>'
-                : '<span class="badge" style="background:#7f8c8d">'+(AKHIR_LABEL[ak]||'-')+'</span>';
-            var lab_icon = r.diperiksa_lab=='1'
-                ? '<i class="fa fa-check-circle text-success"></i>'
-                : '<i class="fa fa-times-circle text-muted"></i>';
-            html += '<tr>'
-                +'<td><small>'+(r.no_pe||'-')+'</small></td>'
-                +'<td><small>'+(r.no_ebs ? '<a href="#" onclick="openEbs(\'' + r.no_ebs + '\');return false;">'+r.no_ebs+'</a>' : '-')+'</small></td>'
-                +'<td><small>'+(r.nama_penyakit||'-')+'</small></td>'
-                +'<td><small>'+(r.propinsi||'-')+'</small></td>'
-                +'<td><small>'+(r.kota||'-')+'</small></td>'
-                +'<td><b>'+(r.nama_pasien||'-')+'</b><br><small class="text-muted">'+(r.nik||'')+'</small></td>'
-                +'<td class="text-center">'+(r.kelamin=='L'?'<span class="text-primary">L</span>':'<span class="text-danger">P</span>')+'</td>'
-                +'<td class="text-center">'+umur+'</td>'
-                +'<td>'+(r.tgl_sakit||'-')+'</td>'
-                +'<td>'+(r.tgl_pe||'-')+'</td>'
-                +'<td class="text-center">'+badge_s+'</td>'
-                +'<td class="text-center">'+badge_a+'</td>'
-                +'<td class="text-center">'+lab_icon+'</td>'
-                +'<td class="text-center" style="white-space:nowrap">'
-                +'<a href="'+BASE+'zoonosis/detail/'+r.id+'" class="btn btn-xs btn-info" title="Detail"><i class="fa fa-eye"></i></a> '
-                +'<a href="'+BASE+'zoonosis/form_edit/'+r.id+'" class="btn btn-xs btn-warning" title="Edit"><i class="fa fa-pencil"></i></a> '
-                +'<a href="'+BASE+'zoonosis/hapus/'+r.id+'" class="btn btn-xs btn-danger" title="Hapus" onclick="return confirm(\'Hapus data ini?\')"><i class="fa fa-trash"></i></a>'
-                +'</td></tr>';
-        });
-        // Destroy DataTables dulu sebelum update HTML
-        if ($.fn.DataTable.isDataTable('#tblDaftar')) {
-            $('#tblDaftar').DataTable().destroy();
-        }
-        $('#tbody-daftar').html(html);
-        // Init DataTables
-        $('#tblDaftar').DataTable({
-            paging:   true,
-            ordering: true,
-            info:     true,
-            searching: false,
-            lengthMenu: [[10,25,50,100,500,-1],[10,25,50,100,500,'Semua']],
-            pageLength: 25,
-            language: {
-                lengthMenu: 'Menampilkan _MENU_ data per halaman',
-                info:       'Menampilkan _START_ sampai _END_ dari _TOTAL_ records',
-                infoEmpty:  'Tidak ada data',
-                infoFiltered: '(filtered from _MAX_ total records)',
-                paginate:   {first:'<<',last:'>>',next:'>',previous:'<'}
-            }
-        });
-    },'json');
+    if ($.fn.DataTable.isDataTable('#tblDaftar')) {
+        $('#tblDaftar').DataTable().ajax.reload(null, false);
+    }
 }
 
 function exportCsv() {
@@ -289,7 +220,56 @@ function openEbs(no_ebs) {
     }, 'json');
 }
 $(function() {
-    loadDaftar();
+    // Init DataTables server-side
+    var dt = $('#tblDaftar').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: BASE + 'zoonosis/get_daftar',
+            type: 'GET',
+            data: function(d) {
+                d.id_penyakit = $('#f_penyakit').val();
+                d.id_prop     = $('#f_prop').val();
+                d.id_kota     = $('#f_kota').val();
+                d.id_kec      = $('#f_kec').val() || 0;
+                d.id_pusk     = $('#f_pusk').val() || 0;
+                d.tgl1        = $('#f_tgl1').val();
+                d.tgl2        = $('#f_tgl2').val();
+                d.cari        = $('#f_cari').val();
+            }
+        },
+        columns: [
+            {data:'no_pe',        render: function(d,t,r){ return d ? '<a href="'+BASE+'zoonosis/detail/'+r.id+'" target="_blank">'+d+'</a>' : '-'; }},
+            {data:'no_ebs',       render: function(d,t,r){ return d ? '<a href="javascript:void(0)" onclick="openEbs(\"'+d+'\")" class="text-info">'+d+'</a>' : '-'; }},
+            {data:'nama_penyakit',render: function(d){ return d||'-'; }},
+            {data:'propinsi',     render: function(d){ return d||'-'; }},
+            {data:'kota',         render: function(d){ return d||'-'; }},
+            {data:'nama_pasien',  render: function(d){ return d||'-'; }},
+            {data:'kelamin',      render: function(d){ return d=='L'?'Laki-laki':(d=='P'?'Perempuan':'-'); }},
+            {data:'umur_thn',     render: function(d,t,r){ return (r.umur_thn||0)+' thn '+(r.umur_bln||0)+' bln'; }},
+            {data:'tgl_sakit',    render: function(d){ return d||'-'; }},
+            {data:'tgl_pe',       render: function(d){ return d||'-'; }},
+            {data:'status_kasus', render: function(d){ var s=['Suspek','Probable','Konfirmasi','Discarded']; return '<span class="label label-'+(d==2?'success':d==1?'warning':d==3?'default':'info')+'">'+(s[d]||'-')+'</span>'; }},
+            {data:'akhir_no',     render: function(d){ var s=['-','Sembuh','Meninggal','Dirawat RS','Dirawat Klinik','Dirawat Rumah']; return s[d]||'-'; }},
+            {data:'diperiksa_lab',render: function(d){ return d==1?'<span class="label label-info">Ya</span>':'Tidak'; }},
+            {data:'id',           render: function(d,t,r){ return '<a href="'+BASE+'zoonosis/detail/'+d+'" class="btn btn-xs btn-primary" target="_blank"><i class="fa fa-eye"></i></a> <a href="'+BASE+'zoonosis/edit/'+d+'" class="btn btn-xs btn-warning"><i class="fa fa-pencil"></i></a>'; }},
+        ],
+        paging:    true,
+        ordering:  false,
+        info:      true,
+        searching: false,
+        lengthMenu: [[10,25,50,100],[10,25,50,100]],
+        pageLength: 25,
+        language: {
+            lengthMenu:   'Menampilkan _MENU_ data per halaman',
+            info:         'Menampilkan _START_ sampai _END_ dari _TOTAL_ records',
+            infoEmpty:    'Tidak ada data',
+            infoFiltered: '(dari _MAX_ total records)',
+            processing:   '<i class="fa fa-spinner fa-spin"></i> Memuat...',
+            paginate:     {first:'<<',last:'>>',next:'>',previous:'<'}
+        }
+    });
+
     $('#f_penyakit').change(function(){ loadDaftar(); });
     $('#f_prop').change(function(){ loadKotaDaftar(); loadDaftar(); });
     $('#f_kota').change(function(){ loadKecDaftar(); loadDaftar(); });
