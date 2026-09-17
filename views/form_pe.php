@@ -1762,6 +1762,45 @@ $('#formPE').submit(function(e) {
 $(function() {
     if (initProp) { $('#sel_prop').val(initProp).trigger('change'); }
 });
+// Validasi tanggal real-time saat blur
+function cekUrutan() {
+    var tgl_bergejala  = $('#tgl_bergejala').val();
+    var tgl_sakit      = $('#tgl_sakit').val();
+    var tgl_laporan    = $('#tgl_laporan').val();
+    var tgl_pe         = $('#tgl_pe').val();
+    var tgl_masuk_rs   = $('#tgl_masuk_rs').val();
+    var tgl_meninggal  = $('#tgl_meninggal').val();
+    var tgl_ambil      = $('input[name=tgl_ambil_sample]').val();
+    var tgl_kirim      = $('input[name=tgl_kirim_sample]').val();
+    var tgl_hasil      = $('input[name=tgl_hasil_lab]').val();
+    var warns = [];
+
+    // Hapus warning lama
+    $('.warn-tgl').remove();
+
+    function addWarn(selector, msg) {
+        $(selector).after('<small class="warn-tgl text-danger"><i class="fa fa-exclamation-triangle"></i> '+msg+'</small>');
+    }
+
+    if (tgl_pe && tgl_laporan && tgl_pe > tgl_laporan)
+        addWarn('#tgl_pe', 'Tgl PE tidak boleh lebih dari Tgl Laporan');
+    if (tgl_bergejala && tgl_masuk_rs && tgl_bergejala > tgl_masuk_rs)
+        addWarn('#tgl_bergejala', 'Tgl Bergejala tidak boleh setelah Tgl Masuk RS');
+    if (tgl_masuk_rs && tgl_meninggal && tgl_masuk_rs > tgl_meninggal)
+        addWarn('#tgl_masuk_rs', 'Tgl Masuk RS tidak boleh setelah Tgl Meninggal');
+    if (tgl_bergejala && tgl_meninggal && tgl_bergejala > tgl_meninggal)
+        addWarn('#tgl_bergejala', 'Tgl Bergejala tidak boleh setelah Tgl Meninggal');
+    if (tgl_ambil && tgl_kirim && tgl_ambil > tgl_kirim)
+        addWarn('input[name=tgl_ambil_sample]', 'Tgl Ambil tidak boleh setelah Tgl Kirim');
+    if (tgl_kirim && tgl_hasil && tgl_kirim > tgl_hasil)
+        addWarn('input[name=tgl_kirim_sample]', 'Tgl Kirim tidak boleh setelah Tgl Hasil');
+}
+
+// Pasang event blur ke semua field tanggal
+$(document).on('change', 'input[name="tgl_bergejala"], input[name="tgl_sakit"], input[name="tgl_laporan"], input[name="tgl_pe"], input[name="tgl_masuk_rs"], input[name="tgl_meninggal"], input[name="tgl_ambil_sample"], input[name="tgl_kirim_sample"], input[name="tgl_hasil_lab"]', function(){
+    cekUrutan();
+});
+
 // Filter input hanya angka untuk NIK dan telp
 function onlyNumbers(e) {
     var k = e.which || e.keyCode;
