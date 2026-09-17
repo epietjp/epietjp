@@ -14,6 +14,8 @@ class Zoonosis extends BackendController {
         );
         $this->load->model('Zoonosis_model', 'zm');
         $this->load->helper('url');
+        // Override remap - jangan remap 'edit' ke '__edit'
+        unset($this->remap['edit']);
     }
 
     private function _auth() {
@@ -185,10 +187,18 @@ class Zoonosis extends BackendController {
             'detail'      => $this->zm->get_eav_template($id_penyakit),
             'anggota'     => array(),
             'kontak_pn'   => array(),
+            'kontak_pe'   => array(),
+            'tim_pe'      => array(),
+            'kontak_kasus'=> array(),
+            'kontak_gs'   => array(),
             'list_ebs'    => $this->zm->get_ebs_by_penyakit($id_penyakit, $this->kel_place, $this->detail_place),
             'list_diagnosa' => $this->zm->get_diagnosa_by_penyakit($id_penyakit),
         );
         $this->template->build('form_pe', $data);
+    }
+
+    public function edit($id=0) {
+        $this->form_edit($id);
     }
 
     public function form_edit($id=0) {
@@ -208,6 +218,12 @@ class Zoonosis extends BackendController {
             'detail'      => $this->zm->get_detail_by_pe($id),
             'list_ebs'    => $this->zm->get_ebs_by_penyakit($id_penyakit, $this->kel_place, $this->detail_place),
             'list_diagnosa' => $this->zm->get_diagnosa_by_penyakit($id_penyakit),
+            'anggota'     => $this->zm->get_anggota_serumah($id),
+            'kontak_pn'   => $this->zm->get_kontak_pneumonia($id),
+            'kontak_pe'   => $this->db->where('id_pe',$id)->get('ghs_zoonosis_kontak_pe')->result_array(),
+            'tim_pe'      => $this->db->where('id_pe',$id)->get('ghs_zoonosis_tim_pe')->result_array(),
+            'kontak_kasus'=> $this->db->where('id_pe',$id)->get('ghs_zoonosis_kontak_kasus')->result_array(),
+            'kontak_gs'   => $this->db->where('id_pe',$id)->get('ghs_zoonosis_kontak_gejala')->result_array(),
         );
         $this->template->build('form_pe', $data);
     }
