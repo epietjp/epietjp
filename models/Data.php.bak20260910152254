@@ -1,0 +1,1775 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+class Data extends MX_Model {
+	var $post=[];
+	var $get=[];
+	var $header=[];
+	var $preference=[];
+	var $data_Checks=[];
+	var $limit=10;
+	var $key='';
+	var $ip='';
+
+	private $secret_key = '8f32a7b9c1d2e4f6a9b4e3c7d8a1f9e0c3b5a6d7e8f9a0b1c2d3e4f5a6b7c8d9';
+    private $secret_iv  = 'f7a1c2d3e4f5b6a7c8d9e0f1a2b3c4d5';
+	public function __construct()
+    {
+		parent::__construct();
+	}
+
+	function get_data_field(){
+		$this->data_Checks[]=array('field'=>'id', 'title'=>'', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'propinsi', 'title'=>'Propinsi', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'kota', 'title'=>'Kota', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'distrik', 'title'=>'Distrik', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'kel_unit', 'title'=>'Id Unit', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'unit', 'title'=>'Unit', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'kode_depdagri_prop', 'title'=>'', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'kode_depdagri_kota', 'title'=>'', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'kode_depdagri_distrik', 'title'=>'', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'sts_rumor', 'title'=>'Status Rumor', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'sumber_laporan', 'title'=>'Sumber Laporan', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'sts_klb', 'title'=>'sts_klb', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'diagnosa', 'title'=>'', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'verifikasi', 'title'=>'', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'no_ebs', 'title'=>'', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'sumber_verifikasi', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'hasil_lab', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'penyakit', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'umur7', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'umur28', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'umur1', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'umur4', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'umur9', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'umur14', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'umur19', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'umur44', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'umur54', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'umur69', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'umur70', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'pria', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'wanita', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'populasi', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'tgl_mulai', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'tgl_akhir', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'tgl_diketahui', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'tgl_ditanggulangi', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'tgl_laporan', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'nama_pelapor', 'title'=>'', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'telp_pelapor', 'title'=>'', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'jml_kasus', 'title'=>'', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'jml_kematian', 'title'=>'', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'sts_lab_no', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'informasi', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'kronologi', 'title'=>'', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'tindakan', 'title'=>'', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'saran', 'title'=>'', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'respon24', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'formw1', 'title'=>'', 'rule'=>false);
+		$this->data_Checks[]=array('field'=>'klb', 'title'=>'', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'lat', 'title'=>'', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'lng', 'title'=>'', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'tgl_laporan', 'title'=>'Tanggal Laporan', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'informasi', 'title'=>'Informasi', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'create_date', 'title'=>'Tanggal Entri', 'rule'=>true);
+		$this->data_Checks[]=array('field'=>'update_date', 'title'=>'Terakhir Update', 'rule'=>true);
+	}
+
+	function get_param(){
+		$kel='propinsi';
+		if (isset($this->post['kel'])){
+			$kel=$this->post['kel'];
+		}
+		$result=[];
+		switch ($kel){
+			case 'propinsi':
+				if(isset($this->post['id'])){
+					$this->db->where('id', intval($this->post['id']));
+				}
+				if(isset($this->post['kode_depdagri'])){
+					$this->db->where('kode_depdagri', $this->post['kode_depdagri']);
+				}
+				$result=$this->db->select('id, kode_depdagri, kode, propinsi as name')->where('aktif','Y')->get(_TBL_PROPINSI)->result_array();
+				break;
+			case 'kota':
+				if(isset($this->post['id'])){
+					$this->db->where('id', intval($this->post['id']));
+				}
+				if(isset($this->post['id_prop'])){
+					$this->db->where('id_prop', intval($this->post['id_prop']));
+				}
+				if(isset($this->post['kode_depdagri'])){
+					$this->db->where('kode_depdagri', $this->post['kode_depdagri']);
+				}
+				if(isset($this->post['kode_depdagri_prop'])){
+					$this->db->where('kode_depdagri_prop', $this->post['kode_depdagri_prop']);
+				}
+				$result=$this->db->select('id, kode_depdagri, kode_depdagri_prop, kota as name')->where('aktif','Y')->order_by('id_prop, kota')->get(_TBL_VIEW_KOTA)->result_array();
+				break;
+			case 'distrik':
+				if(isset($this->post['id'])){
+					$this->db->where('id', intval($this->post['id']));
+				}
+				if(isset($this->post['id_kota'])){
+					$this->db->where('id_kota', intval($this->post['id_kota']));
+				}
+				if(isset($this->post['id_prop'])){
+					$this->db->where('id_prop', intval($this->post['id_prop']));
+				}
+				if(isset($this->post['kode_depdagri'])){
+					$this->db->where('kode_depdagri', $this->post['kode_depdagri']);
+				}
+				if(isset($this->post['kode_depdagri_prop'])){
+					$this->db->where('kode_depdagri_prop', $this->post['kode_depdagri_prop']);
+				}
+				if(isset($this->post['kode_depdagri_kota'])){
+					$this->db->where('kode_depdagri_kota', $this->post['kode_depdagri_kota']);
+				}
+				$result=$this->db->select('id, kode_depdagri, kode_depdagri_kota, kode_depdagri_prop, distrik as name')->where('aktif','Y')->order_by('id_kota, distrik')->get(_TBL_VIEW_DISTRIK)->result_array();
+				break;
+			case 'unit':
+				$result=$this->db->select('id, data as name')->where('kelompok', 'sumber_data')->where('aktif','Y')->get(_TBL_DATA_COMBO)->result_array();
+				break;
+		}
+		return $result;
+	}
+
+	function get_data_filter_ebs(){
+		// if (isset($this->get['unit_pelapor'])){
+		// 	$this->db->where('id_unit', intval($this->get['unit_pelapor']));
+		// }
+		if (isset($this->post['tahun'])){
+			$this->db->where('tahun', intval($this->post['tahun']));
+		}
+		if (isset($this->post['tgl_buat_awal']) && isset($this->post['tgl_buat_akhir'])){
+			if (!empty($this->post['tgl_buat_awal']) && !empty($this->post['tgl_buat_akhir'])){
+				$this->db->where('tanggal >=', $this->post['tgl_buat_awal']);
+				$this->db->where('tanggal <=', $this->post['tgl_buat_akhir']);
+			}
+		}elseif (isset($this->post['tgl_buat_awal'])){
+			if (!empty($this->post['tgl_buat_awal'])){
+				$this->db->where('tanggal', $this->post['tgl_buat_awal']);
+			}
+		}
+
+		if (isset($this->post['tgl_laporan_awal']) && isset($this->post['tgl_laporan_akhir'])){
+			if (!empty($this->post['tgl_laporan_awal']) && !empty($this->post['tgl_laporan_akhir'])){
+				$this->db->where('tgl_laporan >=', $this->post['tgl_laporan_awal']);
+				$this->db->where('tgl_laporan <=', $this->post['tgl_laporan_akhir']);
+			}
+		}elseif (isset($this->post['tgl_laporan_awal'])){
+			if (!empty($this->post['tgl_laporan_awal'])){
+				$this->db->where('tgl_laporan>=', $this->post['tgl_laporan_awal']);
+			}
+		}
+
+		
+		if (isset($this->post['kode_prop'])){
+			if (!empty($this->post['kode_prop'])){
+				$this->db->where('kode_depdagri_prop', intval($this->post['kode_prop']));
+			}
+		}
+		if (isset($this->post['kode_kota'])){
+			if (!empty($this->post['kode_kota'])){
+				$this->db->where('kode_depdagri_kota', intval($this->post['kode_kota']));
+			}
+		}
+		if (isset($this->post['kode_kecamatan'])){
+			if (!empty($this->post['kode_kecamatan'])){
+				$this->db->where('kode_depdagri_distrik', intval($this->post['kode_kecamatan']));
+			}
+		}
+	}
+
+	function ebs(){
+		// $fields=['id', 'prop_code as prop_id', 'propinsi', 'city_code as kota_id', 'kota', 'distrik_code as distrik_id', 'distrik', 'puskesmas as unit_pelapor', 'tgl_laporan', 'minggu', 'nama_pasien', 'no_epid', 'alamat', 'lat', 'lng', 'kelamin', 'tgl_sakit', 'diag_awal', 'diag_akhir','create_date', 'update_date'];
+		// $fields=['propinsi', 'kota', 'lokasi', 'sts_rumor', 'diagnosa', 'verifikasi', 'jml_kasus', 'jml_kematian', 'kronologi', 'tindakan', 'klb', 'lat', 'lng'];
+
+		$this->get_data_field();
+		if (isset($this->post['fields'])){
+			if (!empty($this->post['fields'])){
+				$fields=explode(',', $this->post['fields']);
+			}
+		}else{
+			$fields=[];
+		}
+
+		if(count($fields)==0){
+			foreach($this->data_Checks as $x){
+				if ($x['rule']){
+					$fields[]=$x['field'];
+				}
+			}
+		}
+		if (isset($this->post['limit'])){
+			if (intval($this->post['limit'])>0){
+				$this->limit=$this->post['limit'];
+			}
+		}
+		$page = (isset($this->post['page']))?intval($this->post['page']):1;
+		if($page<1){$page=1;}
+
+		$this->get_data_filter_ebs();
+		$rows = $this->db->get(_TBL_VIEW_FORM_EBS)->num_rows();
+		$result['paging']['total']=$rows;
+		$result['paging']['page']=$page;
+		$result['paging']['limit']=$this->limit;
+		$x=$rows%$this->limit;
+		$tpage=0;
+		if ($x>0){
+			$tpage=1;
+		}
+		--$page;
+		$result['paging']['total_page']=intval($rows/$this->limit)+$tpage;
+
+		$this->get_data_filter_ebs();
+		$this->db->limit($this->limit, ($page*$this->limit));
+		
+		$this->db->order_by('tgl_laporan desc');
+
+		$rows=$this->db->select(implode(',',$fields))->get(_TBL_VIEW_FORM_EBS)->result_array();
+		$result['data']=$rows;
+		$result['status']=true;
+		// die($this->db->last_query());
+		// $result['sql']=$this->db->last_query();
+		return $result;
+	}
+
+	function get_data_filter_tgc(){
+		
+		if (isset($this->post['unit'])){
+			$this->db->where('unit', $this->post['unit']);
+		}
+		if (isset($this->post['golongan'])){
+			$this->db->where('golongan', $this->post['golongan']);
+		}
+		if (isset($this->post['jabatan'])){
+			$this->db->where('jabatan', $this->post['jabatan']);
+		}
+		if (isset($this->post['gender'])){
+			$this->db->where('gender', $this->post['gender_id']);
+		}
+		
+		if (isset($this->post['kode_prop'])){
+			if (!empty($this->post['kode_prop'])){
+				$this->db->where('id_prop', $this->post['kode_prop']);
+			}
+		}
+		if (isset($this->post['kode_kota'])){
+			if (!empty($this->post['kode_kota'])){
+				$this->db->where('id_kota', $this->post['kode_kota']);
+			}
+		}
+	}
+
+	function tgc(){
+		$this->data_Checks=[];
+		$this->data_Checks=['unit'=>'Instansi', 'satuan_kerja'=>'Satuan Kerja', 'nik'=>'Nik', 'nama'=>'Nama', 'golongan'=>'Pangkat/Golongan', 'jabatan'=>'Jabatan / Profesi', 'sk'=>'Sk', 'sertifikat'=>'Sertifikat Pelatihan', 'pendidikan'=>'Pendidikan Terakhir', 'tahun_tugas'=>'Tahun Penugasan', 'email'=>'Alamat Email', 'hp'=>'Handphone', 'gender'=>'Gender','aktif'=>'Status Keanggotaan', 'lat'=>'Latitude', 'lng'=>'Longitude'];
+
+
+		if (isset($this->post['limit'])){
+			if (intval($this->post['limit'])>0){
+				$this->limit=$this->post['limit'];
+			}
+		}
+		$page = (isset($this->post['page']))?intval($this->post['page']):1;
+		if($page<1){$page=1;}
+
+		$this->get_data_filter_ebs();
+		$fields=array_keys($this->data_Checks);
+		// $this->db->select(implode(",",$fields));
+		$rows = $this->db->get(_TBL_VIEW_TGC)->num_rows();
+		$result['paging']['total']=$rows;
+		$result['paging']['page']=$page;
+		$result['paging']['limit']=intval($this->limit);
+		$x=$rows%$this->limit;
+		$tpage=0;
+		if ($x>0){
+			$tpage=1;
+		}
+		--$page;
+		$result['paging']['total_page']=intval($rows/$this->limit)+$tpage;
+
+		$this->get_data_filter_ebs();
+		$this->db->limit($this->limit, ($page*$this->limit));
+		
+		$this->db->order_by('create_date');
+
+		$rows=$this->db->select(implode(',',$fields))->get(_TBL_VIEW_TGC)->result_array();
+		$result['data']=$rows;
+		$result['status']=true;
+		// die($this->db->last_query());
+		// $result['sql']=$this->db->last_query();
+		return $result;
+	}
+
+	function master_kode(){
+		$sts=true;
+		$result=[];
+		if (isset($this->get['tipe'])){
+			if($this->get['tipe']=='unit'){
+				$this->db->select('id, data')->where('kelompok', 'sumber_data');
+				$rows = $this->db->get(_TBL_DATA_COMBO)->result_array();
+			}
+			elseif($this->get['tipe']=='golongan'){
+				$this->db->select('id, data')->where('kelompok', 'gol');
+				$rows = $this->db->get(_TBL_DATA_COMBO)->result_array();
+			}
+			elseif($this->get['tipe']=='profesi'){
+				$this->db->select('id, data')->where('kelompok', 'profesi');
+				$rows = $this->db->get(_TBL_DATA_COMBO)->result_array();
+			}elseif($this->get['tipe']=='gender'){
+				$rows = [['id'=>'','data'=>''],['id'=>'L','data'=>'Pria'], ['id'=>'P','data'=>'Wanita']];
+			}
+		}else{
+			$sts=false;
+			$rows=[];
+		}
+		$x=[];
+		sort($rows);
+		if($rows){
+			foreach($rows as $row){
+				$x[]=['id'=>$row['id'],'nama'=>$row['data']];
+			}
+		}
+		$result['data']=$x;
+		$result['status']=$sts;
+		return $result;
+	}
+	
+	function saveSms($data=[]){
+		try{
+			$rows = $this->db->where('hp', $data['no_hp'])->get(_TBL_VIEW_PETUGAS_PUSKESMAS)->row();
+			$result['nama']='';
+			$result['puskesmas']='';
+			if($data['sts_data']==0){
+				$result['pesan'] = 'Format laporan salah, data minggu tidak ada!';
+				$result['sts']=0;
+			}elseif ($rows){
+				$data['petugas_no']=$rows->id;
+				$data['puskesmas_no']=$rows->id_puskesmas;
+				$result['puskesmas']=$rows->puskesmas;
+				$result['pesan']='hi %s, Laporan minggu %s-%s unt %s sudah kami terima dengan ID:%s, %s';
+				$result['sts']=1;
+				$result['nama']=$rows->petugas;
+			}else{
+				$result['pesan']='No HP Anda belum terdaftar di database kami';
+				$result['sts']=0;
+				$result['sts_data']=0;
+				$data['sts_data']==0;
+			}
+			// $data['pesan_balik']=$result['pesan'];
+			$this->db->insert(_TBL_INBOX_NEW, $data);
+			$id=$this->db->insert_id();
+			$result['id']=$id;
+			$upd=[];
+			$upd['pesan_balik']=$mo_message=sprintf($result['pesan'], $result['nama'], $data['minggu'], $data['tahun'], $result['puskesmas'], $result['id'], 'Surveillance KEMENKES RI');
+			$this->db->update(_TBL_INBOX_NEW, $upd, ['id'=>$id]);
+		}catch(Exception $e){
+			$result['pesan']=$e->getMessage();
+			$result['id']=0;
+		}
+		return $result;
+	}
+
+	function set_Minggu_Aktif(){
+		$thn=date('Y');
+		$tgl=date('Y-m-d');
+		
+		$mulai = new DateTime(date('Y-m-d'));
+		$week = $mulai->format("W");
+		$minggu= $week;
+		$x='';
+		$rows = $this->db
+					->select('*')
+					->from('minggu')
+					->where('week_date >=',$tgl)
+					->order_by('week_date', 'asc')
+					->limit(1)
+					->get()->row();
+					
+		// $x=$this->ci->db->last_query();
+		$arr=array();
+		if (!$rows){
+			$thn=date('Y')-1;
+			$rows = $this->db
+						->select('*')
+						->from('minggu')
+						->where('week_date < substring(now(),1,10)')
+						->where('week_year', $thn)
+						->order_by('week_date', 'desc')
+						->limit(1)
+						->get()->row();
+			// $x=$this->ci->db->last_query();
+		}
+		
+		$rows = (array) $rows;
+		
+		if (count($rows)==0){
+			$rows=array('minggu'=>$minggu, 'tahun'=>$thn, 'tanggal'=>$tgl, 'query'=>$x);
+		}else{
+			$rows=array('minggu'=>$rows['week'], 'tahun'=>$rows['week_year'], 'tanggal'=>$rows['week_date'], 'query'=>$x);
+		}
+		
+		return $rows;
+	}
+
+	protected function _detect_method()
+    {
+        // Declare a variable to store the method
+        $method = NULL;
+
+        // Determine whether the 'enable_emulate_request' setting is enabled
+        if ($this->config->item('enable_emulate_request') === TRUE)
+        {
+            $method = $this->input->post('_method');
+            if ($method === NULL)
+            {
+                $method = $this->input->server('HTTP_X_HTTP_METHOD_OVERRIDE');
+            }
+
+            $method = strtolower($method);
+        }
+
+        if (empty($method))
+        {
+            // Get the request method as a lowercase string
+            $method = $this->input->method();
+        }
+
+        return in_array($method, $this->allowed_http_methods) && method_exists($this, '_parse_' . $method) ? $method : 'get';
+    }
+
+	function cek_auth($tk='token_api', $sts_save=false){
+		
+		$token=$this->preference[$tk];//'ufMnCmdj0ON7tyDz9mCxf2blLYzSrVIQM3DSVeMs';
+		$hasil['status']=false;
+		$hasil['keterangan']='Authentication failed';
+		$this->key='';
+		if(array_key_exists('User-Key', $this->header) || array_key_exists('User-Id', $this->header)){
+			if(array_key_exists('User-Key', $this->header)){
+				$this->key=$this->header['User-Key'];
+			}
+			if(array_key_exists('User-Id', $this->header)){
+				$this->key=$this->header['User-Id'];
+			}
+			if($this->key==$token){
+				$hasil['status']=true;
+				$hasil['keterangan']='success';
+			}
+		}
+		$this->ip=get_ip();
+
+		if($hasil['status']==true && intval($this->preference['sts_ip_whitelist'])){
+			$hasil=$this->cekwhitelist();
+		}
+		if($hasil['status']==false || $sts_save==true){
+			$payload=['post'=>$this->post, 'get'=>$this->get, 'header'=>$this->header];
+			$this->db->insert(
+					'ewarn_api_logs_dki', [
+					'method' => $this->uri->uri_string(),
+					'api_key' => $this->key,
+					'ip_address' => $this->ip,
+					'status' => $hasil['keterangan'],
+					'payload' => json_encode($payload, JSON_UNESCAPED_UNICODE, JSON_UNESCAPED_SLASHES),
+					'created_at' => date('Y-m-d H:i:s')
+					]);
+		}
+		// $hasil['ip_address']=$ip;
+		// if($this->input->ip_address()=='192.168.203.2'){
+		// 	die ($this->db->last_query());
+		// }
+		return $hasil;
+	}
+
+	function cekwhitelist(){
+		$hasil['status']=true;
+		$hasil['keterangan']='berhasil';
+		$whitelist=$this->db->get(_TBL_IP_WHITELIST)->result_array();
+		if(!empty($whitelist)){
+			foreach($whitelist as $x){
+				if(trim($x['ip_address'])==$this->ip){
+					$ada=true;
+					break;
+				}
+			}
+			if(!$ada){
+				$hasil['status']=false;
+				$hasil['keterangan']='Authentication failed, your IP address is not registered';
+			}
+		}
+		return $hasil;
+	}
+
+	function get_penyakit(){
+		
+		// doi::dump($this->preference);
+		$rows=$this->db->select('id as uniq_id, code as kode, kode_sms, nama_penyakit as nama')->where('aktif','Y')->get(_TBL_PENYAKIT)->result_array();
+
+		$result['status']=true;
+		$result['data']=$rows;
+		return $result;
+	}
+	function get_propinsi(){
+		$page        = (isset($this->post['page'])) ? intval($this->post['page']) : 1;
+		if (isset($this->post['limit'])){
+            if (intval($this->post['limit']>0)){
+			    $this->limit=$this->post['limit'];
+		    }
+		}
+        if ($page < 1) {$page = 1;}
+
+		if(isset($this->post['id'])){
+			$this->db->where('id', intval($this->post['id']));
+		}
+		if(isset($this->post['kode_prop'])){
+			$this->db->where('kode_depdagri', $this->post['kode_prop']);
+		}
+		$rows = $this->db->get(_TBL_PROPINSI)->num_rows();
+		$result['paging']['total'] = $rows;
+		$result['paging']['page']  = $page;
+		$result['paging']['limit'] = intval($this->limit);
+		$x                         = $rows % $this->limit;
+		$tpage                     = 0;
+		if ($x > 0) {
+			$tpage = 1;
+		}
+		--$page;
+		$result['paging']['total_page'] = intval($rows / $this->limit) + $tpage;
+		$this->db->limit($this->limit, ($page*$this->limit));
+		
+		if(isset($this->post['id'])){
+			$this->db->where('id', intval($this->post['id']));
+		}
+		if(isset($this->post['kode_prop'])){
+			$this->db->where('kode_depdagri', $this->post['kode_prop']);
+		}
+		$rows=$this->db->select('id as uniq_id, kode_depdagri as kode_prop, propinsi')->where('aktif','Y')->get(_TBL_PROPINSI)->result_array();
+
+		$result['data']=$rows;
+		$result['status']=true;
+		return $result;
+	}
+	function get_kota(){
+
+		$page        = (isset($this->post['page'])) ? intval($this->post['page']) : 1;
+		if (isset($this->post['limit'])){
+            if (intval($this->post['limit']>0)){
+			    $this->limit=$this->post['limit'];
+		    }
+		}
+        if ($page < 1) {$page = 1;}
+
+		if(isset($this->post['id'])){
+			$this->db->where('id', intval($this->post['id']));
+		}
+		if(isset($this->post['kode_prop'])){
+			$this->db->where('kode_depdagri_prop', $this->post['kode_prop']);
+		}
+		if(isset($this->post['kode_kota'])){
+			$this->db->where('kode_depdagri', $this->post['kode_kota']);
+		}
+
+		$rows = $this->db->select('id')->get(_TBL_VIEW_KOTA)->num_rows();
+		$result['paging']['total'] = $rows;
+		$result['paging']['page']  = $page;
+		$result['paging']['limit'] = intval($this->limit);
+		$x                         = $rows % $this->limit;
+		$tpage                     = 0;
+		if ($x > 0) {
+			$tpage = 1;
+		}
+		--$page;
+		$result['paging']['total_page'] = intval($rows / $this->limit) + $tpage;
+		$this->db->limit($this->limit, ($page*$this->limit));
+
+		if(isset($this->post['id'])){
+			$this->db->where('id', intval($this->post['id']));
+		}
+		if(isset($this->post['kode_prop'])){
+			$this->db->where('kode_depdagri_prop', $this->post['kode_prop']);
+		}
+		if(isset($this->post['kode_kota'])){
+			$this->db->where('kode_depdagri', $this->post['kode_kota']);
+		}
+		$rows=$this->db->select('id as uniq_id, kode_depdagri_prop as kode_prop, kode_depdagri as kode_kota, propinsi, kota')->where('aktif','Y')->get(_TBL_VIEW_KOTA)->result_array();
+		$result['data']=$rows;
+		$result['status']=true;
+		return $result;
+	}
+	function get_kecamatan(){
+		$page        = (isset($this->post['page'])) ? intval($this->post['page']) : 1;
+		if (isset($this->post['limit'])){
+            if (intval($this->post['limit']>0)){
+			    $this->limit=$this->post['limit'];
+		    }
+		}
+        if ($page < 1) {$page = 1;}
+
+		if(isset($this->post['id'])){
+			$this->db->where('id', intval($this->post['id']));
+		}
+		if(isset($this->post['kode_prop'])){
+			$this->db->where('kode_depdagri_prop', $this->post['kode_prop']);
+		}
+		if(isset($this->post['kode_kota'])){
+			$this->db->where('kode_depdagri_kota', $this->post['kode_kota']);
+		}
+		if(isset($this->post['kode_kecamatan'])){
+			$this->db->where('kode_depdagri', $this->post['kode_kecamatan']);
+		}
+
+		$rows = $this->db->select('id')->where('aktif','Y')->get(_TBL_VIEW_DISTRIK)->num_rows();
+		$result['paging']['total'] = $rows;
+		$result['paging']['page']  = $page;
+		$result['paging']['limit'] = intval($this->limit);
+		$x                         = $rows % $this->limit;
+		$tpage                     = 0;
+		if ($x > 0) {
+			$tpage = 1;
+		}
+		--$page;
+		$result['paging']['total_page'] = intval($rows / $this->limit) + $tpage;
+		$this->db->limit($this->limit, ($page*$this->limit));
+
+		if(isset($this->post['id'])){
+			$this->db->where('id', intval($this->post['id']));
+		}
+		if(isset($this->post['kode_prop'])){
+			$this->db->where('kode_depdagri_prop', $this->post['kode_prop']);
+		}
+		if(isset($this->post['kode_kota'])){
+			$this->db->where('kode_depdagri_kota', $this->post['kode_kota']);
+		}
+		if(isset($this->post['kode_kecamatan'])){
+			$this->db->where('kode_depdagri', $this->post['kode_kecamatan']);
+		}
+		$rows=$this->db->select('id as uniq_id,kode_depdagri_prop as kode_prop, kode_depdagri_kota as kode_kota,  kode_depdagri as kode_kecamatan, propinsi, kota, distrik as kecamatan')->where('aktif','Y')->get(_TBL_VIEW_DISTRIK)->result_array();
+		$result['data']=$rows;
+		$result['status']=true;
+		return $result;
+	}
+	function get_unit(){
+
+		$page        = (isset($this->post['page'])) ? intval($this->post['page']) : 1;
+		if (isset($this->post['limit'])){
+            if (intval($this->post['limit']>0)){
+			    $this->limit=$this->post['limit'];
+		    }
+		}
+        if ($page < 1) {$page = 1;}
+
+		if(isset($this->post['id'])){
+			$this->db->where('id', intval($this->post['id']));
+		}
+		if(isset($this->post['kode_unit'])){
+			$this->db->where('id_unit', intval($this->post['kode_unit']));
+		}
+		if(isset($this->post['kode_prop'])){
+			$this->db->where('kode_depdagri_prop', $this->post['kode_prop']);
+		}
+		if(isset($this->post['kode_kota'])){
+			$this->db->where('kode_depdagri_kota', $this->post['kode_kota']);
+		}
+		if(isset($this->post['kode_kecamatan'])){
+			$this->db->where('kode_depdagri_distrik', $this->post['kode_kecamatan']);
+		}
+
+		$rows = $this->db->select('id')->where('aktif','Y')->get(_TBL_VIEW_PUSKESMAS)->num_rows();
+		$result['paging']['total'] = $rows;
+		$result['paging']['page']  = $page;
+		$result['paging']['limit'] = intval($this->limit);
+		$x                         = $rows % $this->limit;
+		$tpage                     = 0;
+		if ($x > 0) {
+			$tpage = 1;
+		}
+		--$page;
+		$result['paging']['total_page'] = intval($rows / $this->limit) + $tpage;
+		$this->db->limit($this->limit, ($page*$this->limit));
+
+		if(isset($this->post['id'])){
+			$this->db->where('id', intval($this->post['id']));
+		}
+		if(isset($this->post['kode_unit'])){
+			$this->db->where('id_unit', intval($this->post['kode_unit']));
+		}
+		if(isset($this->post['kode_prop'])){
+			$this->db->where('kode_depdagri_prop', $this->post['kode_prop']);
+		}
+		if(isset($this->post['kode_kota'])){
+			$this->db->where('kode_depdagri_kota', $this->post['kode_kota']);
+		}
+		if(isset($this->post['kode_kecamatan'])){
+			$this->db->where('kode_depdagri_distrik', $this->post['kode_kecamatan']);
+		}
+		$rows=$this->db->select('id as uniq_id,kode_depdagri_prop as kode_prop, kode_depdagri_kota as kode_kota, kode_depdagri_distrik as kode_kecamatan, id_unit unit_id, unit_pelapor as unit, kode_puskesmas as kode, propinsi, kota, distrik as kecamatan, puskesmas as nama_unit, alamat')->where('aktif','Y')->get(_TBL_VIEW_PUSKESMAS)->result_array();
+		$result['data']=$rows;
+		$result['status']=true;
+		return $result;
+	}
+
+	function get_aggregat(){
+		$page        = (isset($this->post['page'])) ? intval($this->post['page']) : 1;
+		if (isset($this->post['limit'])){
+            if (intval($this->post['limit']>0)){
+			    $this->limit=$this->post['limit'];
+		    }
+		}
+        if ($page < 1) {$page = 1;}
+
+		if(isset($this->post['id'])){
+			$this->db->where('id', intval($this->post['id']));
+		}
+		if(isset($this->post['kode_unit'])){
+			if(!empty($this->post['kode_unit'])){
+				$this->db->where('kode_puskesmas', $this->post['kode_unit']);
+			}
+		}
+		if(isset($this->post['kategori_unit_id'])){
+			if(!empty($this->post['kategori_unit_id'])){
+				$this->db->where('id_unit', intval($this->post['kategori_unit_id']));
+			}
+		}
+		if(isset($this->post['kode_prov'])){
+			if(!empty($this->post['kode_prov'])){
+				$this->db->where('kode_depdagri_prop', $this->post['kode_prov']);
+			}
+		}
+		if(isset($this->post['kode_kota'])){
+			if(!empty($this->post['kode_kota'])){
+				$this->db->where('kode_depdagri_kota', $this->post['kode_kota']);
+			}
+		}
+		if(isset($this->post['tahun'])){
+			$this->db->where('year', $this->post['tahun']);
+		}else{
+			$this->db->where('year', date('Y'));
+		}
+		if(isset($this->post['minggu'])){
+			$this->db->where('minggu', $this->post['minggu']);
+		}else{
+			$minggu=date('W');
+			$this->db->where('minggu', date('W'));
+		}
+
+		$rows = $this->db->select('id')->get(_TBL_VIEW_DATAREPORT)->num_rows();
+		$result['paging']['total'] = $rows;
+		$result['paging']['page']  = $page;
+		$result['paging']['limit'] = intval($this->limit);
+		$x                         = $rows % $this->limit;
+		$tpage                     = 0;
+		if ($x > 0) {
+			$tpage = 1;
+		}
+		--$page;
+		$result['paging']['total_page'] = intval($rows / $this->limit) + $tpage;
+		$this->db->limit($this->limit, ($page*$this->limit));
+
+		if(isset($this->post['id'])){
+			$this->db->where('id', intval($this->post['id']));
+		}
+		if(isset($this->post['kode_unit'])){
+			if(!empty($this->post['kode_unit'])){
+				$this->db->where('kode_puskesmas', $this->post['kode_unit']);
+			}
+		}
+		if(isset($this->post['unit_id'])){
+			if(!empty($this->post['unit_id'])){
+				$this->db->where('id_puskesmas', intval($this->post['unit_id']));
+			}
+		}
+		if(isset($this->post['kode_prov'])){
+			if(!empty($this->post['kode_prov'])){
+				$this->db->where('kode_depdagri_prop', $this->post['kode_prov']);
+			}
+		}
+		if(isset($this->post['kode_kota'])){
+			if(!empty($this->post['kode_kota'])){
+				$this->db->where('kode_depdagri_kota', $this->post['kode_kota']);
+			}
+		}
+		if(isset($this->post['tahun'])){
+			$this->db->where('year', $this->post['tahun']);
+		}else{
+			$this->db->where('year', date('Y'));
+		}
+		if(isset($this->post['minggu'])){
+			$this->db->where('minggu', $this->post['minggu']);
+		}else{
+			$minggu=date('W');
+			$this->db->where('minggu', date('W'));
+		}
+		$this->db->order_by('minggu');
+
+		$rows=$this->db->select('id as uniq_id, id_unit kategori_unit_id, unit_pelapor kategori_unit_pelapor, id_puskesmas unit_id, kode_puskesmas kode_unit, kode_depdagri_prop kode_prov, kode_depdagri_kota kode_kota, propinsi as provinsi, kota, distrik as kecamatan, puskesmas as unit, kelompok, nama_petugas as petugas, year as tahun, minggu, form_date, sts_tepat, sts_simpan as tipe_input, create_date, create_user')->get(_TBL_VIEW_DATAREPORT)->result_array();
+		$x=[];
+		// if (getUserIP()=='103.126.10.22'){
+		// 	die($this->db->last_query());
+		// }
+		$arr_detail=[];
+		foreach($rows as $row){
+			$x[]=$row['uniq_id'];
+		}
+		if($x){
+			$rows_detail=$this->db->where_in('id_datareport', $x)->get(_TBL_VIEW_DATAREPORT_DETAIL)->result_array();
+			foreach($rows_detail as $row){
+				if(isset($this->post['status_kasus'])){
+					if(intval($this->post['status_kasus'])){
+						if(intval($row['nilai'])){
+							$arr_detail[$row['id_datareport']][$row['kode_sms']]=['penyakit'=>$row['nama_penyakit'], 'kasus'=>$row['nilai']];
+						}
+					}else{
+						$arr_detail[$row['id_datareport']][$row['kode_sms']]=['penyakit'=>$row['nama_penyakit'], 'kasus'=>$row['nilai']];
+					}
+				}else{
+					$arr_detail[$row['id_datareport']][$row['kode_sms']]=['penyakit'=>$row['nama_penyakit'], 'kasus'=>$row['nilai']];
+				}
+			}
+
+			foreach($rows as &$row){
+				if(array_key_exists($row['uniq_id'], $arr_detail)){
+					$row['detail']=$arr_detail[$row['uniq_id']];
+				}
+			}
+			unset($row);
+		}
+		$result['data']=$rows;
+		$result['status']=true;
+		return $result;
+	}
+
+	function get_alert($id_prop=0){
+		$page        = (isset($this->post['page'])) ? intval($this->post['page']) : 1;
+		if (isset($this->post['limit'])){
+            if (intval($this->post['limit']>0)){
+			    $this->limit=$this->post['limit'];
+		    }
+		}
+        if ($page < 1) {$page = 1;}
+
+		if(isset($this->post['id'])){
+			$this->db->where('id', intval($this->post['id']));
+		}
+		if(isset($this->post['kode_unit'])){
+			$this->db->where('kode_puskesmas', $this->post['kode_unit']);
+		}
+
+		if(isset($this->post['unit_id'])){
+			$this->db->where('id_place', $this->post['unit_id']);
+		}
+		if(isset($this->post['kategori_unit_id'])){
+			$this->db->where('id_unit', $this->post['kategori_unit_id']);
+		}
+		if(isset($this->post['kode_prov'])){
+			if(!empty($this->post['kode_prov'])){
+				$this->db->where('kode_depdagri_prop', $this->post['kode_prov']);
+			}
+		}
+		if(isset($this->post['kode_kota'])){
+			if(!empty($this->post['kode_kota'])){
+				$this->db->where('kode_depdagri_kota', $this->post['kode_kota']);
+			}
+		}
+		if(isset($this->post['kode_kako'])){
+			if(!empty($this->post['kode_kako'])){
+				$this->db->where('id_kota', $this->post['kode_kako']);
+			}
+		}
+		
+		if(isset($this->post['tahun'])){
+			$tahun=$this->post['tahun'];
+			$this->db->where('tahun', $this->post['tahun']);
+		}else{
+			$tahun=date('Y');
+			$this->db->where('tahun', date('Y'));
+		}
+		if(isset($this->post['minggu'])){
+			$minggu=$this->post['minggu'];
+			$this->db->where('minggu', $this->post['minggu']);
+		}else{
+			$minggu=date('W');
+			$this->db->where('minggu', date('W'));
+		}
+		if($id_prop>0){
+			$this->db->where('id_prop', $id_prop);
+			if($id_prop==7){
+				$this->db->where('id_unit', 1);
+			}
+		}
+
+		$rows = $this->db->select('id')->get(_TBL_VIEW_ALERT)->num_rows();
+		$result['paging']['total'] = $rows;
+		$result['paging']['page']  = $page;
+		$result['paging']['limit'] = intval($this->limit);
+		$x                         = $rows % $this->limit;
+		$tpage                     = 0;
+		if ($x > 0) {
+			$tpage = 1;
+		}
+		--$page;
+		$result['paging']['total_page'] = intval($rows / $this->limit) + $tpage;
+		$this->db->limit($this->limit, ($page*$this->limit));
+
+		if(isset($this->post['id'])){
+			$this->db->where('id', intval($this->post['id']));
+		}
+		if(isset($this->post['kode_unit'])){
+			$this->db->where('kode_puskesmas', $this->post['kode_unit']);
+		}
+
+		if(isset($this->post['unit_id'])){
+			$this->db->where('id_place', $this->post['unit_id']);
+		}
+		if(isset($this->post['kategori_unit_id'])){
+			$this->db->where('id_unit', $this->post['kategori_unit_id']);
+		}
+		if(isset($this->post['kode_prov'])){
+			if(!empty($this->post['kode_prov'])){
+				$this->db->where('kode_depdagri_prop', $this->post['kode_prov']);
+			}
+		}
+		if(isset($this->post['kode_kota'])){
+			if(!empty($this->post['kode_kota'])){
+				$this->db->where('kode_depdagri_kota', $this->post['kode_kota']);
+			}
+		}
+		
+		if(isset($this->post['tahun'])){
+			$tahun=$this->post['tahun'];
+			$this->db->where('tahun', $this->post['tahun']);
+		}else{
+			$tahun=date('Y');
+			$this->db->where('tahun', date('Y'));
+		}
+		if(isset($this->post['minggu'])){
+			$minggu=$this->post['minggu'];
+			$this->db->where('minggu', $this->post['minggu']);
+		}else{
+			$minggu=date('W');
+			$this->db->where('minggu', date('W'));
+		}
+		if($id_prop>0){
+			$this->db->where('id_prop', $id_prop);
+			if($id_prop==7){
+				$this->db->where('id_unit', 1);
+			}
+		}
+		$this->db->order_by('minggu');
+		$rows=$this->db->select('id as uniq_id, id_unit kategori_unit_id, unit_pelapor kategori_unit_pelapor, id_place unit_id , kode_puskesmas kode_unit, propinsi as provinsi, kota, distrik as kecamatan, puskesmas as unit, lokasi as alamat, lat, lng, nama_penyakit, code as kode_penyakit, tahun, minggu, nilai as kasus, jml_kematian, sts_verifikasi, note, tgl_verif as tgl_verifikasi, petugas as petugas_verifikasi, temuan, klb, respon24, jenis_verif, gejala, kronologi, tindakan, spesimen_diperiksa, hasil_pemeriksaan')->get(_TBL_VIEW_ALERT)->result_array();
+		
+		if ($id_prop==7){
+			foreach($rows as &$row){
+				$plain_text = $row['uniq_id'];
+				$encrypted = $this->encrypt_text($plain_text);
+				$row['uniq_id']=$encrypted;
+			}	
+			unset($row);
+		}	
+
+		// $result['sql']=$this->db->last_query();
+		// die($this->db->last_query());
+		$result['status']=true;
+		$result['data']=$rows;
+		$result['tahun']=$tahun;
+		$result['minggu']=$minggu;
+
+		return $result;
+	}
+
+	function get_mbg($mode=1){
+		$page        = (isset($this->post['page'])) ? intval($this->post['page']) : 1;
+		if (isset($this->post['limit'])){
+            if (intval($this->post['limit']>0)){
+			    $this->limit=$this->post['limit'];
+		    }
+		}
+        if ($page < 1) {$page = 1;}
+		
+		if(isset($this->post['tahun'])){
+			$tahun=$this->post['tahun'];
+			$this->db->where('tahun', $this->post['tahun']);
+		}else{
+			$tahun=date('Y');
+			$this->db->where('tahun', date('Y'));
+		}
+		if(isset($this->post['bulan'])){
+			$this->db->where('bulan', $this->post['bulan']);
+		}
+		if(isset($this->post['no_mbg'])){
+			$this->db->where('no_mbg', $this->post['no_mbg']);
+		}
+		if(isset($this->post['kode_prop'])){
+			$this->db->where('kode_prop', $this->post['kode_prop']);
+		}
+		if(isset($this->post['kode_kota'])){
+			$this->db->where('kode_kota', $this->post['kode_kota']);
+		}
+		if(isset($this->post['tgl_dari'])) $this->db->where('create_date >=', $this->post['tgl_dari']);
+		if(isset($this->post['tgl_sampai'])) $this->db->where('create_date <=', $this->post['tgl_sampai'].' 23:59:59');
+
+		$rows = $this->db->select('id')->get(_TBL_VIEW_MBG)->num_rows();
+		$result['paging']['total'] = $rows;
+		$result['paging']['page']  = $page;
+		$result['paging']['limit'] = intval($this->limit);
+		$x                         = $rows % $this->limit;
+		$tpage                     = 0;
+		if ($x > 0) {
+			$tpage = 1;
+		}
+		--$page;
+		$result['paging']['total_page'] = intval($rows / $this->limit) + $tpage;
+		$this->db->limit($this->limit, ($page*$this->limit));
+
+		if(isset($this->post['tahun'])){
+			$tahun=$this->post['tahun'];
+			$this->db->where('tahun', $this->post['tahun']);
+		}else{
+			$tahun=date('Y');
+			$this->db->where('tahun', date('Y'));
+		}
+		if(isset($this->post['bulan'])){
+			$this->db->where('bulan', $this->post['bulan']);
+		}
+		if(isset($this->post['no_mbg'])){
+			$this->db->where('no_mbg', $this->post['no_mbg']);
+		}
+		if(isset($this->post['kode_prop'])){
+			$this->db->where('kode_depdagri_prop', $this->post['kode_prop']);
+		}
+		if(isset($this->post['kode_kota'])){
+			$this->db->where('kode_depdagri_kota', $this->post['kode_kota']);
+		}
+		if(isset($this->post['tgl_dari'])) $this->db->where('create_date >=', $this->post['tgl_dari']);
+		if(isset($this->post['tgl_sampai'])) $this->db->where('create_date <=', $this->post['tgl_sampai'].' 23:59:59');
+		$this->db->order_by('tahun, bulan');
+		if($mode==1){	
+			$rows=$this->db->select('id, id id_uniq, no_mbg, create_date tanggal_pelaporan, hp_pelapor, email_pelapor, tgl_kejadian tanggal_kejadian, tgl_makan tanggal_makan, tgl_gejala tanggal_gejala, kode_depdagri_prop kode_prop, kode_depdagri_kota kode_kota, kode_depdagri_distrik kode_kecamatan, propinsi provinsi, kota, distrik kecamatan, desa, sekolah, jml_kasus jumlah_kasus, jml_mati jumlah_kematian, jml_rawatinap jumlah_rawat_inap, jml_rawatjalan jumlah_rawat_jalan, jml_sembuh jumlah_sembuh, jml_pria jumlah_pria, jml_wanita jumlah_wanita, usia4 usia_4, usia59 usia_5_9, usia1014 usia_10_14, usia1519 usia_15_19, usia20 usia_20, jml_sekolah jumlah_sekolah, kloter_anter kloter_pengantaran, \'\' list_gejala, tanda_gejala, inku_pendek inkubasi_terpendek, inku_panjang inkubasi_terpanjang, inku_rata inkubasi_rata, inku_median inkubasi_median, karbohidrat, protein1 protein_1, protein2 protein_2, sayur, buah, faskes faskes_penanganan_kasus, diag_banding diagnosa_banding , nama_sppg, yayasan_sppg, kode_sppg, \'\'  info_sekolah, bumil ibu_hamil, busui ibu_menyusui, balita, case when serti_sppg=0 then \'ya\' else \'tidak\' end serti_sppg, if(hasil_ikl=1, \'Memenuhi syarat\', \'Tidak memenuhi syarat\') hasil_ikl, create_date created_at, update_date updated_at')->get(_TBL_VIEW_MBG)->result_array();
+		}else{
+			$rows=$this->db->select('id, id id_uniq, no_mbg, tgl_ambil_sample, tgl_kirim_sample, tgl_keluar_hasil, nama_lab, kode_sppg, \'\'  sample_lab, create_date created_at, update_date updated_at')->get(_TBL_VIEW_MBG)->result_array();
+		}
+		
+		$arr_id=[];
+		foreach($rows as &$row){
+			$arr_id[]=$row['id'];
+			$plain_text = $row['id'];
+			$encrypted = $this->encrypt_text($plain_text);
+			$row['id_uniq']=$encrypted;
+		}	
+		unset($row);
+		$arr_sppg=[];
+		$arr_gejala=[];
+		if($mode==1){	
+			$sppg_rows=$this->db->where_in('mbg_id', $arr_id)->order_by('mbg_id')->get(_TBL_MBG_SPPG)->result_array();
+			$gejala_rows=$this->db->where('kelompok', 'gejala_mbg')->get(_TBL_DATA_COMBO)->result_array();
+			foreach($gejala_rows as $gr){
+				$arr_gejala[$gr['id']]=$gr['data'];
+			}
+			foreach($sppg_rows as $sppg){
+				$arr_sppg[$sppg['mbg_id']][]=['nama_sekolah'=>$sppg['sekolah'], 'jml_siswa'=>$sppg['jml_siswa'], 'jml_porsi'=>$sppg['jml_porsi'], 'sts_uks'=>$sppg['uks'], 'sts_uji_organoleptik'=>$sppg['sk'], 'sarana_ctps'=>$sppg['kepemilikan']];
+			}
+		}else{
+			$sample_lab_rows=$this->db->where('kelompok', 'sample_lab')->get(_TBL_DATA_COMBO)->result_array();
+			foreach($sample_lab_rows as $gr){
+				$arr_gejala[$gr['id']]=$gr['data'];
+			}
+			$sppg_rows=$this->db->where_in('mbg_id', $arr_id)->order_by('mbg_id')->get(_TBL_MBG_LAB)->result_array();
+			foreach($sppg_rows as $sppg){
+				$kategori=$sppg['kategori_id'];
+				if(array_key_exists(intval($sppg['kategori_id']), $arr_gejala)){
+					$kategori=$arr_gejala[intval($sppg['kategori_id'])];
+				}
+				$arr_sppg[$sppg['mbg_id']][]=['kategori'=>$kategori, 'sample'=>$sppg['sample'], 'sumber'=>$sppg['sumber'], 'hasil_mikrobiologi_positif'=>$sppg['hasil_mikrobiologi_positif'], 'hasil_mikrobiologi_negatif'=>$sppg['hasil_mikrobiologi_negatif'], 'hasil_kimia_positif'=>$sppg['hasil_kimia_positif'], 'hasil_kimia_negatif'=>$sppg['hasil_kimia_negatif']];
+			}
+		}
+		foreach($rows as &$row){
+			if($mode==1){
+				if(array_key_exists($row['id'], $arr_sppg)){
+					$row['info_sekolah']=$arr_sppg[$row['id']];
+				}else{
+					$row['info_sekolah']=[];
+				}
+				$gejala=json_decode($row['tanda_gejala'],true);
+				foreach($gejala as &$g){
+					if(array_key_exists(intval($g['gejala']), $arr_gejala)){
+						$g['gejala']=$arr_gejala[$g['gejala']];
+					}
+				}
+				unset($g);
+				unset($row['tanda_gejala']);
+				$row['list_gejala']=$gejala;
+			}else{
+				if(array_key_exists($row['id'], $arr_sppg)){
+					$row['sample_lab']=$arr_sppg[$row['id']];
+				}else{
+					$row['sample_lab']=[];
+				}
+			}
+			unset($row['id']);
+		}	
+		unset($row);
+
+		$result['status']=true;
+		$result['data']=$rows;
+
+		return $result;
+	}
+
+	function get_users(){
+		$page = isset($this->post['page']) ? intval($this->post['page']) : 1;
+		if(isset($this->post['limit']) && intval($this->post['limit'])>0){
+			$this->limit = $this->post['limit'];
+		}
+		if($page < 1) $page = 1;
+		$kel_label = ['0'=>'Pusat','1'=>'Provinsi','2'=>'Kab/Kota','3'=>'Kecamatan','4'=>'Puskesmas','5'=>'Rumah Sakit','6'=>'Laboratorium','7'=>'PHEOC','8'=>'Klinik','9'=>'BKK'];
+		// Filter
+		$this->db->where('is_admin', 0)->where('aktif', 'Y');
+		if(isset($this->post['kel_place'])){
+			$this->db->where('kel_place', $this->post['kel_place']);
+		}
+		if(isset($this->post['id_place'])){
+			$this->db->where('id_place', $this->post['id_place']);
+		}
+		if(isset($this->post['username'])){
+			$this->db->like('username', $this->post['username']);
+		}
+		$total = $this->db->select('id')->get('ewarn_users')->num_rows();
+		$total_page = ceil($total / $this->limit);
+		$offset = ($page-1) * $this->limit;
+		if(isset($this->post['kel_place'])){
+			$this->db->where('kel_place', $this->post['kel_place']);
+		}
+		if(isset($this->post['id_place'])){
+			$this->db->where('id_place', $this->post['id_place']);
+		}
+		if(isset($this->post['username'])){
+			$this->db->like('username', $this->post['username']);
+		}
+		$rows = $this->db->select('id, username, nama_lengkap, nip, email, hp, level, kel_place, id_place, kel_akses, id_akses, aktif, create_date, update_date')
+			->where('is_admin', 0)->where('aktif', 'Y')
+			->limit($this->limit, $offset)
+			->order_by('kel_place, nama_lengkap')
+			->get('ewarn_users')->result_array();
+		foreach($rows as &$row){
+			$kel = strval($row['kel_place']);
+			$row['level_akses'] = isset($kel_label[$kel]) ? $kel_label[$kel] : 'Lainnya';
+			$lokasi = '';
+			if($row['kel_place']==1){
+				$r = $this->db->select('propinsi as nama')->where('id',$row['id_place'])->get('ewarn_propinsi')->row_array();
+				$lokasi = $r ? $r['nama'] : '';
+			}elseif($row['kel_place']==2){
+				$r = $this->db->select('kota as nama')->where('id',$row['id_place'])->get('ewarn_kota')->row_array();
+				$lokasi = $r ? $r['nama'] : '';
+			}elseif($row['kel_place']>=3){
+				$r = $this->db->select('puskesmas as nama')->where('id',$row['id_place'])->get('ewarn_view_puskesmas')->row_array();
+				$lokasi = $r ? $r['nama'] : '';
+			}else{
+				$lokasi = 'Pusat';
+			}
+			$row['lokasi'] = $lokasi;
+			// Level Akses Wilayah
+			$kel_a = strval($row['kel_akses']);
+			$row['level_akses_wilayah'] = isset($kel_label[$kel_a]) ? $kel_label[$kel_a] : 'Lainnya';
+			$lokasi_akses = '';
+			if($row['kel_akses']==1){
+				$r = $this->db->select('propinsi as nama')->where('id',$row['id_akses'])->get('ewarn_propinsi')->row_array();
+				$lokasi_akses = $r ? $r['nama'] : '';
+			}elseif($row['kel_akses']==2){
+				$r = $this->db->select('kota as nama')->where('id',$row['id_akses'])->get('ewarn_kota')->row_array();
+				$lokasi_akses = $r ? $r['nama'] : '';
+			}elseif($row['kel_akses']>=3){
+				$r = $this->db->select('puskesmas as nama')->where('id',$row['id_akses'])->get('ewarn_view_puskesmas')->row_array();
+				$lokasi_akses = $r ? $r['nama'] : '';
+			}else{
+				$lokasi_akses = 'Pusat';
+			}
+			$row['lokasi_akses'] = $lokasi_akses;
+			unset($row['aktif']);
+		}
+		return ['status'=>true, 'paging'=>['total'=>$total,'page'=>$page,'limit'=>$this->limit,'total_page'=>$total_page], 'data'=>$rows, 'kode'=>200];
+	}
+
+	function save_agregat_puskesmas(){
+		$p = $this->post;
+		// Validasi field wajib
+		$required = ['id_puskesmas','id_petugas_puskesmas','year','time_unit_value','detail'];
+		foreach($required as $f){
+			if(!isset($p[$f]) || $p[$f]==='' || $p[$f]===null){
+				return ['status'=>false,'keterangan'=>'Field '.$f.' wajib diisi','kode'=>400];
+			}
+		}
+		// Validasi detail harus array
+		if(!is_array($p['detail']) || count($p['detail'])==0){
+			return ['status'=>false,'keterangan'=>'Field detail harus berupa array penyakit','kode'=>400];
+		}
+		// Validasi total kunjungan (id_penyakit=22) tidak boleh 0
+		foreach($p['detail'] as $d){
+			if(intval($d['id_penyakit'])==22 && intval($d['nilai'])<=0){
+				return ['status'=>false,'keterangan'=>'Total Kunjungan (id_penyakit=22) harus diisi dan tidak boleh 0','kode'=>400];
+			}
+		}
+		// Validasi minggu tidak boleh > minggu aktif
+		// Ambil minggu aktif dari tabel ewarn_minggu
+		$row_minggu = $this->db->select('week, week_year')->where('week_date >=', date('Y-m-d'))->order_by('week_date','asc')->limit(1)->get('ewarn_minggu')->row_array();
+		if(!$row_minggu){
+			$row_minggu = $this->db->select('week, week_year')->where('week_date <', date('Y-m-d'))->order_by('week_date','desc')->limit(1)->get('ewarn_minggu')->row_array();
+		}
+		$minggu_aktif = $row_minggu ? intval($row_minggu['week']) : intval(date('W'));
+		$tahun_aktif  = $row_minggu ? intval($row_minggu['week_year']) : intval(date('Y'));
+		$tahun_aktif  = intval(date('Y'));
+		$minggu_input = intval($p['time_unit_value']);
+		$tahun_input  = intval($p['year']);
+		if($tahun_input > $tahun_aktif || ($tahun_input == $tahun_aktif && $minggu_input > $minggu_aktif)){
+			return ['status'=>false,'keterangan'=>'Minggu '.$minggu_input.'/'.$tahun_input.' melebihi minggu aktif '.$minggu_aktif.'/'.$tahun_aktif,'kode'=>400];
+		}
+		// Cek duplikat
+		$cek = $this->db->where('time_unit_value',$p['time_unit_value'])->where('year',$p['year'])->where('id_puskesmas',$p['id_puskesmas'])->get('ewarn_datareport')->row_array();
+		if($cek){
+			return ['status'=>false,'keterangan'=>'Data minggu '.$p['time_unit_value'].'/'.$p['year'].' sudah pernah dientry','kode'=>409,'id'=>$cek['id']];
+		}
+		// Hitung sts_tepat
+		$kirim = date('w');
+		$sts_tepat = ($minggu_input == $minggu_aktif && intval($kirim)<=2) ? 1 : 0;
+		// Insert header
+		$header = [
+			'id_puskesmas'       => intval($p['id_puskesmas']),
+			'id_petugas_puskesmas'=> $p['id_petugas_puskesmas'],
+			'id_unit'            => isset($p['id_unit']) ? intval($p['id_unit']) : 0,
+			'year'               => $tahun_input,
+			'time_unit'          => 1,
+			'time_unit_value'    => $minggu_input,
+			'time_unit_date'     => date('Y-m-d H:i:s'),
+			'form_date'          => isset($p['form_date']) ? $p['form_date'] : date('Y-m-d'),
+			'data_entry_date'    => date('Y-m-d H:i:s'),
+			'sts_simpan'         => 7,
+			'sts_tepat'          => $sts_tepat,
+			'create_date'        => date('Y-m-d H:i:s'),
+			'create_user'        => isset($p['create_user']) ? $p['create_user'] : 'api',
+			'petugas_entry'      => isset($p['create_user']) ? $p['create_user'] : 'api',
+		];
+		$this->db->insert('ewarn_datareport', $header);
+		$id = $this->db->insert_id();
+		if(!$id) return ['status'=>false,'keterangan'=>'Gagal menyimpan header laporan','kode'=>500];
+		// Load alert library
+		$this->load->library('alert');
+		// Insert detail per penyakit
+		$detail_saved = 0;
+		foreach($p['detail'] as $d){
+			$id_penyakit = intval($d['id_penyakit']);
+			$nilai = isset($d['nilai']) ? intval($d['nilai']) : 0;
+			$kematian = isset($d['kematian']) ? intval($d['kematian']) : 0;
+			$lab = isset($d['lab']) ? intval($d['lab']) : 0;
+			// Generate alert
+			$alert = $this->alert->set_data(['id_puskesmas'=>intval($p['id_puskesmas']),'kasus'=>$nilai,'id_penyakit'=>$id_penyakit,'id_minggu'=>$minggu_input,'id_tahun'=>$tahun_input])->generate_alert()->draw();
+			$detail = [
+				'id_datareport' => $id,
+				'id_penyakit'   => $id_penyakit,
+				'nilai'         => $nilai,
+				'jml_kematian'  => $kematian,
+				'lab'           => $lab,
+				'create_date'   => date('Y-m-d H:i:s'),
+				'create_user'   => isset($p['create_user']) ? $p['create_user'] : 'api',
+			];
+			if(isset($alert[$id_penyakit]) && $alert[$id_penyakit]['sts_alert']){
+				$detail['sts_alert'] = $alert[$id_penyakit]['sts_alert'];
+				$detail['kasus']     = $alert[$id_penyakit]['kasus'];
+				$detail['ambang']    = $alert[$id_penyakit]['ambang'];
+				$detail['criteria']  = $alert[$id_penyakit]['criteria'];
+				$detail['bandingkan']= $alert[$id_penyakit]['bandingkan'];
+			}
+			$this->db->insert('ewarn_datareport_detail', $detail);
+			$detail_saved++;
+		}
+		return [
+			'status'     => true,
+			'kode'       => 200,
+			'keterangan' => 'Data agregat berhasil disimpan',
+			'id'         => $id,
+			'sts_tepat'  => $sts_tepat,
+			'detail_saved'=> $detail_saved,
+			'minggu'     => $minggu_input,
+			'tahun'      => $tahun_input,
+		];
+	}
+
+	function get_list_ebs_new(){
+		$page = isset($this->post['page']) ? intval($this->post['page']) : 1;
+		if(isset($this->post['limit']) && intval($this->post['limit'])>0) $this->limit=$this->post['limit'];
+		if($page<1) $page=1;
+		// Filter
+		$tahun = isset($this->post['tahun']) ? $this->post['tahun'] : date('Y');
+		$this->db->where('tahun', $tahun);
+		if(isset($this->post['bulan'])) $this->db->where('bulan', $this->post['bulan']);
+		if(isset($this->post['kode_prop'])) $this->db->where('kode_depdagri_prop', $this->post['kode_prop']);
+		if(isset($this->post['kode_kota'])) $this->db->where('kode_depdagri_kota', $this->post['kode_kota']);
+		if(isset($this->post['no_ebs'])) $this->db->where('no_ebs', $this->post['no_ebs']);
+		if(isset($this->post['diagnosa_no'])) { $dn=$this->post['diagnosa_no']; if(strpos($dn,',')!==false){ $this->db->where_in('diagnosa_no', array_map('intval', explode(',',$dn))); }else{ $this->db->where('diagnosa_no', intval($dn)); } }
+		if(isset($this->post['tgl_dari'])) $this->db->where('tgl_laporan >=', $this->post['tgl_dari']);
+		if(isset($this->post['tgl_sampai'])) $this->db->where('tgl_laporan <=', $this->post['tgl_sampai']);
+		if(isset($this->post['update_dari'])) $this->db->where('update_date >=', $this->post['update_dari']);
+		if(isset($this->post['update_sampai'])) $this->db->where('update_date <=', $this->post['update_sampai']);
+		$total = $this->db->select('id')->get('ewarn_view_form_ebs_new')->num_rows();
+		if(isset($this->post['kode_kako'])) $this->db->where('id_kota', intval($this->post['kode_kako']));
+		$total_page = ceil($total/$this->limit);
+		$offset = ($page-1)*$this->limit;
+		// Re-apply filters for data query
+		$this->db->where('tahun', $tahun);
+		if(isset($this->post['bulan'])) $this->db->where('bulan', $this->post['bulan']);
+		if(isset($this->post['kode_prop'])) $this->db->where('kode_depdagri_prop', $this->post['kode_prop']);
+		if(isset($this->post['kode_kota'])) $this->db->where('kode_depdagri_kota', $this->post['kode_kota']);
+		if(isset($this->post['no_ebs'])) $this->db->where('no_ebs', $this->post['no_ebs']);
+		if(isset($this->post['diagnosa_no'])) { $dn=$this->post['diagnosa_no']; if(strpos($dn,',')!==false){ $this->db->where_in('diagnosa_no', array_map('intval', explode(',',$dn))); }else{ $this->db->where('diagnosa_no', intval($dn)); } }
+		if(isset($this->post['kode_kako'])) $this->db->where('id_kota', intval($this->post['kode_kako']));
+		if(isset($this->post['update_dari'])) $this->db->where('update_date >=', $this->post['update_dari']);
+		if(isset($this->post['update_sampai'])) $this->db->where('update_date <=', $this->post['update_sampai']);
+		if(isset($this->post['size_ref_id'])) $this->db->where('size_ref_id', $this->post['size_ref_id']);
+		if(isset($this->post['tgl_dari'])) $this->db->where('tgl_laporan >=', $this->post['tgl_dari']);
+		if(isset($this->post['tgl_sampai'])) $this->db->where('tgl_laporan <=', $this->post['tgl_sampai']);
+		$rows = $this->db->select('id, no_ebs, tahun, bulan, tgl_laporan, tgl_diketahui, create_date, unit, propinsi, kota, distrik, id_prop, id_kota, id_distrik, id_puskesmas, nama_pelapor, telp_pelapor, diagnosa, diagnosa_no, verifikasi, verifikasi_no, sts_rumor, sts_rumor_no, sumber_laporan, sumber_laporan_no, jml_kasus, jml_kematian, gejala, tgl_bergejala, informasi, sts_lab_no, jml_orang_periksa, hasil_lab, hasil_lab_no, jml_orang_hasil_lab, tgl_ambil_hasil_lab, tgl_kirim_lab, tgl_hasil_lab, klb, formw1, sk_klb, tgl_mulai, tgl_akhir, sts_klb_ebs, tgl_pe, sk_tgc, tgc_id, kode_depdagri_prop kode_prop, kode_depdagri_kota kode_kota, kd_prop_kasus, kd_kota_kasus, user_no, create_user, update_date, file_hasil_lab, umur7, umur28, umur1, umur4, umur9, umur14, umur19, umur44, umur54, umur69, umur70, umur7w, umur28w, umur1w, umur4w, umur9w, umur14w, umur19w, umur44w, umur54w, umur69w, umur70w, sumber_verifikasi_no, tgl_meninggal, lokasi_gigitan, sts_tata_laksana_kasus, jenis_tata_laksana_kasus, tgl_datang_faskes, tgl_tata_laksana_kasus, sts_kominikasi_resiko, sts_kood_lintas, tgl_rumor_verifikasi, file_pe, tgl_pengobatan, tgl_faktor_resiko, faktor_resiko, sts_faktor_resiko, tgl_penyuluhan, tgl_koord_lp, data_pendukung, id_klb, lat, lng, size_ref_id, size_respon_detail, size_update_by, size_update_date')
+			->order_by('create_date','desc')
+			->limit($this->limit, $offset)
+			->get('ewarn_view_form_ebs_new')->result_array();
+		// Ambil file upload per EBS
+		if(!empty($rows)){
+			$ids = array_map(function($r){ return $r['id']; }, $rows);
+			$files = $this->db->select('file_no, nama_file, nama_file_asli, tipe_file, create_date')
+				->where_in('file_no', $ids)
+				->get('ewarn_gallery_file_new_ebs')->result_array();
+			$file_map = [];
+			foreach($files as $f){
+				$file_map[$f['file_no']][] = [
+					'nama_file'      => $f['nama_file'],
+					'nama_file_asli' => $f['nama_file_asli'],
+					'tipe_file'      => $f['tipe_file'],
+					'url'            => 'https://skdr.kemkes.go.id/api/download/ebs_new/'.$f['nama_file'],
+					'create_date'    => $f['create_date']
+				];
+			}
+			foreach($rows as &$row){
+				$row['files'] = isset($file_map[$row['id']]) ? $file_map[$row['id']] : [];
+			}
+			unset($row);
+		}
+		return ['status'=>true,'paging'=>['total'=>$total,'page'=>$page,'limit'=>$this->limit,'total_page'=>$total_page],'data'=>$rows,'kode'=>200];
+	}
+
+        function update_ebs_new(){
+                $p = $this->post;
+                // Validasi no_ebs wajib
+                if(empty($p["no_ebs"])) return ["status"=>false,"kode"=>400,"keterangan"=>"Field no_ebs wajib diisi"];
+                // Cek no_ebs ada di DB
+                $cek = $this->db->where("no_ebs",$p["no_ebs"])->get("ewarn_form_ebs_new")->row_array();
+                if(!$cek) return ["status"=>false,"kode"=>404,"keterangan"=>"No EBS tidak ditemukan"];
+                // Field yang boleh diupdate oleh SIZE (7 komponen respon + field tambahan)
+                $allowed = ["tgl_pe","sk_tgc","tgc_id","sts_kominikasi_resiko","tgl_penyuluhan","sts_kood_lintas","tgl_koord_lp","sts_faktor_resiko","faktor_resiko","tgl_faktor_resiko","sts_tata_laksana_kasus","jenis_tata_laksana_kasus","tgl_tata_laksana_kasus","verifikasi_no","sts_rumor_no","jml_kasus","jml_kematian","informasi","gejala","update_user","size_ref_id","size_respon_detail","size_update_by","size_update_date"];
+                $data = [];
+                foreach($allowed as $f){
+                        if(isset($p[$f])) $data[$f] = $p[$f];
+                }
+                if(empty($data)) return ["status"=>false,"kode"=>400,"keterangan"=>"Tidak ada field yang valid untuk diupdate"];
+                $data["update_date"] = date("Y-m-d H:i:s");
+				if(isset($p["size_ref_id"])||isset($p["size_respon_detail"])||isset($p["size_update_by"])) $data["size_update_date"] = date("Y-m-d H:i:s");
+                if(empty($data["update_user"])) $data["update_user"] = "api_size";
+                $this->db->where("no_ebs",$p["no_ebs"])->update("ewarn_form_ebs_new",$data);
+                if($this->db->affected_rows()>=0){
+                        return ["status"=>true,"kode"=>200,"keterangan"=>"Data EBS berhasil diupdate","no_ebs"=>$p["no_ebs"],"field_updated"=>array_keys($data)];
+                }
+                return ["status"=>false,"kode"=>500,"keterangan"=>"Gagal mengupdate data"];
+        }
+	function save_ebs_new(){
+		$p = $this->post;
+		// Validasi field wajib
+		$required = ['id_unit','id_distrik','id_puskesmas','nama_pelapor','tgl_diketahui','diagnosa_no','user_no'];
+		foreach($required as $f){
+			if(!isset($p[$f]) || $p[$f]==='' || $p[$f]===null){
+				return ['status'=>false,'keterangan'=>'Field '.$f.' wajib diisi','kode'=>400];
+			}
+		}
+		// Generate no_ebs
+		$rows = $this->db->select('id, ifnull(nomor,0) as no')->where('tahun',date('Y'))->where('bulan',date('n'))->get('ewarn_no_ebs')->row_array();
+		$nolast=1; $idedit=0;
+		if($rows){ $idedit=$rows['id']; $nolast=$rows['no']+1; $this->db->update('ewarn_no_ebs',['nomor'=>$nolast],['id'=>$idedit]); }
+		else{ $this->db->insert('ewarn_no_ebs',['tahun'=>date('Y'),'bulan'=>date('n'),'nomor'=>$nolast]); }
+		$pref = $this->db->where('uri_title','format_ebs')->get('ewarn_preference')->row_array();
+		$format = $pref ? $pref['value'] : 'EBS-#no#';
+		$format = str_replace('#no#', str_pad($nolast,3,'0',STR_PAD_LEFT), $format);
+		$no_ebs = format_serti($format);
+		// Siapkan data
+		$data = [
+		// no_ebs akan diupdate setelah insert
+			'tgl_laporan'      => date('Y-m-d'),
+			'tahun_lap'        => date('Y'),
+			'bulan_lap'        => date('n'),
+			'create_date'      => date('Y-m-d H:i:s'),
+			'id_unit'          => intval($p['id_unit']),
+			'id_distrik'       => intval($p['id_distrik']),
+			'id_puskesmas'     => intval($p['id_puskesmas']),
+			'nama_pelapor'     => $p['nama_pelapor'],
+			'telp_pelapor'     => isset($p['telp_pelapor']) ? $p['telp_pelapor'] : '',
+			'tgl_diketahui'    => $p['tgl_diketahui'],
+			'diagnosa_no'      => intval($p['diagnosa_no']),
+			'sts_rumor_no'     => isset($p['sts_rumor_no']) ? intval($p['sts_rumor_no']) : 0,
+			'sumber_laporan_no'=> isset($p['sumber_laporan_no']) ? intval($p['sumber_laporan_no']) : 0,
+			'jml_kasus'        => isset($p['jml_kasus']) ? intval($p['jml_kasus']) : 0,
+			'jml_kematian'     => isset($p['jml_kematian']) ? intval($p['jml_kematian']) : 0,
+			'informasi'        => isset($p['informasi']) ? $p['informasi'] : '',
+			'gejala'           => isset($p['gejala']) ? $p['gejala'] : '',
+			'tgl_bergejala'    => isset($p['tgl_bergejala']) ? $p['tgl_bergejala'] : null,
+			'tgl_meninggal'    => isset($p['tgl_meninggal']) ? $p['tgl_meninggal'] : null,
+			'tgl_datang_faskes'=> isset($p['tgl_datang_faskes']) ? $p['tgl_datang_faskes'] : null,
+			'verifikasi_no'    => isset($p['verifikasi_no']) ? intval($p['verifikasi_no']) : 0,
+			'kd_prop_kasus'    => isset($p['kd_prop_kasus']) ? intval($p['kd_prop_kasus']) : 0,
+			'kd_kota_kasus'    => isset($p['kd_kota_kasus']) ? intval($p['kd_kota_kasus']) : 0,
+			'sts_lab_no'       => isset($p['sts_lab_no']) ? intval($p['sts_lab_no']) : -1,
+			'jml_orang_periksa'=> isset($p['jml_orang_periksa']) ? intval($p['jml_orang_periksa']) : 0,
+			'hasil_lab_no'     => isset($p['hasil_lab_no']) ? intval($p['hasil_lab_no']) : 0,
+			'tgl_ambil_hasil_lab'=>isset($p['tgl_ambil_hasil_lab']) ? $p['tgl_ambil_hasil_lab'] : null,
+			'tgl_kirim_lab'    => isset($p['tgl_kirim_lab']) ? $p['tgl_kirim_lab'] : null,
+			'tgl_hasil_lab'    => isset($p['tgl_hasil_lab']) ? $p['tgl_hasil_lab'] : null,
+			'klb'              => isset($p['klb']) ? intval($p['klb']) : -1,
+			'formw1'           => isset($p['formw1']) ? intval($p['formw1']) : -1,
+			'sk_klb'           => isset($p['sk_klb']) ? intval($p['sk_klb']) : -1,
+			'tgl_mulai'        => isset($p['tgl_mulai']) ? $p['tgl_mulai'] : null,
+			'tgl_akhir'        => isset($p['tgl_akhir']) ? $p['tgl_akhir'] : null,
+			'tgl_pe'           => isset($p['tgl_pe']) ? $p['tgl_pe'] : null,
+			'user_no'          => intval($p['user_no']),
+			'create_user'      => isset($p['create_user']) ? $p['create_user'] : 'api',
+				'size_ref_id'      => isset($p['size_ref_id']) ? $p['size_ref_id'] : null,
+				'size_respon_detail'=> isset($p['size_respon_detail']) ? $p['size_respon_detail'] : null,
+				'size_update_by'   => isset($p['size_update_by']) ? $p['size_update_by'] : null,
+				'size_update_date' => date('Y-m-d H:i:s'),
+		];
+		// Usia pria
+		foreach(['umur7','umur28','umur1','umur4','umur9','umur14','umur19','umur44','umur54','umur69','umur70'] as $u){
+			$data[$u] = isset($p[$u]) ? intval($p[$u]) : 0;
+		}
+		// Usia wanita
+		foreach(['umur7w','umur28w','umur1w','umur4w','umur9w','umur14w','umur19w','umur44w','umur54w','umur69w','umur70w'] as $u){
+			$data[$u] = isset($p[$u]) ? intval($p[$u]) : 0;
+		}
+		$this->db->insert('ewarn_form_ebs_new', $data);
+		$id = $this->db->insert_id();
+		if($id) $this->db->where('id',$id)->update('ewarn_form_ebs_new', ['no_ebs'=>$no_ebs]);
+		if(!$id) return ['status'=>false,'keterangan'=>'Gagal menyimpan data','kode'=>500];
+		// Kirim notifikasi
+		kirim_notif_ebs_wa($id);
+		kirim_notif_ebs_telegram($id);
+		return ['status'=>true,'kode'=>200,'keterangan'=>'Data EBS berhasil disimpan','no_ebs'=>$no_ebs,'id'=>$id];
+	}
+
+	function do_login(){
+		$username = isset($this->post['username']) ? $this->post['username'] : '';
+		$password = isset($this->post['password']) ? $this->post['password'] : '';
+		if(empty($username) || empty($password)){
+			return ['status'=>false, 'keterangan'=>'Username dan password wajib diisi', 'kode'=>400];
+		}
+		$user = $this->db->select('id, username, password, nama_lengkap, nip, email, hp, level, kel_place, id_place, kel_akses, id_akses, aktif, is_admin')
+			->where('is_admin', 0)
+			->group_start()
+			->where('username', $username)
+			->or_where('hp', $username)
+			->or_where('email', $username)
+			->group_end()
+			->get('ewarn_users')->row_array();
+		if(!$user){
+			return ['status'=>false, 'keterangan'=>'Username tidak ditemukan', 'kode'=>401];
+		}
+		if($user['aktif']!='Y'){
+			return ['status'=>false, 'keterangan'=>'Akun tidak aktif', 'kode'=>403];
+		}
+		if(crypt($password, $user['password']) !== $user['password']){
+			return ['status'=>false, 'keterangan'=>'Password salah', 'kode'=>401];
+		}
+		$kel_label = ['0'=>'Pusat','1'=>'Provinsi','2'=>'Kab/Kota','3'=>'Kecamatan','4'=>'Puskesmas','5'=>'Rumah Sakit','6'=>'Laboratorium','7'=>'PHEOC','8'=>'Klinik','9'=>'BKK'];
+		$kel = strval($user['kel_place']);
+		$level_akses = isset($kel_label[$kel]) ? $kel_label[$kel] : 'Lainnya';
+		// Level Akses Wilayah (kel_akses/id_akses)
+		$kel_akses = strval($user['kel_akses']);
+		$level_akses_wilayah = isset($kel_label[$kel_akses]) ? $kel_label[$kel_akses] : 'Lainnya';
+		$lokasi_akses = '';
+		if($user['kel_akses']==1){
+			$r = $this->db->select('propinsi as nama')->where('id',$user['id_akses'])->get('ewarn_propinsi')->row_array();
+			$lokasi_akses = $r ? $r['nama'] : '';
+		}elseif($user['kel_akses']==2){
+			$r = $this->db->select('kota as nama')->where('id',$user['id_akses'])->get('ewarn_kota')->row_array();
+			$lokasi_akses = $r ? $r['nama'] : '';
+		}elseif($user['kel_akses']>=3){
+			$r = $this->db->select('puskesmas as nama')->where('id',$user['id_akses'])->get('ewarn_view_puskesmas')->row_array();
+			$lokasi_akses = $r ? $r['nama'] : '';
+		}else{
+			$lokasi_akses = 'Pusat';
+		}
+		$lokasi = '';
+		if($user['kel_place']==1){
+			$row = $this->db->select('propinsi as nama')->where('id',$user['id_place'])->get('ewarn_propinsi')->row_array();
+			$lokasi = $row ? $row['nama'] : '';
+		}elseif($user['kel_place']==2){
+			$row = $this->db->select('kota as nama')->where('id',$user['id_place'])->get('ewarn_kota')->row_array();
+			$lokasi = $row ? $row['nama'] : '';
+		}elseif($user['kel_place']>=3){
+			$row = $this->db->select('puskesmas as nama')->where('id',$user['id_place'])->get('ewarn_view_puskesmas')->row_array();
+			$lokasi = $row ? $row['nama'] : '';
+		}else{
+			$lokasi = 'Pusat';
+		}
+		$token = bin2hex(openssl_random_pseudo_bytes(32));
+		$this->db->update('ewarn_users', ['last_visit_date'=>date('Y-m-d H:i:s'), 'last_activity_date'=>date('Y-m-d H:i:s')], ['id'=>$user['id']]);
+		return [
+			'status' => true,
+			'kode' => 200,
+			'keterangan' => 'Login berhasil',
+			'data' => [
+				'id' => $user['id'],
+				'username' => $user['username'],
+				'nama_lengkap' => $user['nama_lengkap'],
+				'nip' => $user['nip'],
+				'email' => $user['email'],
+				'hp' => $user['hp'],
+				'level' => $user['level'],
+				'level_akses' => $level_akses,
+				'lokasi' => $lokasi,
+				'kel_place' => $user['kel_place'],
+				'kel_akses' => $user['kel_akses'],
+				'id_akses' => $user['id_akses'],
+				'level_akses_wilayah' => $level_akses_wilayah,
+				'lokasi_akses' => $lokasi_akses,
+				'id_place' => $user['id_place'],
+				'token' => $token,
+			]
+		];
+	}
+
+
+
+
+	function get_slhs(){
+		$page = (isset($this->post['page'])) ? intval($this->post['page']) : 1;
+		if(isset($this->post['limit']) && intval($this->post['limit'])>0){
+			$this->limit=$this->post['limit'];
+		}
+		if($page < 1){$page = 1;}
+		$tahun = isset($this->post['tahun']) ? $this->post['tahun'] : date('Y');
+		$this->db->where('YEAR(create_date)', $tahun);
+		if(isset($this->post['bulan'])){
+			$this->db->where('MONTH(create_date)', $this->post['bulan']);
+		}
+		if(isset($this->post['kode_prop'])){
+			$this->db->where('id_prop', $this->post['kode_prop']);
+		}
+		if(isset($this->post['kode_kota'])){
+			$this->db->where('id_kota', $this->post['kode_kota']);
+		}
+		if(isset($this->post['tgl_dari'])) $this->db->where('create_date >=', $this->post['tgl_dari']);
+		if(isset($this->post['tgl_sampai'])) $this->db->where('create_date <=', $this->post['tgl_sampai'].' 23:59:59');
+		$total = $this->db->select('id')->get('ewarn_view_mbg_slhs')->num_rows();
+		$total_page = ceil($total/$this->limit);
+		$offset = ($page-1)*$this->limit;
+		$this->db->where('YEAR(create_date)', $tahun);
+		if(isset($this->post['bulan'])){
+			$this->db->where('MONTH(create_date)', $this->post['bulan']);
+		}
+		if(isset($this->post['kode_prop'])){
+			$this->db->where('id_prop', $this->post['kode_prop']);
+		}
+		if(isset($this->post['kode_kota'])){
+			$this->db->where('id_kota', $this->post['kode_kota']);
+		}
+		if(isset($this->post['tgl_dari'])) $this->db->where('create_date >=', $this->post['tgl_dari']);
+		if(isset($this->post['tgl_sampai'])) $this->db->where('create_date <=', $this->post['tgl_sampai'].' 23:59:59');
+		$rows = $this->db->select('id, no_slhs, create_date tanggal_pelaporan, hp_pelapor, email_pelapor, nama_petugas, hp_petugas, email_petugas, propinsi_sppg provinsi, kota_sppg kota, distrik_sppg kecamatan, desa_sppg desa, nama_sppg, nama_yayasan, kode_sppg, tgl_ambil_sample, tgl_periksa, tgl_selesai, tgl_kirim_hasil, uji_makan, hasil_makan, uji_air, hasil_air, uji_alat_makan, hasil_alat_makan, uji_rhodamin, hasil_rhodamin, uji_methanyl, hasil_methanyl, uji_boraks, hasil_boraks, uji_formalin, hasil_formalin, rekom, nil_rekom, create_date created_at, update_date updated_at')->limit($this->limit, $offset)->get('ewarn_view_mbg_slhs')->result_array();
+		return ['status'=>true, 'paging'=>['total'=>$total,'page'=>$page,'limit'=>$this->limit,'total_page'=>$total_page], 'data'=>$rows, 'kode'=>200];
+	}
+
+	function get_sppg($mode=1){
+		$page        = (isset($this->post['page'])) ? intval($this->post['page']) : 1;
+		if (isset($this->post['limit'])){
+            if (intval($this->post['limit']>0)){
+			    $this->limit=$this->post['limit'];
+		    }
+		}
+        if ($page < 1) {$page = 1;}
+		
+		
+			if(isset($this->post['kode_sppg'])){
+				$this->db->where('kode_sppg', $this->post['kode_sppg']);
+			}
+		if(isset($this->post['status_slhs'])){
+			$this->db->where('slhs', intval($this->post['status_slhs']));
+		}
+		if(isset($this->post['kode_prop'])){
+			$this->db->where('kode_prov', $this->post['kode_prop']);
+		}
+		if(isset($this->post['kode_kota'])){
+			$this->db->where('kode_kab', $this->post['kode_kota']);
+		}
+
+		$rows = $this->db->select('id')->get(_TBL_VIEW_SPPG)->num_rows();
+		$result['paging']['total'] = $rows;
+		$result['paging']['page']  = $page;
+		$result['paging']['limit'] = intval($this->limit);
+		$x                         = $rows % $this->limit;
+		$tpage                     = 0;
+		if ($x > 0) {
+			$tpage = 1;
+		}
+		--$page;
+		$result['paging']['total_page'] = intval($rows / $this->limit) + $tpage;
+		$this->db->limit($this->limit, ($page*$this->limit));
+
+		if(isset($this->post['status_slhs'])){
+			$this->db->where('slhs', intval($this->post['status_slhs']));
+		}
+		if(isset($this->post['kode_prop'])){
+			$this->db->where('kode_prov', $this->post['kode_prop']);
+		}
+		if(isset($this->post['kode_kota'])){
+			$this->db->where('kode_kab', $this->post['kode_kota']);
+		}
+		// $this->db->order_by('tahun, bulan');
+		$rows=$this->db->select('kode_sppg,uuid id_sppg,kode_prov,provinsi,kode_kab,kabupaten,kode_kec,kecamatan,kode_kel,kelurahan,nama_sppg,nama_yayasan,alamat_sppg,ka_sppg,tanggal_operasional,jenis_sppg,slhs status_slhs,sertifikat, create_date created_at, update_date updated_at')->get(_TBL_VIEW_SPPG)->result_array();
+		
+		// $arr_id=[];
+		foreach($rows as &$row){
+			if($row['sertifikat']){
+				$row['sertifikat'] = base_url('api/download/serti/'.$row['sertifikat']);
+			}
+		}	
+		unset($row);
+
+		$result['status']=true;
+		$result['data']=$rows;
+
+		return $result;
+	}
+	function save_respon_alert(){
+
+		// $headerServer=$this->input->request_headers();
+		$upd=[];
+		// $upd['created_at'] = date('Y-m-d H:i:s');	
+		// $upd['datas'] = json_encode($this->post,JSON_UNESCAPED_SLASHES);	
+		// $upd['ip'] = get_ip();	
+		// $upd['agen'] = json_encode($headerServer,JSON_UNESCAPED_SLASHES);
+
+		// $this->db->insert(_TBL_TEMPORARY,$upd);
+		try{
+			$data=$this->post;
+			$alert_id = $this->decrypt_text($data['uniq_id']);
+			// $this->post['uniq_id']=$alert_id;
+			$result['data']=$this->post;
+			$result['status']=true;
+			$result['keterangan']='Proses penyimpanan data alert berhasil dengan id '.$alert_id;
+			$result['tanggal']=date('d-m-Y H:i:s');
+
+			
+			// $alert_id=intval($data['uniq_id']);
+			// $pesan="seseorang mengirimkan data respon alert dengan id ".$alert_id.":\n\n";
+			// $pesan.=$upd['datas']."\n\n";
+			// $pesan.=" Tanggal : ".$upd['created_at'];
+
+			// $inst=[];
+			// $inst['id_inbox']=$alert_id;
+			// $inst['tipe_id']=2;
+			// $inst['id_petugas']=0;
+			// $inst['pesan']=$pesan;
+			// $inst['hp']='+628176690091';
+			// $inst['id_status']=0;
+			// $inst['id_prioritas']=1;
+			// $inst['created_by']='sistem';
+			// $inst['tgl_masuk']=date('Y-m-d H:i:s');
+			// $this->db->insert(_TBL_OUTBOX_WA, $inst);
+			// $inst['id_inbox']=$alert_id;
+			// $inst['tipe_id']=2;
+			// $inst['id_petugas']=0;
+			// $inst['pesan']=$pesan;
+			// $inst['hp']='+628569999357';
+			// $inst['id_status']=0;
+			// $inst['id_prioritas']=1;
+			// $inst['created_by']='sistem';
+			// $inst['tgl_masuk']=date('Y-m-d H:i:s');
+			// $this->db->insert(_TBL_OUTBOX_WA, $inst);
+			
+			// return $result;
+			$result['status']=false;
+			$result['keterangan']='gagal memproses data alert';
+
+			// $alert_id=intval($alert_id);
+			if(intval($alert_id)){
+				$rows = $this->db->where('id', $alert_id)->get(_TBL_LAP_ALERT)->row_array();
+				if($rows){
+					// $result['keterangan']='Data berhasil disimpan';
+					
+					$upd=[];
+					$upd['klb'] = $data["klb"]?$data["klb"]:null;
+					$upd['id_criteria'] = $data["kriteria"]?$data["kriteria"]:null;
+					$upd['note'] = $data["Rencana_tindak_lanjut"]?$data["Rencana_tindak_lanjut"]:null;
+					// $upd['petugas'] = $data["petugas"]?$data["petugas"]:null;
+					$upd['jml_kematian'] = $data["jml_kematian"]?$data["jml_kematian"]:null;
+					$upd['gejala'] = $data["gejala"]?$data["gejala"]:null;
+					$upd['kronologi'] = $data["kronologi"]?$data["kronologi"]:null;
+					$upd['tindakan'] = $data["tindakan"]?$data["tindakan"]:null;
+					$upd['spesimen_diperiksa'] = $data["spesimen_diperiksa"]?$data["spesimen_diperiksa"]:null;
+					$upd['hasil_pemeriksaan'] = $data["hasil_pemeriksaan"]?$data["hasil_pemeriksaan"]:null;
+					$upd['temuan'] = $data["deskripsi_kejadian"]?$data["deskripsi_kejadian"]:null;
+					$upd['update_date'] = date('Y-m-d H:i:s');	
+					$upd['update_user'] = 'api';	
+					$upd['jenis_verif'] = $data["jenis_verif"]?$data["jenis_verif"]:null;	
+					$upd['sts_laporan_ebs'] = $data["sts_laporan_ebs"]?$data["sts_laporan_ebs"]:null;	
+		// no_ebs akan diupdate setelah insert
+						
+					$upd['tgl_verif'] = $data["tgl_verifikasi"]?$data["tgl_verifikasi"]:null;
+					if(date('Y-m-d') <= date('Y-m-d', strtotime($data['create_date_alert']." +1 day"))){
+						$respon24 = 1;
+					}
+					$upd['sts_verifikasi'] = 1;
+					$upd['respon24'] = $respon24;
+
+					$this->db->where('id', $rows["id"]);
+					$this->db->update(_TBL_LAP_ALERT,$upd);
+					$result['keterangan']='Proses update respon data alert berhasil dengan id '.$alert_id;
+					$result['status']=true;
+				}else{
+					$result['status']=false;
+					$result['keterangan']='Data alert tidak ditemukan';
+				}
+			}else{
+				$result['status']=false;
+				$result['keterangan']='Parameter id alert '.$alert_id.' tidak ditemukan';
+			}
+		}catch(Exception $e){
+			$result['status']=false;
+			$result['keterangan']="Terjadi kesalahan proses";
+
+			$payload = ['result'=>$result, 'sql'=>$upd, 'error_message'=>$e->getMessage()];
+			$this->db->insert(
+					'ewarn_api_logs_dki', [
+					'method' => $this->uri->uri_string(),
+					'api_key' => $this->key,
+					'ip_address' => $this->ip,
+					'status' => $hasil['keterangan'],
+					'payload' => json_encode($payload, JSON_UNESCAPED_UNICODE, JSON_UNESCAPED_SLASHES),
+					'created_at' => date('Y-m-d H:i:s')
+					]);
+		}
+		return $result;
+	}
+
+	private function encrypt_text($string)
+    {
+        $key = hash('sha256', $this->secret_key);
+        $iv  = substr(hash('sha256', $this->secret_iv), 0, 16);
+
+        $output = openssl_encrypt($string, "AES-256-CBC", $key, 0, $iv);
+        return base64_encode($output);
+    }
+
+    // Fungsi decrypt
+    private function decrypt_text($string)
+    {
+        $key = hash('sha256', $this->secret_key);
+        $iv  = substr(hash('sha256', $this->secret_iv), 0, 16);
+
+        return openssl_decrypt(base64_decode($string), "AES-256-CBC", $key, 0, $iv);
+    }
+}
+/* End of file app_login_model.php */
+/* Location: ./application/models/app_login_model.php */

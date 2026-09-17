@@ -1,0 +1,802 @@
+<?php
+
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+// This can be removed if you use __autoload() in config.php OR use Modular Extensions
+/** @noinspection PhpIncludeInspection */
+/**
+ * This is an example of a few basic user interaction methods you could use
+ * all done with a hardcoded array
+ *
+ * @package         CodeIgniter
+ * @subpackage      Rest Server
+ * @category        Controller
+ * @author          Phil Sturgeon, Chris Kacerguis
+ * @license         MIT
+ * @link            https://github.com/chriskacerguis/codeigniter-restserver
+ */
+ 
+class Api extends REST_Controller {
+	
+	protected $api_kel=0;
+	private $minggu_aktif = 1;
+    private $tahun_aktif      = 2021;
+    private $tanggal        = '2021/1/1';
+    private $max_hari     = 2;
+	private $p      = [];
+	private $g      = [];
+
+    function __construct()
+    {
+        // Construct the parent class
+		parent::__construct();
+		ini_set('max_execution_time', 60);
+        // Configure limits on our controller methods
+        // Ensure you have created the 'limits' table and enabled 'limits' within application/config/rest.php
+        $this->methods['users_get']['limit'] = 500; // 500 requests per hour per user/key
+        $this->methods['users_post']['limit'] = 100; // 100 requests per hour per user/key
+		$this->methods['users_delete']['limit'] = 50; // 50 requests per hour per user/key
+		
+		$this->g = $this->get();
+		$this->p = $this->post();
+		$this->data->get=$this->g;
+		$this->data->post=$this->p;
+		$this->data->header=$this->_args;
+		$this->data->preference=$this->_Preference_;
+    }
+
+	
+	public function login_post(){
+
+		$post = $this->post();
+		if(empty($post['username']) || empty($post['password'])){
+			$this->response(['resultLogin'=>['status'=>false,'kode'=>400,'keterangan'=>'Username dan password wajib diisi']], 400);
+			return;
+		}
+		$result = $this->data->do_login($post['username'], $post['password']);
+		$this->response(['resultLogin'=>$result], $result['kode']);
+	}
+
+	public function users_post(){
+		$result = $this->data->get_users();
+		$this->response(['resultUsers'=>$result], $result['kode']);
+	}
+
+	public function test_post(){
+		$cek=$this->db->where('uri_title','tgl_cli_wa')->get(_TBL_PREFERENCE)->row_array();
+
+		$awal  = date_create($cek['value']);
+		$akhir = date_create(); // waktu sekarang
+		$diff  = date_diff( $awal, $akhir );
+
+		$result['tahun']= $diff->y;
+		$result['bulan'] = $diff->m;
+		$result['hari'] = $diff->d;
+		$result['jam'] = $diff->h;
+		$result['menit'] = $diff->i;
+		$result['detik'] = $diff->s;
+
+		$result['status']=1;
+		$result['tgl']=$awal;
+		if($diff->h>1 || ($diff->h==0 && $diff->i>45)){
+			$result['info']='Lanjut';
+		}else{
+			$result['info']="masih proses";
+		}
+
+		if ($result['status']==1)
+		{
+			$this->response($result, REST_Controller::HTTP_OK);
+		}
+		else
+		{
+			$this->response($result, REST_Controller::HTTP_NOT_FOUND);
+		}
+
+	}
+
+	public function sms_post()
+    {
+        $data['msisdn'] = $this->post('msisdn');
+        $data['trx_id'] = $this->post('trx_id');
+		$data['mo_message'] = urldecode($this->post('mo_message'));
+		$data['id_server'] = $this->post('id');
+		$data['operator'] = $this->post('operator');
+		$data['created_at'] = date('Y-m-d H:i:s');
+
+		$this->load->library('sms');
+		$this->sms->post=$this->post;
+		$result = $this->sms->set_data($data)->process();
+		// $result['status']=0;
+		if ($result['status']==1)
+		{
+			$this->response($result, REST_Controller::HTTP_OK);
+		}
+		else
+		{
+			$this->response($result, REST_Controller::HTTP_NOT_FOUND);
+		}
+	}
+	
+	public function sms_get()
+    {
+        $data['msisdn'] = $this->get('msisdn');
+        $data['trx_id'] = $this->get('trx_id');
+		$data['mo_message'] = urldecode($this->get('mo_message'));
+		$data['id_server'] = $this->get('id');
+		$data['operator'] = $this->get('operator');
+		$data['created_at'] = date('Y-m-d H:i:s');
+
+		$this->load->library('sms');
+		$this->sms->post=$this->get();
+		$result = $this->sms->set_data($data)->process();
+		// $result['status']=0;
+		if ($result['status']==1)
+		{
+			$this->response($result, REST_Controller::HTTP_OK);
+		}
+		else
+		{
+			$this->response($result, REST_Controller::HTTP_NOT_FOUND);
+		}
+	}
+	
+	function ebs_new_post(){
+		$result = $this->data->save_ebs_new();
+		$this->response(['resultEbs_new'=>$result], $result['kode']);
+	}
+
+	function list_ebs_new_post(){
+		$result = $this->data->get_list_ebs_new();
+		$this->response(['resultList_ebs_new'=>$result], $result['kode']);
+	}
+
+	function ebs_post(){
+		$result = $this->data->cek_auth('token_api_ebs');
+		if($result['status']){
+			$result = $this->data->ebs();
+		// $result['status']=0;
+		}
+
+		$prefix='resultEbs';
+		if ($result['status'])
+		{
+			$result['kode']=REST_Controller::HTTP_OK;
+			$this->response([$prefix=>$result], REST_Controller::HTTP_OK);
+		}
+		else
+		{
+			$result['kode']=REST_Controller::HTTP_NOT_FOUND;
+			$this->response([$prefix=>['total'=>0,'data'=>[], 'status'=>false]], REST_Controller::HTTP_NOT_FOUND);
+		}
+	}
+
+	function master_kode_get(){
+		$result = $this->data->cek_auth('token_api_ebs');
+		if($result['status']){
+			$result = $this->data->master_kode();
+		}
+		if ($result['status'])
+		{
+			$result['kode']=REST_Controller::HTTP_OK;
+			$this->response($result, REST_Controller::HTTP_OK);
+		}
+		else
+		{
+			$result['kode']=REST_Controller::HTTP_NOT_FOUND;
+			$this->response(['total'=>0,'data'=>[], 'status'=>false], REST_Controller::HTTP_NOT_FOUND);
+		}
+	}
+
+	function tgc_post(){
+		$result = $this->data->cek_auth('token_api_tgc');
+		if($result['status']){
+			$result = $this->data->tgc();
+		// $result['status']=0;
+		}
+		if ($result['status'])
+		{
+			$result['kode']=REST_Controller::HTTP_OK;
+			$this->response($result, REST_Controller::HTTP_OK);
+		}
+		else
+		{
+			$result['kode']=REST_Controller::HTTP_NOT_FOUND;
+			$this->response(['total'=>0,'data'=>[], 'status'=>false], REST_Controller::HTTP_NOT_FOUND);
+		}
+	}
+	
+	// function skdr_get(){
+	// 	$result = $this->data->individual();
+	// 	// $result['status']=0;
+	// 	if ($result['status'])
+	// 	{
+	// 		$this->response($result, REST_Controller::HTTP_OK);
+	// 	}
+	// 	else
+	// 	{
+	// 		$this->response(['total'=>0,'data'=>[], 'status'=>false], REST_Controller::HTTP_NOT_FOUND);
+	// 	}
+	// }
+
+	function skdr_param_post(){
+		$result = $this->data->cek_auth();
+		if($result['status']){
+			$result = $this->data->get_param();
+		}
+		if ($result)
+		{
+			$this->response($result, REST_Controller::HTTP_OK);
+		}
+		else
+		{
+			$this->response(['total'=>0,'data'=>[], 'status'=>false], REST_Controller::HTTP_NOT_FOUND);
+		}
+	}
+
+	function provinsi_post(){
+
+		$result = $this->data->cek_auth();
+		if($result['status']){
+			$result = $this->data->get_propinsi();
+		}
+		$this->result_api($result,'provinsi');
+	}
+
+	function kota_post(){
+		$result = $this->data->cek_auth();
+		if($result['status']){
+			$result = $this->data->get_kota();
+		}
+		$this->result_api($result,'kota');
+	}
+
+	function kecamatan_post(){
+		$result = $this->data->cek_auth();
+		if($result['status']){
+			$result = $this->data->get_kecamatan();
+		}
+		$this->result_api($result,'kecamatan');
+	}
+
+	function unit_post(){
+		$result = $this->data->cek_auth();
+		if($result['status']){
+			$result = $this->data->get_unit();
+		}
+		$this->result_api($result,'unit');
+	}
+	function penyakit_post(){
+		$result = $this->data->cek_auth();
+		if($result['status']){
+			$result = $this->data->get_penyakit();
+		}
+		$this->result_api($result,'penyakit');
+	}
+
+	function agregat_puskesmas_post(){
+		$result = $this->data->save_agregat_puskesmas();
+		$this->response(['resultAgregatPuskesmas'=>$result], $result['kode']);
+	}
+
+	function kerpang_mbg_post(){
+		$result = $this->data->get_mbg(1);
+		$this->response(['resultKerpang_mbg'=>$result], $result['kode']);
+	}
+
+	function lab_mbg_post(){
+		$result = $this->data->get_mbg(2);
+		$this->response(['resultLab_mbg'=>$result], $result['kode']);
+	}
+
+	function slhs_post(){
+		$result = $this->data->get_slhs();
+		$this->response(['resultSlhs'=>$result], $result['kode']);
+	}
+
+	function download_get(){
+		$kode = $this->uri->segment(4);
+		$type = $this->uri->segment(3);
+		if($type=='serti' && $kode){
+			$row = $this->db->select('sertifikat')->where('sertifikat', $kode)->get('ewarn_form_slhs')->row_array();
+			if($row && $row['sertifikat']){
+				$path = FCPATH.'uploads/serti/'.$row['sertifikat'];
+				if(file_exists($path)){
+					header('Content-Type: application/pdf');
+					header('Content-Disposition: inline; filename="'.$kode.'"');
+					readfile($path);
+					exit;
+				}
+			}
+			$this->response(['status'=>false,'keterangan'=>'File tidak ditemukan'], 404);
+		}else{
+			$this->response(['status'=>false,'keterangan'=>'Invalid request'], 400);
+		}
+	}
+
+	function sppg_post(){
+		$result = $this->data->get_sppg(1);
+		$this->response(['resultSppg'=>$result], $result['kode']);
+	}
+
+	function aggregat_post(){
+		$result = $this->data->cek_auth();
+		if($result['status']){
+			// if (getUserIP()=='103.126.10.22'){
+			// 	die("debug");
+			// }
+			$result = $this->data->get_aggregat();
+		}
+		$this->result_api($result,'aggregat');
+	}
+	function alert_post(){
+		$result = $this->data->cek_auth();
+		if($result['status']){
+			$result = $this->data->get_alert();
+		}
+		$this->result_api($result,'alert');
+	}
+	function alert_dki_post(){
+		$result = $this->data->cek_auth('token_api_dki');
+		if($result['status']){
+			$result = $this->data->get_alert(7);
+		}
+		$this->result_api($result,'alert');
+	}
+
+	function result_api($result, $prefix=''){
+		$prefix='result'. ucfirst($prefix);
+		// $hasil[$prefix]=$result;
+		if ($result['status'])
+		{
+			$result['kode']=REST_Controller::HTTP_OK;
+			$this->response([$prefix=>$result], REST_Controller::HTTP_OK);
+		}
+		else
+		{
+			$result['kode']=REST_Controller::HTTP_NOT_FOUND;
+			$this->response($result, REST_Controller::HTTP_NOT_FOUND);
+		}
+	}
+
+	public function receive_alert_response_post(){
+		$prefix='result'. ucfirst('receive_alert_response');
+		$result = $this->data->cek_auth('token_api_dki');
+		if($result['status']){
+			$result = $this->data->save_respon_alert();
+		}
+
+		if ($result['status'])
+		{
+			$result['kode']=REST_Controller::HTTP_OK;
+			$this->response([$prefix=>$result], REST_Controller::HTTP_OK);
+		}
+		else
+		{
+			$result['kode']=REST_Controller::HTTP_NOT_FOUND;
+			$this->response([$prefix=>$result], REST_Controller::HTTP_NOT_FOUND);
+		}
+	}
+
+	public function message_tmp(){
+		$message="success";
+		$noProses=[0,0,0];
+		$x=$this->db->where_in('uri_title',['api_url','api_token','api_last_message_number', 'api_wa', 'api_suffix'])->get(_TBL_PREFERENCE)->result_array();
+			
+		foreach($x as $row){
+			$param[$row['uri_title']] = $row['value'];
+		}
+		// echo json_encode($this->p['messages'][0], JSON_PRETTY_PRINT);
+		if (array_key_exists('messages', $this->p)){
+			$row=$this->p['messages'][0];
+			$tipe=1;
+			if ($row['author']==$param['api_wa']){
+				$tipe=2;
+			}
+
+			$inst=[];
+			$inst['tipe_id']=$tipe;
+			$inst['hp_sender']='+'.str_replace($param['api_suffix'],'',$row['chatId']);
+			$inst['id_api']=$row['id'];
+			$inst['body']=$row['body'];
+			$inst['fromMe']=$row['fromMe'];
+			$inst['self']=$row['self'];
+			$inst['isForwarded']=$row['isForwarded'];
+			$inst['author']=$row['author'];
+			$inst['chatId']=$row['chatId'];
+			// $inst['messageNumber']=$row['messageNumber'];
+			$inst['time']=$row['time'];
+			$inst['senderName']=$row['senderName'];
+			$inst['chatName']=$row['chatName'];
+			$inst['created_by']='system';
+			$inst['created_at']=date('Y-m-d H:i:s');
+			if(in_array($inst['hp_sender'], ['+','+E', '+1', '+5', '+c', '+K', '+T'])){
+				$inst['sts_proses']=4;
+			}else{
+				if ($tipe==1){
+					$inst['sts_proses']=-1;
+				}else{
+					$inst['sts_proses']=1;
+				}
+			}
+			if(isset($row['caption'])){
+				$inst['caption']=$row['caption'];
+			}
+			$this->db->where('id_api', $row['id']);
+			$cek = $this->db->select('id')->where_in('sts_proses', [0,1])->get(_TBL_INBOX_WA)->num_rows();
+			if($tipe==1){
+				if (intval($cek)==0){
+					$this->db->insert(_TBL_INBOX_WA, $inst);
+					$noProses[0]=1;
+				}else{
+					$this->db->insert(_TBL_INBOX_WA_DOUBLE, $inst);
+					$noProses[1]=1;
+				}
+			}else{
+				$this->db->insert(_TBL_INBOX_WA_REPLY, $inst);
+				$noProses[2]=1;
+			}
+
+		}
+		$this->response(['status'=>true, 'message'=>$message, 'data'=>['success'=>$noProses[0], 'double'=>$noProses[1], 'reply'=>$noProses[2]]], REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+	}
+
+	public function message_test_get(){
+
+		$x=$this->db->where_in('uri_title',['api_url','api_token','api_last_message_number', 'api_wa', 'api_suffix'])->get(_TBL_PREFERENCE)->result_array();
+			
+		foreach($x as $row){
+			$param[$row['uri_title']] = $row['value'];
+		}
+		$rows=$this->db->where('id>=',959152)->where('id<=',961482)->where('sts_proses',0)->get(_TBL_INBOX_WA_HOOK)->result_array();
+	die($this->db->last_query());
+		foreach($rows as $rok){
+			$ros=json_decode($rok['pesan'], true);
+			$row=[];
+			// if(array_key_exists('messages', $ros)){
+			// 	$row=$ros['messages'][0];
+			// }
+			if($ros){
+				$row=$ros[0];
+			}	
+			// die(json_encode($row, JSON_PRETTY_PRINT));
+			if($row){
+				$tipe=1;
+				if ($row['author']==$param['api_wa']){
+					$tipe=2;
+				}
+
+				$inst=[];
+				$inst['tipe_id']=$tipe;
+				$inst['hp_sender']='+'.str_replace($param['api_suffix'],'',$row['chatId']);
+				$inst['id_api']=$row['id'];
+				$inst['body']=$row['body'];
+				$inst['fromMe']=$row['fromMe'];
+				$inst['self']=$row['self'];
+				$inst['isForwarded']=$row['isForwarded'];
+				$inst['author']=$row['author'];
+				$inst['chatId']=$row['chatId'];
+				// $inst['messageNumber']=$row['messageNumber'];
+				$inst['time']=$row['time'];
+				$inst['senderName']=$row['senderName'];
+				$inst['chatName']=$row['chatName'];
+				$inst['created_by']='system';
+				$inst['created_at']=date('Y-m-d H:i:s');
+				if(in_array($inst['hp_sender'], ['+','+E', '+1', '+5', '+c', '+K', '+T'])){
+					$inst['sts_proses']=4;
+				}else{
+					if ($tipe==1){
+						$inst['sts_proses']=-1;
+					}else{
+						$inst['sts_proses']=1;
+					}
+				}
+				if(isset($row['caption'])){
+					$inst['caption']=$row['caption'];
+				}
+				$this->db->where('id_api', $row['id']);
+				$cek = $this->db->select('id')->where_in('sts_proses', [0,1])->get(_TBL_INBOX_WA)->num_rows();
+				if($tipe==1){
+					if (intval($cek)==0){
+						$this->db->insert(_TBL_INBOX_WA, $inst);
+						$noProses[0]=1;
+					}else{
+						$this->db->insert(_TBL_INBOX_WA_DOUBLE, $inst);
+						$noProses[1]=1;
+					}
+				}else{
+					$this->db->insert(_TBL_INBOX_WA_REPLY, $inst);
+					$noProses[2]=1;
+				}
+			}
+			$this->db->update(_TBL_INBOX_WA_HOOK, ['sts_proses'=>1], ['id'=>$rok['id']]);
+		}
+		$this->response(['status'=>true, 'message'=>'Selesai'], REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+	}
+
+	public function message_post()
+    {
+
+		$this->message_tmp();
+		die();
+		$sts_error=false;
+		// die();
+		// if(array_key_exists('test',$this->p)){
+		// 	$this->response(['status'=>true, 'data'=>'berhasil'], REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+		// 	return true;
+		// }
+		
+		// $this->db->insert(_TBL_OUTBOX_WA_TEST, ['pesan'=>json_encode($this->p), 'id_status'=>10, 'created_at'=>date('Y-m-d H:i:s')]);
+		// die($this->db->last_query());
+		$message='';
+		$noProses=[0,0,0];
+		// $this->db->trans_begin();
+		if(array_key_exists('messages', $this->p)){
+			// Doi::dump($this->p);
+			if(count($this->p['messages'])>0){
+				$this->db->insert(_TBL_INBOX_WA_HOOK,['pesan'=>json_encode($this->p['messages'], JSON_UNESCAPED_SLASHES), 'created_at'=>date('Y-m-d H:i:s')]);
+			}
+		}
+		// die("debug");
+		$cek=$this->db->where('uri_title','sts_cli_wa')->get(_TBL_PREFERENCE)->row_array();
+		if(intval($cek['value'])>=1){
+			$cek=$this->db->where('uri_title','tgl_cli_wa')->get(_TBL_PREFERENCE)->row_array();
+
+			$awal  = date_create($cek['value']);
+			$akhir = date_create(); // waktu sekarang
+			$diff  = date_diff( $awal, $akhir );
+
+			if($diff->h>1 || ($diff->h==0 && $diff->i>45)){
+				
+			}else{
+				echo "masih proses \n";
+				return false;
+			}
+		}
+		try{
+			$this->db->update(_TBL_PREFERENCE, ['value'=>1], ['uri_title'=>'sts_cli_wa']);
+			$this->db->update(_TBL_PREFERENCE, ['value'=>date('d-m-Y H:i:s')], ['uri_title'=>'tgl_cli_wa']);
+			
+			$x=$this->db->where_in('uri_title',['api_url','api_token','api_last_message_number', 'api_wa', 'api_suffix'])->get(_TBL_PREFERENCE)->result_array();
+			
+			foreach($x as $row){
+				$param[$row['uri_title']] = $row['value'];
+			}
+			$url = $param['api_url'].'messages';
+
+			$params = [
+				'token' => $param['api_token'],
+				'lastMessageNumber'=>$param['api_last_message_number'],
+			];
+			$client = new GuzzleHttp\Client();
+			$response = $client->request('GET', $url, ['query'=>$params]);
+			$data = json_decode($response->getBody()->getContents(), true);
+
+			// $this->db->insert(_TBL_TMP,['isi'=>json_encode($data), 'update_date'=>date('Y-m-d H:i:s')]);
+			// $this->db->trans_begin();
+			$jmlPesan=0;
+			$akhirNo=$param['api_last_message_number'];
+			$akhirNo2=$param['api_last_message_number'];
+			if (array_key_exists('messages', $data)){
+				$jmlPesan = count($data['messages']);
+				$jmlx=count($data['messages'])-1;
+				if($jmlx>0){
+					if(intval($data['messages'][$jmlx]["messageNumber"])>intval($akhirNo)){
+						$akhirNo2=$data['messages'][$jmlx]["messageNumber"];
+						$this->db->update(_TBL_PREFERENCE, ['value'=>json_encode($data['messages'][$jmlx])], ['uri_title'=>'lastParamMessageNumber']);
+					}else{
+						$this->db->update(_TBL_PREFERENCE, ['value'=>json_encode($data['messages'][$jmlx])], ['uri_title'=>'lastParamMessageNumberErr']);
+					}
+				}
+			}
+			// echo $jmlPesan .'&&'. $akhirNo2.'>'.$akhirNo."\n";
+			
+			if ($jmlPesan && $akhirNo2>$akhirNo){
+				// $this->db->insert(_TBL_TEST_WA,['d_post'=>json_encode($this->post()), 'd_get'=>json_encode($data), 'no_awal'=>$akhirNo, 'no_akhir'=>$akhirNo2, 'jml_pesan'=>$jmlPesan, 'created_at'=>date('Y-m-d H:i:s')]);
+				try{
+					foreach($data['messages'] as $key=>$row){
+						// echo "no ke ".$key."\n";
+						// Doi::dump($row);
+						$tipe=1;
+						if ($row['author']==$param['api_wa']){
+							$tipe=2;
+						}
+
+						$inst=[];
+						// $inst['bot_code']=$bot_code;
+						// $inst['petugas_id']=intval($id_petugas);
+						// $inst['tmp_lap']=json_encode($penyakit);
+						$inst['tipe_id']=$tipe;
+						$inst['hp_sender']='+'.str_replace($param['api_suffix'],'',$row['chatId']);
+						$inst['id_api']=$row['id'];
+						$inst['body']=$row['body'];
+						$inst['fromMe']=$row['fromMe'];
+						$inst['self']=$row['self'];
+						$inst['isForwarded']=$row['isForwarded'];
+						$inst['author']=$row['author'];
+						$inst['chatId']=$row['chatId'];
+						$inst['messageNumber']=$row['messageNumber'];
+						$inst['time']=$row['time'];
+						$inst['senderName']=$row['senderName'];
+						$inst['chatName']=$row['chatName'];
+						$inst['created_by']='system';
+						$inst['created_at']=date('Y-m-d H:i:s');
+						if(in_array($inst['hp_sender'], ['+','+E', '+1', '+5', '+c', '+K', '+T'])){
+							$inst['sts_proses']=4;
+						}else{
+							if ($tipe==1){
+								$inst['sts_proses']=-1;
+							}else{
+								$inst['sts_proses']=1;
+							}
+						}
+						if(isset($row['caption'])){
+							$inst['caption']=$row['caption'];
+						}
+						// Doi::dump($inst);
+						// Doi::dump(json_encode,$inst);
+						// $this->db->where('hp_sender', $inst['hp_sender']);
+						$this->db->where('id_api', $row['id']);
+						$cek = $this->db->select('id')->where_in('sts_proses', [0,1])->get(_TBL_INBOX_WA)->num_rows();
+						// $cek=0;
+						if($tipe==1){
+							if (intval($cek)==0){
+								$this->db->insert(_TBL_INBOX_WA, $inst);
+								// echo $cek."ke ".$key." | "._TBL_INBOX_WA."\n";
+								// $id_inbox = $this->db->insert_id();
+								// echo $this->db->last_query()."\n";
+								++$noProses[0];
+							}else{
+								$this->db->insert(_TBL_INBOX_WA_DOUBLE, $inst);
+								++$noProses[1];
+								// echo $cek."ke ".$key." | "._TBL_INBOX_WA_DOUBLE."\n";
+								// echo $this->db->last_query()."\n";
+								// die($this->db->last_query());
+								// $id_inbox = $this->db->insert_id();
+							}
+						}else{
+							$this->db->insert(_TBL_INBOX_WA_REPLY, $inst);
+							++$noProses[2];
+							// echo $cek."ke ".$key." | "._TBL_INBOX_WA_REPLY."\n";
+						}
+					}
+					$this->db->update(_TBL_PREFERENCE, ['value'=>$akhirNo2], ['uri_title'=>'api_last_message_number']);
+					$this->db->update(_TBL_PREFERENCE, ['value'=>date('d-m-Y H:i:s')], ['uri_title'=>'tgl_last_update_wa']);
+				}catch(\Exception $e){
+					echo "error1\n";
+					echo $e->getMessage();
+					$err=$e->getMessage().'\n'.json_encode($data).'\n';
+					$this->db->update(_TBL_PREFERENCE, ['value'=>date('d-m-Y H:i:s')], ['uri_title'=>'err_wa_inbox']);
+					// $this->db->trans_rollback();
+				}
+			}
+		}catch(\Exception $e){
+			// echo "error2\n";
+			$message = $e->getMessage();
+		}
+		$this->db->update(_TBL_PREFERENCE, ['value'=>0], ['uri_title'=>'sts_cli_wa']);
+		// $this->db->trans_commit();
+		$this->response(['status'=>true, 'message'=>$message, 'data'=>['success'=>$noProses[0], 'double'=>$noProses[1], 'reply'=>$noProses[2]]], REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+	}
+
+	public function message_qontak_post()
+    {
+		$this->load->library('waqontak');
+		if(array_key_exists('verify_info', $this->p)){
+			if($this->p['verify_info']=='This is a verification message. Please respond with 2xx http code.'){
+				$ket='Verify Info : Setting Webhook berubah';
+			}else{
+				$ket='Qontak Verify Info : ';
+			}
+			$result = $this->waqontak->params(['mode'=>'post', 'note'=>$ket])->datas($this->p)->process('logs');
+		}else{
+			$result = $this->waqontak->params(['mode'=>'post'])->datas($this->p)->process('inbox');
+		}
+		if ($result['status'])
+		{
+			$this->response($result, REST_Controller::HTTP_OK);	
+		}
+		else
+		{
+			$this->response($result, REST_Controller::HTTP_NOT_FOUND);
+		}
+	}
+function unit_pelapor_get(){
+		$result = $this->data->cek_auth();
+		if($result['status']){
+			$historis = array(
+				2022 => array('Puskesmas'=>10435,'Rumah Sakit'=>593,'Laboratorium'=>0,'B/BKK/LKK'=>0,'Klinik'=>0),
+				2023 => array('Puskesmas'=>10489,'Rumah Sakit'=>935,'Laboratorium'=>11,'B/BKK/LKK'=>51,'Klinik'=>0),
+				2024 => array('Puskesmas'=>10489,'Rumah Sakit'=>1386,'Laboratorium'=>92,'B/BKK/LKK'=>51,'Klinik'=>0),
+				2025 => array('Puskesmas'=>10583,'Rumah Sakit'=>2473,'Laboratorium'=>196,'B/BKK/LKK'=>51,'Klinik'=>131),
+			);
+			$jumlah_faskes = array('Puskesmas'=>10416,'Rumah Sakit'=>3267,'Laboratorium'=>299,'B/BKK/LKK'=>51,'Klinik'=>13571);
+			$rows = $this->db->query("
+				SELECT
+CASE WHEN id_unit=2 THEN 'Puskesmas'
+						WHEN id_unit=1 THEN 'Rumah Sakit'
+						WHEN id_unit=4 THEN 'Laboratorium'
+						WHEN id_unit=156 THEN 'B/BKK/LKK'
+						WHEN id_unit=242 THEN 'Klinik'
+						ELSE 'Lainnya' END AS jenis_unit,
+					COUNT(*) AS jumlah
+FROM ewarn_puskesmas GROUP BY jenis_unit
+			")->result_array();
+			$data_kini = array('Puskesmas'=>0,'Rumah Sakit'=>0,'Laboratorium'=>0,'B/BKK/LKK'=>0,'Klinik'=>0);
+			foreach($rows as $r){ if(isset($data_kini[$r['jenis_unit']])) $data_kini[$r['jenis_unit']]=intval($r['jumlah']); }
+			$semua = $historis;
+			$semua[intval(date('Y'))] = $data_kini;
+			ksort($semua);
+			$tahun_list = array_keys($semua);
+			$total_per_tahun = array();
+			foreach($semua as $t=>$j){ $total_per_tahun[$t]=array_sum($j); }
+			$tren = array();
+			foreach($tahun_list as $i=>$t){
+				$kenaikan=null; $persen=null;
+				if($i>0){ $prev=$total_per_tahun[$tahun_list[$i-1]]; $kenaikan=$total_per_tahun[$t]-$prev; $persen=$prev>0?round($kenaikan/$prev,6):null; }
+				$tren[]=array('tahun'=>$t,'total'=>$total_per_tahun[$t],'kenaikan'=>$kenaikan,'persen'=>$persen);
+			}
+			$t_awal=$tahun_list[0]; $t_akhir=$tahun_list[count($tahun_list)-1];
+			$max_t=$tahun_list[0]; foreach($total_per_tahun as $t=>$v){ if($v>$total_per_tahun[$max_t]) $max_t=$t; }
+			$result = array(
+				'status'=>true,
+				'generated_at'=>date('Y-m-d H:i:s'),
+				'tren'=>$tren,
+				'ringkasan'=>array(
+					'total_kenaikan'=>$total_per_tahun[$t_akhir]-$total_per_tahun[$t_awal],
+					'persen_kenaikan'=>$total_per_tahun[$t_awal]>0?round(($total_per_tahun[$t_akhir]-$total_per_tahun[$t_awal])/$total_per_tahun[$t_awal],6):0,
+					'rata_rata'=>round(array_sum($total_per_tahun)/count($total_per_tahun)),
+					'tahun_tertinggi'=>$max_t,
+				),
+				'per_jenis'=>$semua,
+				'jumlah_faskes'=>$jumlah_faskes,
+				'data_terkini'=>$data_kini,
+				'tahun_list'=>$tahun_list,
+			);
+		}
+		$this->result_api($result,'unit_pelapor');
+	}
+
+function list_unit_pelapor_get(){
+		$result = $this->data->cek_auth();
+		if($result['status']){
+			$page  = intval($this->get('page'))  ?: 1;
+			$limit = intval($this->get('limit')) ?: 500;
+			$aktif = $this->get('aktif'); // Y, N, atau kosong = semua
+			$offset = ($page - 1) * $limit;
+
+			$this->db->select('
+				p.id, p.puskesmas, p.kode_puskesmas,
+				ep.propinsi, ek.kota, ed.distrik,
+				vp.unit_pelapor,
+				p.aktif, p.lat, p.lng,
+				p.id_kota, p.id_prop, p.id_distrik,
+				p.kelompok, p.id_unit,
+				p.create_date, p.update_date
+			');
+			$this->db->from('ewarn_puskesmas p');
+			$this->db->join('ewarn_view_puskesmas vp', 'vp.id = p.id', 'left');
+			$this->db->join('ewarn_propinsi ep', 'ep.id = p.id_prop', 'left');
+			$this->db->join('ewarn_kota ek', 'ek.id = p.id_kota', 'left');
+			$this->db->join('ewarn_distrik ed', 'ed.id = p.id_distrik', 'left');
+			if ($aktif === 'Y' || $aktif === 'N') {
+				$this->db->where('p.aktif', $aktif);
+			}
+			$this->db->order_by('ep.propinsi, ek.kota, p.puskesmas');
+
+			$total = $this->db->count_all_results('', false);
+			$this->db->limit($limit, $offset);
+			$rows = $this->db->get()->result_array();
+
+			$result = array(
+				'status'     => true,
+				'total'      => $total,
+				'page'       => $page,
+				'limit'      => $limit,
+				'total_page' => ceil($total / $limit),
+				'data'       => $rows,
+			);
+		}
+		$this->result_api($result, 'list_unit_pelapor');
+	}
+}
