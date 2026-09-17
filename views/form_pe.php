@@ -97,7 +97,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Telp Petugas</label>
-            <input type="text" name="telp_petugas" class="form-control" value="<?=fv($v,'telp_petugas')?>">
+            <input type="tel" name="telp_petugas" class="form-control" maxlength="13" pattern="[0-9]{10,13}" inputmode="numeric" placeholder="10-13 digit angka" value="<?=fv($v,'telp_petugas')?>">
           </div>
         </div>
         <div class="col-sm-3">
@@ -181,7 +181,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-4">
           <div class="form-group">
             <label>NIK</label>
-            <input type="text" name="nik" class="form-control" maxlength="16" value="<?=fv($v,'nik')?>">
+            <input type="text" name="nik" class="form-control" maxlength="16" pattern="[0-9]{16}" inputmode="numeric" placeholder="16 digit angka" value="<?=fv($v,'nik')?>">
           </div>
         </div>
         <div class="col-sm-2">
@@ -262,7 +262,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-6">
           <div class="form-group">
             <label>Tlp/HP Pasien</label>
-            <input type="text" name="telp_pasien" class="form-control" value="<?=fv($v,'telp_pasien')?>">
+            <input type="tel" name="telp_pasien" class="form-control" maxlength="13" pattern="[0-9]{10,13}" inputmode="numeric" placeholder="10-13 digit angka" value="<?=fv($v,'telp_pasien')?>">
           </div>
         </div>
       </div>
@@ -329,7 +329,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-2">
           <div class="form-group">
             <label>No Telp Kontak Darurat</label>
-            <input type="text" name="telp_kontak_darurat" class="form-control" placeholder="No HP/Telp" value="<?=fv($v,'telp_kontak_darurat')?>">
+            <input type="tel" name="telp_kontak_darurat" class="form-control" maxlength="13" pattern="[0-9]{10,13}" inputmode="numeric" placeholder="10-13 digit angka" value="<?=fv($v,'telp_kontak_darurat')?>">
           </div>
         </div>
       </div>
@@ -1762,6 +1762,27 @@ $('#formPE').submit(function(e) {
 $(function() {
     if (initProp) { $('#sel_prop').val(initProp).trigger('change'); }
 });
+// Filter input hanya angka untuk NIK dan telp
+function onlyNumbers(e) {
+    var k = e.which || e.keyCode;
+    // Allow: backspace, delete, tab, escape, enter, arrow keys
+    if (k==8||k==9||k==13||k==27||k==46||(k>=35&&k<=40)) return true;
+    // Allow: ctrl+A, ctrl+C, ctrl+V, ctrl+X
+    if (e.ctrlKey && (k==65||k==67||k==86||k==88)) return true;
+    // Block non-numeric
+    if (k<48||k>57) { e.preventDefault(); return false; }
+    return true;
+}
+$(function(){
+    // Apply ke NIK dan semua field telp
+    $('input[name="nik"], input[name="telp_pasien"], input[name="telp_petugas"], input[name="telp_kontak_darurat"]')
+        .on('keypress', onlyNumbers)
+        .on('paste', function(e){
+            var text = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
+            if (!/^[0-9]+$/.test(text)) { e.preventDefault(); }
+        });
+});
+
 // Set max date = today untuk semua input date
 $(function(){
     var today = new Date().toISOString().split('T')[0];
