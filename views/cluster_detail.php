@@ -185,7 +185,7 @@ dl.dl-cl dd{font-size:13px;color:#2c3e50;margin-bottom:10px}
   </section>
 </div>
 
-<script src="<?=base_url('assets/plugins/chartjs/Chart.min.js')?>"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <script>
 var BASE='<?=base_url()?>';
 var CL_ID=<?=$cluster['id']?>;
@@ -219,8 +219,8 @@ function showLinkModal() {
       var linked = r.id_cluster == CL_ID;
       var cl_info = r.id_cluster ? (linked?'<span class="text-success">Cluster ini</span>':'<span class="text-warning">Cluster lain</span>') : '-';
       var btn = linked
-        ? '<button class="btn btn-xs btn-danger" onclick="linkPE('+r.id+\',unlink\')"><i class="fa fa-unlink"></i> Unlink</button>'
-        : '<button class="btn btn-xs btn-success" onclick="linkPE('+r.id+\',link\')"><i class="fa fa-link"></i> Link</button>';
+        ? '<button class="btn btn-xs btn-danger" onclick="linkPE('+r.id+',\'unlink\')"><i class="fa fa-unlink"></i> Unlink</button>'
+        : '<button class="btn btn-xs btn-success" onclick="linkPE('+r.id+',\'link\')"><i class="fa fa-link"></i> Link</button>';
       html+='<tr><td>'+r.no_pe+'</td><td>'+r.nama_pasien+'</td><td>'+(r.tgl_sakit||'-')+'</td>'
         +'<td>'+(STATUS[parseInt(r.status_kasus)]||'-')+'</td><td>'+cl_info+'</td><td>'+btn+'</td></tr>';
     });
