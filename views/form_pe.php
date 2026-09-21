@@ -1,3 +1,5 @@
+
+<script>$(function(){ $('body').addClass('sidebar-collapse'); });</script>
 <style>
 .form-section {
     margin-top: 28px;

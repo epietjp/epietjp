@@ -1,3 +1,5 @@
+
+<script>$(function(){ $('body').addClass('sidebar-collapse'); });</script>
 <style>
 .zoo-card {
     border-radius:12px;

@@ -1,3 +1,5 @@
+
+<script>$(function(){ $('body').addClass('sidebar-collapse'); });</script>
 <div class="content-wrapper" id="detail-pe-content">
   <section class="content-header">
     <h1><i class="fa fa-file-text-o"></i> <?=htmlspecialchars($title)?></h1>

@@ -1,3 +1,5 @@
+
+<script>$(function(){ $('body').addClass('sidebar-collapse'); });</script>
 <div class="content-wrapper">
   <section class="content-header">
     <h1><i class="fa fa-bar-chart"></i> Analisa Kasus Zoonosis</h1>
