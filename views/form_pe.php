@@ -265,12 +265,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         </div>
         <div class="col-sm-2">
           <div class="form-group">
-            <label>Tanggal Lahir</label>
-            <input type="date" name="tgl_lahir" class="form-control" value="<?=fv($v,'tgl_lahir')?>">
-          </div>
-        </div>
-        <div class="col-sm-2">
-          <div class="form-group">
             <label>Umur (Tahun)</label>
             <input type="number" name="umur_thn" class="form-control" min="0" value="<?=fv($v,'umur_thn',0)?>">
           </div>
@@ -401,7 +395,38 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Kelurahan/Desa</label>
-            <input type="text" name="kelurahan" class="form-control" value="<?=fv($v,'kelurahan')?>">
+            <select name="kelurahan" id="sel_kelurahan" class="form-control">
+              <option value="">-- Pilih dulu Kecamatan --</option>
+              <?php if(fv($v,'kelurahan')): ?>
+              <option value="<?=htmlspecialchars(fv($v,'kelurahan'))?>" selected><?=htmlspecialchars(fv($v,'kelurahan'))?></option>
+              <?php endif; ?>
+            </select>
+            <script>
+            $(function(){
+              var id_kec = $('#sel_kecamatan_pasien').val();
+              if(id_kec && id_kec > 0) loadDesa(id_kec);
+              $('#sel_kecamatan_pasien').on('change', function(){ loadDesa($(this).val()); });
+            });
+            function loadDesa(id_kec) {
+              var cur = '<?=addslashes(fv($v,"kelurahan"))?>';
+              $('#sel_kelurahan').html('<option value="">-- Memuat desa... --</option>');
+              if(!id_kec||id_kec==0){ $('#sel_kelurahan').html('<option value="">-- Pilih dulu Kecamatan --</option>'); return; }
+              $.get(BASE+'zoonosis/get_desa/'+id_kec, function(rows){
+                var html='<option value="">-- Pilih Kelurahan/Desa --</option>';
+                $.each(rows,function(i,r){ html+='<option value="'+r.desa+'"'+(r.desa==cur?' selected':'')+'>'+r.desa+'</option>'; });
+                html+='<option value="__lain__">Lainnya (tulis manual)</option>';
+                $('#sel_kelurahan').html(html);
+                if(cur) $('#sel_kelurahan').val(cur);
+              },'json');
+            }
+            $('#sel_kelurahan').on('change',function(){
+              if($(this).val()=='__lain__'){
+                var v=prompt('Tulis nama kelurahan/desa:');
+                if(v){ $(this).append('<option value="'+v+'" selected>'+v+'</option>').val(v); }
+                else { $(this).val(''); }
+              }
+            });
+            </script>
           </div>
         </div>
       </div>
@@ -1914,6 +1939,24 @@ $(function(){
             if (!/^[0-9]+$/.test(text)) { e.preventDefault(); }
         });
 });
+
+// Validasi umur real-time
+function cekUmur() {
+    var thn = parseInt($('input[name=umur_thn]').val()) || 0;
+    var bln = parseInt($('input[name=umur_bln]').val()) || 0;
+    var hari = parseInt($('input[name=umur_hari]').val()) || 0;
+    $('.warn-umur').remove();
+    if (thn > 100) {
+        $('input[name=umur_thn]').after('<small class="warn-umur text-danger"><i class="fa fa-exclamation-triangle"></i> Umur tahun tidak boleh lebih dari 100</small>');
+    }
+    if (bln > 11) {
+        $('input[name=umur_bln]').after('<small class="warn-umur text-danger"><i class="fa fa-exclamation-triangle"></i> Umur bulan harus 0-11</small>');
+    }
+    if (hari > 30) {
+        $('input[name=umur_hari]').after('<small class="warn-umur text-danger"><i class="fa fa-exclamation-triangle"></i> Umur hari harus 0-30</small>');
+    }
+}
+$(document).on('change', 'input[name=umur_thn], input[name=umur_bln], input[name=umur_hari]', cekUmur);
 
 // Set max date = today untuk semua input date
 $(function(){
