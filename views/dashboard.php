@@ -168,6 +168,7 @@
           <div class="zoo-label">Gigitan Hewan Penular Rabies (GHPR)</div>
           <div class="zoo-sub"><span class="zoo-badge">Konfirmasi: <b id="kpi-8-kon">-</b></span> <span class="zoo-badge">Meninggal: <b id="kpi-8-mati">-</b></span> <span class="zoo-badge">CFR: <b id="kpi-8-cfr">-</b></span></div>
           <div style="font-size:0.8em;opacity:0.9;margin-top:6px"><i class="fa fa-calendar-o"></i> <b id="kpi-8-minggu">-</b></div>
+          <div id="kpi-8-breakdown" style="margin-top:5px;font-size:0.78em;line-height:1.8"></div>
           <i class="fa fa-paw zoo-icon"></i>
         </div>
       </div>
@@ -177,6 +178,7 @@
           <div class="zoo-label">Suspek Flu Burung Pada Manusia</div>
           <div class="zoo-sub"><span class="zoo-badge">Konfirmasi: <b id="kpi-11-kon">-</b></span> <span class="zoo-badge">Meninggal: <b id="kpi-11-mati">-</b></span> <span class="zoo-badge">CFR: <b id="kpi-11-cfr">-</b></span></div>
           <div style="font-size:0.8em;opacity:0.9;margin-top:6px"><i class="fa fa-calendar-o"></i> <b id="kpi-11-minggu">-</b></div>
+          <div id="kpi-11-breakdown" style="margin-top:5px;font-size:0.78em;line-height:1.8"></div>
           <i class="fa fa-dove zoo-icon"></i>
         </div>
       </div>
@@ -186,6 +188,7 @@
           <div class="zoo-label">Suspek Antrax</div>
           <div class="zoo-sub"><span class="zoo-badge">Konfirmasi: <b id="kpi-14-kon">-</b></span> <span class="zoo-badge">Meninggal: <b id="kpi-14-mati">-</b></span> <span class="zoo-badge">CFR: <b id="kpi-14-cfr">-</b></span></div>
           <div style="font-size:0.8em;opacity:0.9;margin-top:6px"><i class="fa fa-calendar-o"></i> <b id="kpi-14-minggu">-</b></div>
+          <div id="kpi-14-breakdown" style="margin-top:5px;font-size:0.78em;line-height:1.8"></div>
           <i class="fa fa-biohazard zoo-icon"></i>
         </div>
       </div>
@@ -195,6 +198,7 @@
           <div class="zoo-label">Suspek Leptospirosis</div>
           <div class="zoo-sub"><span class="zoo-badge">Konfirmasi: <b id="kpi-26-kon">-</b></span> <span class="zoo-badge">Meninggal: <b id="kpi-26-mati">-</b></span> <span class="zoo-badge">CFR: <b id="kpi-26-cfr">-</b></span></div>
           <div style="font-size:0.8em;opacity:0.9;margin-top:6px"><i class="fa fa-calendar-o"></i> <b id="kpi-26-minggu">-</b></div>
+          <div id="kpi-26-breakdown" style="margin-top:5px;font-size:0.78em;line-height:1.8"></div>
           <i class="fa fa-tint zoo-icon"></i>
         </div>
       </div>
@@ -357,6 +361,18 @@ function loadDashboard() {
             $('#kpi-'+id_p+'-mati').text(row.meninggal || 0);
             $('#kpi-'+id_p+'-cfr').text(row.cfr ? row.cfr+'%' : '0%');
             $('#kpi-'+id_p+'-minggu').text('Minggu '+row.minggu_no+': '+(row.minggu_ini||0)+' kasus');
+            // Breakdown per diagnosa
+            if (row.breakdown && row.breakdown.length >= 1) {
+                var DLABEL = {18:'GHPR',31:'Rabies',226:'Avian Suspek',32:'Avian Konfirmasi',222:'Lepto Suspek',24:'Lepto Konfirmasi',294:'Anthraks'};
+                var bhtml = '';
+                $.each(row.breakdown, function(i,b){
+                    bhtml += '<span class="zoo-badge" style="background:rgba(255,255,255,0.15);margin-top:3px">'
+                        +(DLABEL[b.diagnosa_no]||'Diagnosa '+b.diagnosa_no)+': <b>'+b.total+'</b>'
+                        +' | Meninggal: <b>'+b.meninggal+'</b>'
+                        +' | CFR: <b>'+(b.cfr||0)+'%</b></span> ';
+                });
+                $('#kpi-'+id_p+'-breakdown').html(bhtml);
+            }
         });
     }, 'json');
 }

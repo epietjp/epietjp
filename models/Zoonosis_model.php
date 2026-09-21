@@ -13,7 +13,7 @@ class Zoonosis_model extends CI_Model {
         $tgl2 = $this->db->escape_str($tgl2);
         $q = "SELECT
                 COUNT(*) AS total,
-                SUM(CASE WHEN status_kasus=2 THEN 1 ELSE 0 END) AS konfirmasi,
+                SUM(CASE WHEN diagnosa_no IN (31,32,24) THEN 1 ELSE 0 END) AS konfirmasi,
                 SUM(CASE WHEN akhir_no=2     THEN 1 ELSE 0 END) AS meninggal,
                 SUM(CASE WHEN diperiksa_lab=1 THEN 1 ELSE 0 END) AS diperiksa_lab,
                 ROUND(SUM(CASE WHEN akhir_no=2 THEN 1 ELSE 0 END)/NULLIF(COUNT(*),0)*100,1) AS cfr
@@ -21,7 +21,21 @@ class Zoonosis_model extends CI_Model {
               WHERE z.id_penyakit=".intval($id_penyakit)."
                 AND COALESCE(z.tgl_bergejala, z.tgl_sakit, z.tgl_laporan, z.tgl_pe) BETWEEN '{$tgl1}' AND '{$tgl2}'";
         $this->_where_wilayah($q, $id_prop, $id_kota);
-        return $this->db->query($q)->row_array();
+        $result = $this->db->query($q)->row_array();
+
+        // Breakdown per diagnosa_no
+        $q2 = "SELECT diagnosa_no,
+                COUNT(*) AS total,
+                SUM(CASE WHEN akhir_no=2 THEN 1 ELSE 0 END) AS meninggal,
+                ROUND(SUM(CASE WHEN akhir_no=2 THEN 1 ELSE 0 END)/NULLIF(COUNT(*),0)*100,1) AS cfr
+              FROM ewarn_ghs_zoonosis_pe z
+              WHERE z.id_penyakit=".intval($id_penyakit)."
+                AND COALESCE(z.tgl_bergejala, z.tgl_sakit, z.tgl_laporan, z.tgl_pe) BETWEEN '{$tgl1}' AND '{$tgl2}'";
+        $this->_where_wilayah($q2, $id_prop, $id_kota);
+        $q2 .= " GROUP BY diagnosa_no";
+        $breakdown = $this->db->query($q2)->result_array();
+        $result['breakdown'] = $breakdown;
+        return $result;
     }
 
     // Trend mingguan per penyakit
