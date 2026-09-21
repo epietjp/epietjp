@@ -186,13 +186,43 @@ class Zoonosis extends BackendController {
             GROUP BY c.id
         ")->row_array();
         if (!$cluster) { redirect('zoonosis/cluster'); }
+        // Kurva epidemi
+        $kurva = $this->db->query("
+            SELECT DATE(COALESCE(pe.tgl_sakit,pe.tgl_bergejala,pe.tgl_laporan)) as tgl_sakit,
+                COUNT(*) as total,
+                SUM(CASE WHEN pe.diagnosa_no IN (31,32,24) THEN 1 ELSE 0 END) as konfirmasi,
+                SUM(CASE WHEN pe.akhir_no=2 THEN 1 ELSE 0 END) as meninggal
+            FROM ewarn_ghs_zoonosis_cluster_pe cp
+            JOIN ewarn_ghs_zoonosis_pe pe ON pe.id=cp.id_pe
+            WHERE cp.id_cluster=".intval($id)."
+            AND COALESCE(pe.tgl_sakit,pe.tgl_bergejala,pe.tgl_laporan) IS NOT NULL
+            GROUP BY DATE(COALESCE(pe.tgl_sakit,pe.tgl_bergejala,pe.tgl_laporan))
+            ORDER BY tgl_sakit ASC
+        ")->result_array();
+
+        // Daftar PE terkait
+        $pe_cluster = $this->db->query("
+            SELECT pe.id, pe.no_pe, pe.nama_pasien, pe.tgl_sakit, pe.tgl_laporan,
+                pe.status_kasus, pe.akhir_no, pe.diagnosa_no,
+                pr.propinsi, k.kota
+            FROM ewarn_ghs_zoonosis_cluster_pe cp
+            JOIN ewarn_ghs_zoonosis_pe pe ON pe.id=cp.id_pe
+            LEFT JOIN ewarn_propinsi pr ON pr.id=pe.id_prop
+            LEFT JOIN ewarn_kota k ON k.id=pe.id_kota
+            WHERE cp.id_cluster=".intval($id)."
+            ORDER BY pe.tgl_sakit ASC
+        ")->result_array();
+
         $data = array(
-            'title'   => 'Detail Cluster '.$cluster['no_cluster'],
-            'cluster' => $cluster,
-            'penyakit'=> $this->PENYAKIT_ZOO,
-            'user'    => $this->_user(),
-            'level'   => $this->_level(),
-            'id'      => $id,
+            'title'      => 'Detail Cluster '.$cluster['no_cluster'],
+            'cluster'    => $cluster,
+            'kurva'      => $kurva,
+            'pe_list'    => $pe_cluster,
+            'penyakit'   => $this->PENYAKIT_ZOO,
+            'list_prop'  => $this->db->query("SELECT id, propinsi FROM ewarn_propinsi WHERE aktif='Y' ORDER BY propinsi")->result_array(),
+            'user'       => $this->_user(),
+            'level'      => $this->_level(),
+            'id'         => $id,
         );
         $this->template->build('cluster_detail', $data);
     }
