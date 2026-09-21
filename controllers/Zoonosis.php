@@ -104,6 +104,15 @@ class Zoonosis extends BackendController {
         echo json_encode($this->zm->get_trend($id_penyakit, $tahun, $id_prop, $id_kota));
     }
 
+    public function get_desa($id_kec=0) {
+        $id_kec = (int)$id_kec;
+        $kec = $this->db->query("SELECT distrik FROM ewarn_distrik WHERE id=".intval($id_kec))->row_array();
+        if (!$kec) { echo json_encode(array()); return; }
+        $nama_kec = $this->db->escape_str($kec['distrik']);
+        $rows = $this->db->query("SELECT DISTINCT `COL 5` as desa FROM wilayah_desa WHERE `COL 4`='{$nama_kec}' AND `COL 5`!='' AND `COL 5`!='village' ORDER BY `COL 5`")->result_array();
+        echo json_encode($rows);
+    }
+
     public function get_kota($id_prop=0) {
         $rows = $this->db->query("SELECT id, kota FROM ewarn_kota WHERE id_prop=".intval($id_prop)." AND aktif='Y' ORDER BY kota")->result_array();
         echo json_encode($rows);
@@ -471,6 +480,7 @@ class Zoonosis extends BackendController {
             'no_pe'                => $p['no_pe'],
             'nama_pasien'          => $p['nama_pasien'],
             'nik'                  => $p['nik'],
+            'no_epid'              => isset($p['no_epid']) && $p['no_epid'] ? $p['no_epid'] : NULL,
             'kelamin'              => $p['kelamin'],
             'umur_thn'             => (int)$p['umur_thn'],
             'umur_bln'             => (int)$p['umur_bln'],
@@ -941,7 +951,7 @@ class Zoonosis extends BackendController {
         'no_pe','diagnosa_no','tgl_laporan','tgl_pe','no_ebs','nama_petugas','jabatan_petugas','telp_petugas',
         'id_prop','id_kota','id_puskesmas','id_kecamatan',
         'kd_prop_kasus','kd_kota_kasus','id_kecamatan_kasus',
-        'nama_pasien','nama_kk','nik','kelamin','umur_thn','umur_bln','umur_hari','tgl_lahir','pekerjaan','telp_pasien',
+        'nama_pasien','nama_kk','nik','no_epid','kelamin','umur_thn','umur_bln','umur_hari','tgl_lahir','pekerjaan','telp_pasien',
         'alamat','alamat_kerja','kontak_darurat','telp_kontak_darurat','kelurahan','kecamatan',
         'tgl_bergejala','tgl_sakit','tgl_pajanan','status_kasus','akhir_no','tgl_meninggal','gejala',
         'riwayat_kontak_hewan','jenis_hewan','tgl_kontak','lokasi_kontak',

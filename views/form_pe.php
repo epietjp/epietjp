@@ -131,7 +131,41 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Jabatan Petugas</label>
-            <input type="text" name="jabatan_petugas" class="form-control" placeholder="Contoh: Sanitarian, Dokter, Perawat" value="<?=fv($v,'jabatan_petugas')?>">
+            <select name="jabatan_petugas" class="form-control">
+              <option value="">-- Pilih Jabatan --</option>
+              <?php
+              $jab_opts = array('Petugas Surveilans Puskesmas','Dokter','Perawat','Bidan','Epidemiolog','Sanitarian','Lainnya');
+              foreach($jab_opts as $jab):
+              $sel = fv($v,'jabatan_petugas')==$jab ? 'selected' : '';
+              // Cek jika nilai tidak ada di list (free text lama)
+              if($jab=='Lainnya' && fv($v,'jabatan_petugas') && !in_array(fv($v,'jabatan_petugas'),$jab_opts)) $sel='selected';
+              ?>
+              <option value="<?=$jab?>" <?=$sel?>><?=$jab?></option>
+              <?php endforeach; ?>
+              <?php if(fv($v,'jabatan_petugas') && !in_array(fv($v,'jabatan_petugas'),$jab_opts)): ?>
+              <option value="<?=fv($v,'jabatan_petugas')?>" selected><?=fv($v,'jabatan_petugas')?></option>
+              <?php endif; ?>
+            </select>
+            <input type="text" id="jabatan_lainnya" class="form-control" placeholder="Tulis jabatan lainnya"
+              style="margin-top:5px;display:<?=(fv($v,'jabatan_petugas')&&!in_array(fv($v,'jabatan_petugas'),array('Petugas Surveilans Puskesmas','Dokter','Perawat','Bidan','Epidemiolog','Sanitarian','Lainnya')))?'block':'none'?>"
+              value="<?=(fv($v,'jabatan_petugas')&&!in_array(fv($v,'jabatan_petugas'),array('Petugas Surveilans Puskesmas','Dokter','Perawat','Bidan','Epidemiolog','Sanitarian','Lainnya')))?fv($v,'jabatan_petugas'):''?>"
+              oninput="this.previousElementSibling.previousElementSibling.value=this.value">
+            <script>
+            $('select[name=jabatan_petugas]').on('change',function(){
+              if($(this).val()=='Lainnya'){
+                $('#jabatan_lainnya').show().focus();
+                $(this).val('Lainnya');
+              } else {
+                $('#jabatan_lainnya').hide().val('');
+              }
+            });
+            // Sync nilai lainnya ke select saat submit
+            $('form').on('submit',function(){
+              if($('select[name=jabatan_petugas]').val()=='Lainnya' && $('#jabatan_lainnya').val()){
+                $('select[name=jabatan_petugas]').append('<option value="'+$('#jabatan_lainnya').val()+'" selected>'+$('#jabatan_lainnya').val()+'</option>').val($('#jabatan_lainnya').val());
+              }
+            });
+            </script>
           </div>
         </div>
       </div>
@@ -221,6 +255,20 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             </select>
           </div>
         </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>No. Epid <small class="text-muted">(11 digit)</small></label>
+            <input type="text" name="no_epid" class="form-control" maxlength="11" pattern="[0-9]{11}" inputmode="numeric" placeholder="Contoh: 36740100001" value="<?=fv($v,'no_epid')?>">
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="form-group">
+            <label>Tanggal Lahir</label>
+            <input type="date" name="tgl_lahir" class="form-control" value="<?=fv($v,'tgl_lahir')?>">
+          </div>
+        </div>
         <div class="col-sm-2">
           <div class="form-group">
             <label>Umur (Tahun)</label>
@@ -256,7 +304,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               // Opsi pekerjaan per penyakit sesuai form PE kertas
               $pekerjaan_opts = array(
                 8 => array( // GHPR/Rabies
-                  'petani'=>'Petani','peternakan'=>'Peternakan/Peternak',
+                  'petani'=>'Petani','peternakan'=>'Peternakan/Peternak','veterinarian'=>'Veterinarian',
                   'karyawan'=>'Karyawan/Pekerja Swasta','ibu_rumah_tangga'=>'Ibu Rumah Tangga',
                   'tni'=>'TNI','polri'=>'POLRI','pelajar'=>'Pelajar/Mahasiswa',
                   'tukang'=>'Tukang/Buruh','nelayan'=>'Nelayan','pedagang'=>'Pedagang',
@@ -285,6 +333,23 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="<?=$val?>" <?=fv($v,'pekerjaan')==$val?'selected':''?>><?=$label?></option>
               <?php endforeach; ?>
             </select>
+            <input type="text" id="pekerjaan_lainnya" class="form-control" placeholder="Tulis pekerjaan lainnya"
+              style="margin-top:5px;display:<?=fv($v,'pekerjaan')=='lainnya'?'block':'none'?>"
+              value="">
+            <script>
+            $('select[name=pekerjaan]').on('change',function(){
+              if($(this).val()=='lainnya'){
+                $('#pekerjaan_lainnya').show().focus();
+              } else {
+                $('#pekerjaan_lainnya').hide().val('');
+              }
+            });
+            $('form').on('submit',function(){
+              if($('select[name=pekerjaan]').val()=='lainnya' && $('#pekerjaan_lainnya').val()){
+                $('select[name=pekerjaan]').append('<option value="'+$('#pekerjaan_lainnya').val()+'" selected>'+$('#pekerjaan_lainnya').val()+'</option>').val($('#pekerjaan_lainnya').val());
+              }
+            });
+            </script>
           </div>
         </div>
         <div class="col-sm-6">
