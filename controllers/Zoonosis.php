@@ -14,8 +14,13 @@ class Zoonosis extends BackendController {
         );
         $this->load->model('Zoonosis_model', 'zm');
         $this->load->helper('url');
-        // Override remap - jangan remap 'edit' ke '__edit'
+        // Override remap - jangan remap ke BackendController
         unset($this->remap['edit']);
+        unset($this->remap['view']);
+        unset($this->remap['add']);
+        unset($this->remap['delete']);
+        // Bypass privilege check untuk semua fungsi zoonosis
+        $this->modul_by_pass = array('zoonosis');
     }
 
     private function _auth() {
@@ -132,6 +137,133 @@ class Zoonosis extends BackendController {
     }
 
     // DAFTAR PE
+    public function cluster() {
+        $this->_auth();
+        $data = array(
+            'title'     => 'Cluster Epidemiologi Zoonosis',
+            'penyakit'  => $this->PENYAKIT_ZOO,
+            'list_prop' => $this->db->query("SELECT id, propinsi FROM ewarn_propinsi WHERE aktif='Y' ORDER BY propinsi")->result_array(),
+            'user'      => $this->_user(),
+            'level'     => $this->_level(),
+        );
+        $this->template->build('cluster_daftar', $data);
+    }
+
+    public function cluster_form($id=0) {
+        $this->_auth();
+        $id = (int)$id;
+        $data = array(
+            'title'     => 'Form Cluster Zoonosis',
+            'penyakit'  => $this->PENYAKIT_ZOO,
+            'list_prop' => $this->db->query("SELECT id, propinsi FROM ewarn_propinsi WHERE aktif='Y' ORDER BY propinsi")->result_array(),
+            'user'      => $this->_user(),
+            'level'     => $this->_level(),
+            'id'        => $id,
+        );
+        $this->template->build('cluster_form', $data);
+    }
+
+    public function cluster_detail($id=0) {
+        $this->_auth();
+        $id = (int)$id;
+        $data = array(
+            'title'     => 'Detail Cluster Zoonosis',
+            'penyakit'  => $this->PENYAKIT_ZOO,
+            'user'      => $this->_user(),
+            'level'     => $this->_level(),
+            'id'        => $id,
+        );
+        $this->template->build('cluster_detail', $data);
+    }
+
+
+    public function get_cluster_list() {
+        $this->_auth();
+        $id_penyakit = (int)$this->input->get('id_penyakit');
+        $id_prop     = (int)$this->input->get('id_prop');
+        $id_kota     = (int)$this->input->get('id_kota');
+        $status      = $this->input->get('status');
+        $q = "SELECT c.*, p.propinsi, k.kota, py.nama_penyakit,
+                COUNT(cp.id_pe) as jumlah_kasus,
+                SUM(CASE WHEN pe.status_kasus=2 THEN 1 ELSE 0 END) as konfirmasi,
+                SUM(CASE WHEN pe.akhir_no=2 THEN 1 ELSE 0 END) as meninggal
+              FROM ewarn_ghs_zoonosis_cluster c
+              LEFT JOIN ewarn_propinsi p ON p.id=c.id_prop
+              LEFT JOIN ewarn_kota k ON k.id=c.id_kota
+              LEFT JOIN ewarn_penyakit py ON py.id=c.id_penyakit
+              LEFT JOIN ewarn_ghs_zoonosis_cluster_pe cp ON cp.id_cluster=c.id
+              LEFT JOIN ewarn_ghs_zoonosis_pe pe ON pe.id=cp.id_pe
+              WHERE 1=1";
+        if ($id_penyakit) $q .= " AND c.id_penyakit=".intval($id_penyakit);
+        if ($id_prop)     $q .= " AND c.id_prop=".intval($id_prop);
+        if ($id_kota)     $q .= " AND c.id_kota=".intval($id_kota);
+        if ($status!=='') $q .= " AND c.status_cluster=".intval($status);
+        $q .= " GROUP BY c.id ORDER BY c.create_date DESC LIMIT 200";
+        echo json_encode($this->db->query($q)->result_array());
+    }
+
+    public function cluster_hapus($id=0) {
+        $this->_auth();
+        $id = (int)$id;
+        $this->db->where('id', $id)->delete('ewarn_ghs_zoonosis_cluster');
+        echo json_encode(array('status'=>'ok','id'=>$id,'redirect'=>site_url('zoonosis/cluster')));
+    }
+
+    public function cluster_simpan() {
+        $this->_auth();
+        $u  = $this->_user();
+        $p  = $this->input->post(NULL, TRUE);
+        $id = isset($p['id']) ? (int)$p['id'] : 0;
+        $id_penyakit = (int)$p['id_penyakit'];
+
+        // Generate no_cluster
+        if (empty($p['no_cluster'])) {
+            $singkat = isset($this->PENYAKIT_ZOO[$id_penyakit]) ? $this->PENYAKIT_ZOO[$id_penyakit]['singkat'] : 'ZOO';
+            $tahun   = date('Y');
+            $last    = $this->db->query("SELECT no_cluster FROM ewarn_ghs_zoonosis_cluster WHERE no_cluster LIKE 'CLU-{$singkat}-{$tahun}-%' ORDER BY id DESC LIMIT 1")->row_array();
+            $num     = $last ? (int)substr($last['no_cluster'], -4) + 1 : 1;
+            $no_cluster = 'CLU-'.$singkat.'-'.$tahun.'-'.str_pad($num, 4, '0', STR_PAD_LEFT);
+        } else {
+            $no_cluster = $p['no_cluster'];
+        }
+
+        $data = array(
+            'no_cluster'          => $no_cluster,
+            'id_penyakit'         => $id_penyakit,
+            'id_prop'             => $p['id_prop'] ? (int)$p['id_prop'] : NULL,
+            'id_kota'             => $p['id_kota'] ? (int)$p['id_kota'] : NULL,
+            'nama_cluster'        => $p['nama_cluster'] ?: NULL,
+            'tgl_mulai'           => $p['tgl_mulai'] ?: NULL,
+            'tgl_selesai'         => $p['tgl_selesai'] ?: NULL,
+            'sumber_paparan'      => $p['sumber_paparan'] ?: NULL,
+            'lokasi_paparan'      => $p['lokasi_paparan'] ?: NULL,
+            'jumlah_terpapar'     => $p['jumlah_terpapar'] ? (int)$p['jumlah_terpapar'] : NULL,
+            'status_cluster'      => (int)$p['status_cluster'],
+            'no_klb'              => $p['no_klb'] ?: NULL,
+            'keterangan'          => $p['keterangan'] ?: NULL,
+            'update_user'         => $u['username'],
+            'update_date'         => date('Y-m-d H:i:s'),
+        );
+
+        if ($id) {
+            $this->db->where('id', $id)->update('ewarn_ghs_zoonosis_cluster', $data);
+        } else {
+            $data['create_user'] = $u['username'];
+            $this->db->insert('ewarn_ghs_zoonosis_cluster', $data);
+            $id = $this->db->insert_id();
+        }
+
+        // Simpan PE ke cluster
+        $pe_ids = isset($p['pe_ids']) ? $p['pe_ids'] : array();
+        if (!empty($pe_ids)) {
+            $this->db->where('id_cluster', $id)->delete('ewarn_ghs_zoonosis_cluster_pe');
+            foreach ($pe_ids as $pe_id) {
+                $this->db->insert('ewarn_ghs_zoonosis_cluster_pe', array('id_cluster'=>$id,'id_pe'=>(int)$pe_id));
+            }
+        }
+        echo json_encode(array('status'=>'ok','id'=>$id,'no_cluster'=>$no_cluster));
+    }
+
     public function daftar() {
         $this->_auth();
         $data = array(
