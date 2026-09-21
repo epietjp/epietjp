@@ -175,6 +175,26 @@ dl.dl-cl dd{font-size:13px;color:#2c3e50;margin-bottom:10px}
         <button type="button" class="close" data-dismiss="modal" style="color:#fff"><span>&times;</span></button>
         <h4 class="modal-title"><i class="fa fa-link"></i> Link / Unlink PE ke Cluster <?=htmlspecialchars($cluster['no_cluster'])?></h4>
       </div>
+      <div class="modal-header" style="padding:8px 15px;background:#f8f9fa;border-top:1px solid #ddd">
+        <div class="row">
+          <div class="col-sm-4">
+            <select id="f_link_prop" class="form-control input-sm" onchange="loadKotaLink();showLinkModal()">
+              <option value="0">-- Semua Provinsi --</option>
+              <?php foreach($this->db->query("SELECT id,propinsi FROM ewarn_propinsi WHERE aktif='Y' ORDER BY propinsi")->result_array() as $pr): ?>
+              <option value="<?=$pr['id']?>" <?=$cluster['id_prop']==$pr['id']?'selected':''?>><?=htmlspecialchars($pr['propinsi'])?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+          <div class="col-sm-4">
+            <select id="f_link_kota" class="form-control input-sm" onchange="showLinkModal()">
+              <option value="0">-- Semua Kab/Kota --</option>
+            </select>
+          </div>
+          <div class="col-sm-4">
+            <button class="btn btn-sm btn-primary" onclick="showLinkModal()"><i class="fa fa-search"></i> Filter</button>
+          </div>
+        </div>
+      </div>
       <div class="modal-body" id="modalLinkBody">
         <div class="text-center"><i class="fa fa-spinner fa-spin"></i> Memuat...</div>
       </div>
@@ -210,7 +230,9 @@ new Chart(ctx,{
 function showLinkModal() {
   $('#modalLinkBody').html('<div class="text-center"><i class="fa fa-spinner fa-spin"></i> Memuat PE...</div>');
   $('#modalLinkPE').modal('show');
-  $.get(BASE+'zoonosis/get_pe_for_cluster/'+CL_ID, function(rows) {
+  var id_kota = $('#f_link_kota').val()||0;
+  var id_prop = $('#f_link_prop').val()||0;
+  $.get(BASE+'zoonosis/get_pe_for_cluster/'+CL_ID, {id_prop:id_prop,id_kota:id_kota}, function(rows) {
     if(!rows.length){ $('#modalLinkBody').html('<p class="text-muted text-center">Tidak ada PE untuk penyakit ini.</p>'); return; }
     var html='<table class="table table-bordered table-condensed"><thead><tr style="background:#1F3864;color:#fff">'
       +'<th>No PE</th><th>Nama Pasien</th><th>Tgl Sakit</th><th>Status</th><th>Cluster Saat Ini</th><th>Aksi</th></tr></thead><tbody>';
@@ -226,6 +248,18 @@ function showLinkModal() {
     });
     html+='</tbody></table>';
     $('#modalLinkBody').html(html);
+  },'json');
+}
+
+function loadKotaLink() {
+  var id_prop = $('#f_link_prop').val();
+  $('#f_link_kota').html('<option value="0">-- Semua Kab/Kota --</option>');
+  if (!id_prop||id_prop==0) return;
+  $.get(BASE+'zoonosis/get_kota/'+id_prop, function(rows){
+    $.each(rows,function(i,r){ $('#f_link_kota').append('<option value="'+r.id+'">'+r.kota+'</option>'); });
+    <?php if(!empty($cluster['id_kota'])): ?>
+    $('#f_link_kota').val('<?=$cluster['id_kota']?>');
+    <?php endif; ?>
   },'json');
 }
 
