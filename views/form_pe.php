@@ -897,7 +897,19 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Jenis Spesimen</label>
-            <input type="text" name="jenis_sample" class="form-control" value="<?=fv($v,'jenis_sample')?>">
+            <select name="jenis_sample" class="form-control">
+              <option value="">-- Pilih Jenis Spesimen --</option>
+              <option value="Serum Darah" <?=fv($v,'jenis_sample')=='Serum Darah'?'selected':''?>>Serum Darah</option>
+              <option value="Whole Blood" <?=fv($v,'jenis_sample')=='Whole Blood'?'selected':''?>>Whole Blood</option>
+              <option value="Urine" <?=fv($v,'jenis_sample')=='Urine'?'selected':''?>>Urine</option>
+              <option value="Usap Nasofaring" <?=fv($v,'jenis_sample')=='Usap Nasofaring'?'selected':''?>>Usap Nasofaring</option>
+              <option value="Usap Tenggorok" <?=fv($v,'jenis_sample')=='Usap Tenggorok'?'selected':''?>>Usap Tenggorok</option>
+              <option value="Swab Rektal" <?=fv($v,'jenis_sample')=='Swab Rektal'?'selected':''?>>Swab Rektal</option>
+              <option value="Kulit/Lesi" <?=fv($v,'jenis_sample')=='Kulit/Lesi'?'selected':''?>>Kulit/Lesi</option>
+              <option value="Jaringan/Eksudat" <?=fv($v,'jenis_sample')=='Jaringan/Eksudat'?'selected':''?>>Jaringan/Eksudat</option>
+              <option value="Otak Hewan (GHPR)" <?=fv($v,'jenis_sample')=='Otak Hewan (GHPR)'?'selected':''?>>Otak Hewan (GHPR)</option>
+              <option value="Lainnya" <?=fv($v,'jenis_sample')=='Lainnya'?'selected':''?>>Lainnya</option>
+            </select>
           </div>
         </div>
         <div class="col-sm-3">
