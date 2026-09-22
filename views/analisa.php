@@ -206,5 +206,14 @@ function loadAlert() {
     });
 }
 
-$(function() { loadAnalisa(); loadAlert(); });
+$(function() { 
+  loadAnalisa(); 
+  loadAlert();
+  // Aktifkan tab sesuai hash URL (dari klik KPI dashboard)
+  var hash = window.location.hash;
+  if (hash) { $('#tabPenyakit a[href="'+hash+'"]').tab('show'); }
+  $('#tabPenyakit a').on('shown.bs.tab', function(e){
+    window.location.hash = $(e.target).attr('href');
+  });
+});
 </script>

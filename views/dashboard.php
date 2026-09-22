@@ -163,7 +163,7 @@
     <div class="section-title"><i class="fa fa-stethoscope"></i> Ringkasan Kasus per Penyakit</div>
     <div class="row" id="kpi-row">
       <div class="col-sm-3">
-        <div class="zoo-card card-ghpr">
+        <div class="zoo-card card-ghpr" onclick="window.location='<?=site_url('zoonosis/analisa')?>#tab-8'" style="cursor:pointer" title="Klik untuk lihat analisa">
           <div class="zoo-num" id="kpi-8-total">-</div>
           <div class="zoo-label">GHPR / Rabies</div>
           <div class="zoo-sub" id="kpi-8-sub">-</div>
@@ -173,7 +173,7 @@
         </div>
       </div>
       <div class="col-sm-3">
-        <div class="zoo-card card-avian">
+        <div class="zoo-card card-avian" onclick="window.location='<?=site_url('zoonosis/analisa')?>#tab-11'" style="cursor:pointer" title="Klik untuk lihat analisa">
           <div class="zoo-num" id="kpi-11-total">-</div>
           <div class="zoo-label">Avian Flu</div>
           <div class="zoo-sub" id="kpi-11-sub">-</div>
@@ -183,7 +183,7 @@
         </div>
       </div>
       <div class="col-sm-3">
-        <div class="zoo-card card-anthrax">
+        <div class="zoo-card card-anthrax" onclick="window.location='<?=site_url('zoonosis/analisa')?>#tab-14'" style="cursor:pointer" title="Klik untuk lihat analisa">
           <div class="zoo-num" id="kpi-14-total">-</div>
           <div class="zoo-label">Suspek Antrax</div>
           <div class="zoo-sub" id="kpi-14-sub">-</div>
@@ -193,7 +193,7 @@
         </div>
       </div>
       <div class="col-sm-3">
-        <div class="zoo-card card-lepto">
+        <div class="zoo-card card-lepto" onclick="window.location='<?=site_url('zoonosis/analisa')?>#tab-26'" style="cursor:pointer" title="Klik untuk lihat analisa">
           <div class="zoo-num" id="kpi-26-total">-</div>
           <div class="zoo-label">Leptospirosis</div>
           <div class="zoo-sub" id="kpi-26-sub">-</div>
