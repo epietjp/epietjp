@@ -107,8 +107,9 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <?php endif; ?>
               <?php foreach($list_ebs as $ebs): ?>
               <option value="<?=htmlspecialchars($ebs['no_ebs'])?>"
-                <?=fv($v,'no_ebs')==$ebs['no_ebs']?'selected':''?>>
-                <?=htmlspecialchars($ebs['no_ebs'])?> | <?=htmlspecialchars($ebs['tanggal'])?> | <?=htmlspecialchars($ebs['kota'])?>
+                <?=fv($v,'no_ebs')==$ebs['no_ebs']?'selected':''?>
+                <?=!empty($ebs['sudah_pe'])?'style="color:#e74c3c;font-weight:bold"':''?>>
+                <?=!empty($ebs['sudah_pe'])?'[SUDAH PE: '.$ebs['sudah_pe'].'] ':''?><?=htmlspecialchars($ebs['no_ebs'])?> | <?=htmlspecialchars($ebs['tanggal'])?> | <?=htmlspecialchars($ebs['kota'])?>
               </option>
               <?php endforeach; ?>
             </select>

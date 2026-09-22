@@ -147,13 +147,15 @@ class Zoonosis_model extends CI_Model {
                      e.tgl_laporan AS tanggal,
                      pr.propinsi,
                      k.kota,
-                     pk.puskesmas AS unit
+                     pk.puskesmas AS unit,
+                     pe.no_pe AS sudah_pe
               FROM ewarn_form_ebs_new e
               LEFT JOIN ewarn_data_combo d  ON d.id = e.diagnosa_no
               LEFT JOIN ewarn_distrik dist  ON dist.id = e.id_distrik
               LEFT JOIN ewarn_kota k        ON k.id = dist.id_kota
               LEFT JOIN ewarn_propinsi pr   ON pr.id = k.id_prop
               LEFT JOIN ewarn_puskesmas pk  ON pk.id = e.id_puskesmas
+              LEFT JOIN ewarn_ghs_zoonosis_pe pe ON pe.no_ebs = e.no_ebs
               WHERE e.diagnosa_no IN ({$ids})";
         if ($kel_place == 2 && !empty($detail_place['id_kota'])) {
             $q .= " AND dist.id_kota=".intval($detail_place['id_kota']);

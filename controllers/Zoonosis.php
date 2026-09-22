@@ -1143,12 +1143,14 @@ class Zoonosis extends BackendController {
         $id_prop = (int)$this->input->get('id_prop');
         $id_kota = (int)$this->input->get('id_kota');
         if (!$id_prop && !$id_kota && strlen($q) < 3) { echo json_encode(array()); return; }
-        $sql = "SELECT e.no_ebs, d.data as diagnosa, k.kota
+        $sql = "SELECT e.no_ebs, d.data as diagnosa, k.kota,
+             pe.no_pe as sudah_pe, pe.id as id_pe
              FROM ewarn_form_ebs_new e
              LEFT JOIN ewarn_data_combo d ON d.id=e.diagnosa_no
              LEFT JOIN ewarn_distrik dist ON dist.id=e.id_distrik
              LEFT JOIN ewarn_kota k ON k.id=dist.id_kota
              LEFT JOIN ewarn_propinsi pr ON pr.id=k.id_prop
+             LEFT JOIN ewarn_ghs_zoonosis_pe pe ON pe.no_ebs=e.no_ebs
              WHERE e.diagnosa_no IN(18,31,226,32,294,222,24)";
         if (strlen($q) >= 2) {
             $ql = $this->db->escape_like_str($q);
