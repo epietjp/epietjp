@@ -231,17 +231,7 @@
         <i class="fa fa-map-marker"></i> Tampilkan
       </button>
     </div>
-    <div class="row">
-      <div class="col-sm-12"><div id="map-zoo" style="height:420px"></div></div>
-    </div>
-    <div class="row" style="margin-top:14px">
-      <div class="col-sm-12">
-        <div style="font-weight:bold;margin-bottom:8px;font-size:13px;color:#2c3e50"><i class="fa fa-bar-chart"></i> Top 10 Wilayah</div>
-        <div id="map-zoo-legend"></div>
-      </div>
-    </div>
-    <br>
-    <!-- Trend Chart -->
+    <!-- Trend Chart + Input PE -->
     <div class="row">
       <div class="col-sm-8">
         <div class="box box-primary">
@@ -259,7 +249,7 @@
                 <option value="<?=$y?>" <?=$y==date('Y')?'selected':''?>><?=$y?></option>
                 <?php endfor; ?>
               </select>
-              <button class="btn btn-xs btn-default" onclick="loadTrend()"><i class="fa fa-refresh"></i></button>
+              <button class="btn btn-xs btn-default" onclick="loadTrend()"><i class="fa fa-refresh"></i> Tampilkan</button>
             </div>
           </div>
           <div class="box-body">
@@ -294,6 +284,18 @@
         </div>
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-sm-12"><div id="map-zoo" style="height:420px"></div></div>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <div class="col-sm-12">
+        <div style="font-weight:bold;margin-bottom:8px;font-size:13px;color:#2c3e50"><i class="fa fa-bar-chart"></i> Top 10 Wilayah</div>
+        <div id="map-zoo-legend"></div>
+      </div>
+    </div>
+    <br>
+
 
 
   </section>
