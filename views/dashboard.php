@@ -165,8 +165,8 @@
       <div class="col-sm-3">
         <div class="zoo-card card-ghpr">
           <div class="zoo-num" id="kpi-8-total">-</div>
-          <div class="zoo-label">Gigitan Hewan Penular Rabies (GHPR)</div>
-          <div class="zoo-sub"><span class="zoo-badge">Konfirmasi: <b id="kpi-8-kon">-</b></span> <span class="zoo-badge">Meninggal: <b id="kpi-8-mati">-</b></span> <span class="zoo-badge">CFR: <b id="kpi-8-cfr">-</b></span></div>
+          <div class="zoo-label">GHPR / Rabies</div>
+          <div class="zoo-sub" id="kpi-8-sub">-</div>
           <div style="font-size:0.8em;opacity:0.9;margin-top:6px"><i class="fa fa-calendar-o"></i> <b id="kpi-8-minggu">-</b></div>
           <div id="kpi-8-breakdown" style="margin-top:5px;font-size:0.78em;line-height:1.8"></div>
           <i class="fa fa-paw zoo-icon"></i>
@@ -175,8 +175,8 @@
       <div class="col-sm-3">
         <div class="zoo-card card-avian">
           <div class="zoo-num" id="kpi-11-total">-</div>
-          <div class="zoo-label">Suspek Flu Burung Pada Manusia</div>
-          <div class="zoo-sub"><span class="zoo-badge">Konfirmasi: <b id="kpi-11-kon">-</b></span> <span class="zoo-badge">Meninggal: <b id="kpi-11-mati">-</b></span> <span class="zoo-badge">CFR: <b id="kpi-11-cfr">-</b></span></div>
+          <div class="zoo-label">Avian Flu</div>
+          <div class="zoo-sub" id="kpi-11-sub">-</div>
           <div style="font-size:0.8em;opacity:0.9;margin-top:6px"><i class="fa fa-calendar-o"></i> <b id="kpi-11-minggu">-</b></div>
           <div id="kpi-11-breakdown" style="margin-top:5px;font-size:0.78em;line-height:1.8"></div>
           <i class="fa fa-dove zoo-icon"></i>
@@ -186,7 +186,7 @@
         <div class="zoo-card card-anthrax">
           <div class="zoo-num" id="kpi-14-total">-</div>
           <div class="zoo-label">Suspek Antrax</div>
-          <div class="zoo-sub"><span class="zoo-badge">Konfirmasi: <b id="kpi-14-kon">-</b></span> <span class="zoo-badge">Meninggal: <b id="kpi-14-mati">-</b></span> <span class="zoo-badge">CFR: <b id="kpi-14-cfr">-</b></span></div>
+          <div class="zoo-sub" id="kpi-14-sub">-</div>
           <div style="font-size:0.8em;opacity:0.9;margin-top:6px"><i class="fa fa-calendar-o"></i> <b id="kpi-14-minggu">-</b></div>
           <div id="kpi-14-breakdown" style="margin-top:5px;font-size:0.78em;line-height:1.8"></div>
           <i class="fa fa-biohazard zoo-icon"></i>
@@ -195,8 +195,8 @@
       <div class="col-sm-3">
         <div class="zoo-card card-lepto">
           <div class="zoo-num" id="kpi-26-total">-</div>
-          <div class="zoo-label">Suspek Leptospirosis</div>
-          <div class="zoo-sub"><span class="zoo-badge">Konfirmasi: <b id="kpi-26-kon">-</b></span> <span class="zoo-badge">Meninggal: <b id="kpi-26-mati">-</b></span> <span class="zoo-badge">CFR: <b id="kpi-26-cfr">-</b></span></div>
+          <div class="zoo-label">Leptospirosis</div>
+          <div class="zoo-sub" id="kpi-26-sub">-</div>
           <div style="font-size:0.8em;opacity:0.9;margin-top:6px"><i class="fa fa-calendar-o"></i> <b id="kpi-26-minggu">-</b></div>
           <div id="kpi-26-breakdown" style="margin-top:5px;font-size:0.78em;line-height:1.8"></div>
           <i class="fa fa-tint zoo-icon"></i>
@@ -357,13 +357,23 @@ function loadDashboard() {
     $.get(BASE+'zoonosis/get_dashboard_data', {tgl1:tgl1,tgl2:tgl2,id_prop:id_prop,id_kota:id_kota,id_kec:id_kec,id_pusk:id_pusk}, function(d) {
         $.each(d, function(id_p, row) {
             $('#kpi-'+id_p+'-total').text(row.total || 0);
-            $('#kpi-'+id_p+'-kon').text(row.konfirmasi || 0);
-            $('#kpi-'+id_p+'-mati').text(row.meninggal || 0);
-            $('#kpi-'+id_p+'-cfr').text(row.cfr ? row.cfr+'%' : '0%');
+            // Build badge dari breakdown
+            var DNAME = {18:'GHPR',31:'Rabies',226:'Suspek Flu Burung',32:'Flu Burung Pd Manusia',222:'Suspek Lepto',24:'Leptospirosis',294:'Anthraks'};
+            if (row.breakdown && row.breakdown.length > 0) {
+                var bparts = [];
+                $.each(row.breakdown, function(i,b){
+                    bparts.push((DNAME[b.diagnosa_no]||'Diagnosa '+b.diagnosa_no)+': <b>'+b.total+'</b>');
+                });
+                bparts.push('Meninggal: <b>'+(row.meninggal||0)+'</b>');
+                bparts.push('CFR: <b>'+(row.cfr?row.cfr+'%':'0%')+'</b>');
+                $('#kpi-'+id_p+'-sub').html(bparts.join(' | '));
+            } else {
+                $('#kpi-'+id_p+'-sub').html('Meninggal: <b>'+(row.meninggal||0)+'</b> | CFR: <b>'+(row.cfr?row.cfr+'%':'0%')+'</b>');
+            }
             $('#kpi-'+id_p+'-minggu').text('Minggu '+row.minggu_no+': '+(row.minggu_ini||0)+' kasus');
             // Breakdown per diagnosa
             if (row.breakdown && row.breakdown.length >= 1) {
-                var DLABEL = {18:'GHPR',31:'Rabies',226:'Avian Suspek',32:'Avian Konfirmasi',222:'Lepto Suspek',24:'Lepto Konfirmasi',294:'Anthraks'};
+                var DLABEL = {18:'GHPR',31:'Rabies',226:'Suspek Flu Burung',32:'Flu Burung Pd Manusia',222:'Suspek Lepto',24:'Leptospirosis',294:'Anthraks'};
                 var bhtml = '';
                 $.each(row.breakdown, function(i,b){
                     bhtml += '<span class="zoo-badge" style="background:rgba(255,255,255,0.15);margin-top:3px">'
@@ -510,11 +520,11 @@ function loadMap() {
         var _nameMap = {"IRIAN JAYA TIMUR":"PAPUA","IRIAN JAYA BARAT":"PAPUA BARAT","DKI JAKARTA":"JAKARTA","D.I. ACEH":"ACEH","BANGKA-BELITUNG":"BANGKA BELITUNG","NUSATENGGARA BARAT":"NUSA TENGGARA BARAT","NUSATENGGARA TIMUR":"NUSA TENGGARA TIMUR"};
         function getClr(n) {
             if (!n||n==0) return "#f5f5f5";
-            var p=n/maxV;
-            if (p>0.75) return "#800026";
-            if (p>0.5)  return "#BD0026";
-            if (p>0.25) return "#E31A1C";
-            return "#FC4E2A";
+            if (n>5000) return "#800026";
+            if (n>3000) return "#BD0026";
+            if (n>1000) return "#E31A1C";
+            if (n>300)  return "#FC4E2A";
+            return "#FD8D3C";
         }
         function matchJml(nm) {
             var k=nm.toUpperCase().trim();
