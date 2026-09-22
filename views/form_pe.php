@@ -830,6 +830,25 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               'gastrointestinal'=>'Anthraks Gastrointestinal',
               'paru'=>'Anthraks Paru/Inhalasi',
             ),
+            // Lab Lepto
+            'lepto_rdt' => array(
+              'Positif'=>'Positif',
+              'Negatif'=>'Negatif',
+              'Pending'=>'Pending/Belum Keluar',
+              'Tidak Dilakukan'=>'Tidak Dilakukan',
+            ),
+            'lepto_mat' => array(
+              'Positif'=>'Positif',
+              'Negatif'=>'Negatif',
+              'Pending'=>'Pending/Belum Keluar',
+              'Tidak Dilakukan'=>'Tidak Dilakukan',
+            ),
+            'lepto_pcr' => array(
+              'Positif'=>'Positif',
+              'Negatif'=>'Negatif',
+              'Pending'=>'Pending/Belum Keluar',
+              'Tidak Dilakukan'=>'Tidak Dilakukan',
+            ),
           );
           ?>
           <?php if($d['var_type']=='boolean'): ?>

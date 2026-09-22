@@ -236,7 +236,7 @@ class Zoonosis_model extends CI_Model {
             8  => array('Gejala GHPR','Tata Laksana GHPR'),
             11 => array('Gejala Avian','Data Pendukung Avian','Klinis Avian','Identitas Avian','Lingkungan Avian'),
             14 => array('Gejala Anthraks','Data Pendukung Anthrax','Klinis Anthrax','Lingkungan Anthraks'),
-            26 => array('Gejala Lepto','Data Pendukung Lepto','Klinis Lepto'),
+            26 => array('Gejala Lepto','Data Pendukung Lepto','Klinis Lepto','Lab Lepto'),
         );
         if (!isset($submodule_map[$id_penyakit])) return array();
         $subs = $submodule_map[$id_penyakit];
