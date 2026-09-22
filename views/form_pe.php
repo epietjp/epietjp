@@ -651,6 +651,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     ?>
     <?php foreach($detail_by_sub as $submodule => $rows): ?>
     <?php $rows = array_filter($rows, function($d){ return $d['var_key'] !== 'lokasi_gigitan'; }); if(empty($rows)) continue; ?>
+    <?php if($submodule === 'Gejala GHPR') continue; // Sudah dirender inline di section F ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-list-alt"></i> <?=htmlspecialchars($submodule)?></div>
       <?php if(strpos($submodule,'Gejala')===0): ?>
