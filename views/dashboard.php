@@ -103,13 +103,13 @@
         </div>
         <div class="col-sm-2">
           <label style="font-size:0.82em;margin-bottom:3px">Level</label>
-          <div>
-            <label class="radio-inline" style="font-size:0.85em"><input type="radio" name="f_level" value="0" checked onchange="setLevel()"> Nasional</label>
-            <label class="radio-inline" style="font-size:0.85em"><input type="radio" name="f_level" value="1" onchange="setLevel()"> Provinsi</label>
-            <label class="radio-inline" style="font-size:0.85em"><input type="radio" name="f_level" value="2" onchange="setLevel()"> Kab/Kota</label>
-            <label class="radio-inline" style="font-size:0.85em"><input type="radio" name="f_level" value="3" onchange="setLevel()"> Kecamatan</label>
-            <label class="radio-inline" style="font-size:0.85em"><input type="radio" name="f_level" value="4" onchange="setLevel()"> Unit Pelapor</label>
-          </div>
+          <select name="f_level" id="f_level_sel" class="form-control" onchange="setLevel()">
+            <option value="0">Nasional</option>
+            <option value="1">Provinsi</option>
+            <option value="2">Kab/Kota</option>
+            <option value="3">Kecamatan</option>
+            <option value="4">Unit Pelapor</option>
+          </select>
         </div>
         <div class="col-sm-2" id="wrap-prop" style="display:none">
           <label style="font-size:0.82em;margin-bottom:3px">Provinsi</label>
@@ -310,7 +310,7 @@ var BASE = '<?=base_url()?>';
 var chartTrend = null;
 
 function setLevel() {
-    var lv = parseInt($('input[name=f_level]:checked').val());
+    var lv = parseInt($('#f_level_sel').val());
     $('#wrap-prop').toggle(lv>0);
     $('#wrap-kota').toggle(lv>1);
     $('#wrap-kec').toggle(lv>2);
