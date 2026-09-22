@@ -138,7 +138,7 @@
             <option value="0">-- Pilih Unit Pelapor --</option>
           </select>
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-4">
           <label style="font-size:0.82em;margin-bottom:3px">&nbsp;</label><br>
           <button class="btn btn-primary btn-sm" onclick="loadDashboard()">
             <i class="fa fa-search"></i> Load Data
