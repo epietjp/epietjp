@@ -204,33 +204,6 @@
       </div>
     </div>
 
-    <!-- MAP PETA SEBARAN -->
-    <div class="section-title"><i class="fa fa-map"></i> Peta Sebaran Kasus</div>
-    <div style="margin-bottom:8px;display:flex;align-items:center;flex-wrap:wrap;gap:4px">
-      <select id="f_map_penyakit" class="form-control input-sm" style="width:180px">
-        <?php foreach($penyakit as $id_p=>$info): ?>
-        <option value="<?=$id_p?>"><?=htmlspecialchars($info['singkat'])?></option>
-        <?php endforeach; ?>
-      </select>
-      <select id="f_map_level" class="form-control input-sm" style="width:130px" onchange="onMapLevelChange()">
-        <option value="1">Provinsi</option>
-        <option value="2">Kab/Kota</option>
-        <option value="3">Kecamatan</option>
-        <option value="4">Unit Pelapor</option>
-      </select>
-      <select id="f_map_prop" class="form-control input-sm" style="width:160px;display:none" onchange="loadMapKota()">
-        <option value="0">-- Pilih Provinsi --</option>
-        <?php foreach($list_prop as $pr): ?>
-        <option value="<?=$pr['id']?>"><?=htmlspecialchars($pr['propinsi'])?></option>
-        <?php endforeach; ?>
-      </select>
-      <select id="f_map_kota" class="form-control input-sm" style="width:160px;display:none">
-        <option value="0">-- Pilih Kab/Kota --</option>
-      </select>
-      <button class="btn btn-sm btn-primary" onclick="loadMap()">
-        <i class="fa fa-map-marker"></i> Tampilkan
-      </button>
-    </div>
     <!-- Trend Chart + Input PE -->
     <div class="row">
       <div class="col-sm-8">
@@ -285,6 +258,33 @@
       </div>
     </div>
 
+    <!-- MAP PETA SEBARAN -->
+    <div class="section-title"><i class="fa fa-map"></i> Peta Sebaran Kasus</div>
+    <div style="margin-bottom:8px;display:flex;align-items:center;flex-wrap:wrap;gap:4px">
+      <select id="f_map_penyakit" class="form-control input-sm" style="width:180px">
+        <?php foreach($penyakit as $id_p=>$info): ?>
+        <option value="<?=$id_p?>"><?=htmlspecialchars($info['singkat'])?></option>
+        <?php endforeach; ?>
+      </select>
+      <select id="f_map_level" class="form-control input-sm" style="width:130px" onchange="onMapLevelChange()">
+        <option value="1">Provinsi</option>
+        <option value="2">Kab/Kota</option>
+        <option value="3">Kecamatan</option>
+        <option value="4">Unit Pelapor</option>
+      </select>
+      <select id="f_map_prop" class="form-control input-sm" style="width:160px;display:none" onchange="loadMapKota()">
+        <option value="0">-- Pilih Provinsi --</option>
+        <?php foreach($list_prop as $pr): ?>
+        <option value="<?=$pr['id']?>"><?=htmlspecialchars($pr['propinsi'])?></option>
+        <?php endforeach; ?>
+      </select>
+      <select id="f_map_kota" class="form-control input-sm" style="width:160px;display:none">
+        <option value="0">-- Pilih Kab/Kota --</option>
+      </select>
+      <button class="btn btn-sm btn-primary" onclick="loadMap()">
+        <i class="fa fa-map-marker"></i> Tampilkan
+      </button>
+    </div>
     <div class="row">
       <div class="col-sm-12"><div id="map-zoo" style="height:420px"></div></div>
     </div>
