@@ -493,6 +493,20 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             </select>
           </div>
         </div>
+        <?php if($id_penyakit == 26): ?>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Definisi Kasus <small class="text-muted">(Lepto)</small></label>
+            <select name="definisi_kasus" class="form-control">
+              <option value="">-- Pilih --</option>
+              <option value="1" <?=fv($v,'definisi_kasus')=='1'?'selected':''?>>Konfirmasi</option>
+              <option value="2" <?=fv($v,'definisi_kasus')=='2'?'selected':''?>>Probable</option>
+              <option value="3" <?=fv($v,'definisi_kasus')=='3'?'selected':''?>>Suspek</option>
+              <option value="4" <?=fv($v,'definisi_kasus')=='4'?'selected':''?>>Tidak Memenuhi Kriteria</option>
+            </select>
+          </div>
+        </div>
+        <?php endif; ?>
         <div class="col-sm-3">
           <div class="form-group">
             <label>Kondisi Akhir</label>

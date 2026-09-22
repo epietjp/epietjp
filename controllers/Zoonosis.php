@@ -498,6 +498,7 @@ class Zoonosis extends BackendController {
             'jabatan_petugas'      => isset($p['jabatan_petugas']) ? $p['jabatan_petugas'] : NULL,
             'telp_petugas'         => $p['telp_petugas'],
             'status_kasus'         => (int)$p['status_kasus'],
+            'definisi_kasus'       => isset($p['definisi_kasus']) && $p['definisi_kasus']!=='' ? (int)$p['definisi_kasus'] : NULL,
             'akhir_no'             => $p['akhir_no'] !== '' ? (int)$p['akhir_no'] : NULL,
             'tgl_meninggal'        => $p['tgl_meninggal']     ?: NULL,
             'diperiksa_lab'        => (int)$p['diperiksa_lab'],
