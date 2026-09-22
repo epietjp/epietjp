@@ -264,6 +264,13 @@
             <a href="<?=site_url('zoonosis/daftar')?>" class="btn btn-default btn-block">
               <i class="fa fa-list"></i> Lihat Semua Daftar PE
             </a>
+            <hr style="margin:10px 0">
+            <a href="<?=site_url('zoonosis/cluster_form')?>" class="btn btn-warning btn-block" style="margin-bottom:6px">
+              <i class="fa fa-plus"></i> Input Cluster Baru
+            </a>
+            <a href="<?=site_url('zoonosis/cluster')?>" class="btn btn-default btn-block">
+              <i class="fa fa-object-group"></i> Lihat Semua Daftar Cluster
+            </a>
             <a href="<?=site_url('zoonosis/analisa')?>" class="btn btn-default btn-block" style="margin-top:6px">
               <i class="fa fa-bar-chart"></i> Analisa &amp; Grafik
             </a>
