@@ -93,11 +93,11 @@
     <!-- Filter -->
     <div class="filter-bar">
       <div class="row">
-        <div class="col-sm-2">
+        <div class="col-sm-1" style="min-width:120px">
           <label style="font-size:0.82em;margin-bottom:3px">Dari Tanggal</label>
           <input type="date" id="f_tgl1" class="form-control input-sm" value="<?=date('Y-01-01')?>">
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-1" style="min-width:120px">
           <label style="font-size:0.82em;margin-bottom:3px">Sampai</label>
           <input type="date" id="f_tgl2" class="form-control input-sm" value="<?=date('Y-m-d')?>">
         </div>
