@@ -254,7 +254,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-4">
           <div class="form-group">
             <label>NIK</label>
-            <input type="text" name="nik" class="form-control" maxlength="16" pattern="[0-9]{16}" inputmode="numeric" placeholder="16 digit angka" value="<?=fv($v,'nik')?>">
+            <input type="text" name="nik" class="form-control" maxlength="16" pattern="[0-9]{16}" inputmode="numeric" placeholder="16 digit angka (0000000000000000 jika tidak ada)" value="<?=fv($v,'nik')?>" required><small class="text-muted">Isi 0000000000000000 jika tidak ada NIK</small>
           </div>
         </div>
       </div>
@@ -485,7 +485,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Status Kasus</label>
-            <select name="status_kasus" class="form-control">
+            <select name="status_kasus" class="form-control" required>
               <option value="0" <?=fv($v,'status_kasus','0')=='0'?'selected':''?>>Suspek</option>
               <option value="1" <?=fv($v,'status_kasus')=='1'?'selected':''?>>Probable</option>
               <option value="2" <?=fv($v,'status_kasus')=='2'?'selected':''?>>Konfirmasi</option>
@@ -852,7 +852,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Diperiksa Lab?</label>
-            <select name="diperiksa_lab" class="form-control" onchange="toggleLab(this.value)">
+            <select name="diperiksa_lab" class="form-control" onchange="toggleLab(this.value)" required>
               <option value="0" <?=fv($v,'diperiksa_lab','0')=='0'?'selected':''?>>Tidak</option>
               <option value="1" <?=fv($v,'diperiksa_lab')=='1'?'selected':''?>>Ya</option>
             </select>
@@ -1857,6 +1857,12 @@ $('#formPE').submit(function(e) {
     }
     if (nik && (nik.length !== 16 || !/^[0-9]+$/.test(nik))) {
         errors.push('NIK harus 16 digit angka (isi 0000000000000000 jika tidak ada NIK)');
+    }
+    // Validasi gejala minimal 1 (hanya jika ada checkbox gejala di form)
+    var totalGejala = $('input[name="dval[]"][type="checkbox"]').length;
+    var gejalaChecked = $('input[name="dval[]"]:checked').length;
+    if (totalGejala > 0 && gejalaChecked === 0) {
+        errors.push('Gejala dan Tanda Sakit wajib diisi - pilih minimal 1 gejala.');
     }
     if (umur_thn > 100) { errors.push('Umur (tahun) tidak boleh lebih dari 100'); }
 
