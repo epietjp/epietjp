@@ -228,6 +228,16 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- IDENTITAS PASIEN -->
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-user"></i> <b>D. Identitas Pasien</b></div>
+      <?php if($id_penyakit != 8): ?>
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>No. Epid <small class="text-muted">(11 digit)</small></label>
+            <input type="text" name="no_epid" class="form-control" maxlength="11" pattern="[0-9]{11}" inputmode="numeric" placeholder="Contoh: 36740100001" value="<?=fv($v,'no_epid')?>">
+          </div>
+        </div>
+      </div>
+      <?php endif; ?>
       <div class="row">
         <div class="col-sm-4">
           <div class="form-group">
@@ -235,7 +245,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="text" name="nama_pasien" class="form-control" value="<?=fv($v,'nama_pasien')?>" required>
           </div>
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-4">
           <div class="form-group">
             <label>Nama Orang Tua / KK</label>
             <input type="text" name="nama_kk" class="form-control" value="<?=fv($v,'nama_kk')?>">
@@ -247,6 +257,8 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="text" name="nik" class="form-control" maxlength="16" pattern="[0-9]{16}" inputmode="numeric" placeholder="16 digit angka" value="<?=fv($v,'nik')?>">
           </div>
         </div>
+      </div>
+      <div class="row">
         <div class="col-sm-2">
           <div class="form-group">
             <label>Jenis Kelamin</label>
@@ -256,12 +268,10 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             </select>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-3">
+        <div class="col-sm-2">
           <div class="form-group">
-            <label>No. Epid <small class="text-muted">(11 digit)</small></label>
-            <input type="text" name="no_epid" class="form-control" maxlength="11" pattern="[0-9]{11}" inputmode="numeric" placeholder="Contoh: 36740100001" value="<?=fv($v,'no_epid')?>">
+            <label>Tanggal Lahir</label>
+            <input type="date" name="tgl_lahir" class="form-control" value="<?=fv($v,'tgl_lahir')?>">
           </div>
         </div>
         <div class="col-sm-2">
@@ -284,12 +294,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         </div>
       </div>
       <div class="row">
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Tanggal Lahir</label>
-            <input type="date" name="tgl_lahir" class="form-control" value="<?=fv($v,'tgl_lahir')?>">
-          </div>
-        </div>
         <div class="col-sm-3">
           <div class="form-group">
             <label>Pekerjaan</label>
