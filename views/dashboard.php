@@ -411,9 +411,9 @@ function loadTrend() {
             data: {
                 labels: labels,
                 datasets: [
-                    {label:'Total',data:tot,backgroundColor:'rgba(52,152,219,0.7)',borderColor:'#2980b9',borderWidth:1},
-                    {label:'Konfirmasi',data:kon,backgroundColor:'rgba(231,76,60,0.7)',borderColor:'#c0392b',borderWidth:1},
-                    {label:'Meninggal',data:mati,backgroundColor:'rgba(44,62,80,0.7)',borderColor:'#2c3e50',borderWidth:1}
+                    {label:'Total',type:'bar',data:tot,backgroundColor:'rgba(52,152,219,0.6)',borderColor:'#2980b9',borderWidth:1},
+                    {label:'Konfirmasi',type:'bar',data:kon,backgroundColor:'rgba(231,76,60,0.6)',borderColor:'#c0392b',borderWidth:1},
+                    {label:'Meninggal',type:'line',data:mati,borderColor:'#e74c3c',backgroundColor:'rgba(231,76,60,0.15)',borderWidth:2,pointBackgroundColor:'#e74c3c',pointRadius:4,pointHoverRadius:6,fill:true}
                 ]
             },
             options: {
