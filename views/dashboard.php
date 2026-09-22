@@ -211,11 +211,25 @@
           <div class="box-header with-border">
             <h3 class="box-title"><i class="fa fa-line-chart"></i> Trend Mingguan</h3>
             <div class="box-tools pull-right">
-              <select id="f_trend_p" class="form-control input-sm" style="width:160px;display:inline-block">
-                <option value="8">GHPR</option>
-                <option value="11">Avian Flu</option>
-                <option value="14">Anthrax</option>
-                <option value="26">Leptospirosis</option>
+              <select id="f_trend_p" class="form-control input-sm" style="width:190px;display:inline-block">
+                <optgroup label="GHPR / Rabies">
+                  <option value="8">Semua GHPR+Rabies</option>
+                  <option value="8_18">-- GHPR (Suspek)</option>
+                  <option value="8_31">-- Rabies (Konfirmasi)</option>
+                </optgroup>
+                <optgroup label="Avian Flu">
+                  <option value="11">Semua Avian Flu</option>
+                  <option value="11_226">-- Suspek Flu Burung</option>
+                  <option value="11_32">-- Flu Burung Pd Manusia</option>
+                </optgroup>
+                <optgroup label="Anthraks">
+                  <option value="14">Anthraks</option>
+                </optgroup>
+                <optgroup label="Leptospirosis">
+                  <option value="26">Semua Leptospirosis</option>
+                  <option value="26_222">-- Suspek Lepto</option>
+                  <option value="26_24">-- Leptospirosis</option>
+                </optgroup>
               </select>
               <select id="f_trend_tahun" class="form-control input-sm" style="width:80px;display:inline-block">
                 <?php for($y=date('Y');$y>=2020;$y--): ?>
@@ -261,10 +275,25 @@
     <!-- MAP PETA SEBARAN -->
     <div class="section-title"><i class="fa fa-map"></i> Peta Sebaran Kasus</div>
     <div style="margin-bottom:8px;display:flex;align-items:center;flex-wrap:wrap;gap:4px">
-      <select id="f_map_penyakit" class="form-control input-sm" style="width:180px">
-        <?php foreach($penyakit as $id_p=>$info): ?>
-        <option value="<?=$id_p?>"><?=htmlspecialchars($info['singkat'])?></option>
-        <?php endforeach; ?>
+      <select id="f_map_penyakit" class="form-control input-sm" style="width:200px">
+        <optgroup label="GHPR / Rabies">
+          <option value="8">Semua GHPR+Rabies</option>
+          <option value="8_18">-- GHPR (Suspek)</option>
+          <option value="8_31">-- Rabies (Konfirmasi)</option>
+        </optgroup>
+        <optgroup label="Avian Flu">
+          <option value="11">Semua Avian Flu</option>
+          <option value="11_226">-- Suspek Flu Burung</option>
+          <option value="11_32">-- Flu Burung Pd Manusia</option>
+        </optgroup>
+        <optgroup label="Anthraks">
+          <option value="14">Anthraks</option>
+        </optgroup>
+        <optgroup label="Leptospirosis">
+          <option value="26">Semua Leptospirosis</option>
+          <option value="26_222">-- Suspek Lepto</option>
+          <option value="26_24">-- Leptospirosis</option>
+        </optgroup>
       </select>
       <select id="f_map_level" class="form-control input-sm" style="width:130px" onchange="onMapLevelChange()">
         <option value="1">Provinsi</option>
@@ -392,11 +421,14 @@ function loadDashboard() {
 }
 
 function loadTrend() {
-    var id_p  = $('#f_trend_p').val();
+    var raw = $('#f_trend_p').val();
+    var parts = raw.split('_');
+    var id_p = parts[0];
+    var dn = parts.length > 1 ? parts[1] : 0;
     var tahun = $('#f_trend_tahun').val();
     var id_prop = $('#f_prop').val();
     var id_kota = $('#f_kota').val() || 0;
-    $.get(BASE+'zoonosis/get_trend', {id_penyakit:id_p,tahun:tahun,id_prop:id_prop,id_kota:id_kota}, function(rows) {
+    $.get(BASE+'zoonosis/get_trend', {id_penyakit:id_p,diagnosa_no:dn,tahun:tahun,id_prop:id_prop,id_kota:id_kota}, function(rows) {
         var labels = [], tot = [], kon = [], mati = [];
         $.each(rows, function(i,r) {
             labels.push('M'+r.minggu);
@@ -441,7 +473,7 @@ function loadMapKota() {
 }
 function loadAlertOverlay(map_obj) {
     if (!map_obj) return;
-    var id_p  = $("#f_map_penyakit").val();
+    var raw_map = $("#f_map_penyakit").val(); var parts_map = raw_map.split("_"); var id_p = parts_map[0]; var dn_map = parts_map.length>1?parts_map[1]:0;
     var id_prop = $("#f_prop").val() || 0;
     $.get(BASE+'zoonosis/get_alert_ebs', {id_penyakit:id_p, id_prop:id_prop, window_jam:72}, function(rows) {
         if (!rows || !rows.length) return;
@@ -463,7 +495,10 @@ function loadAlertOverlay(map_obj) {
 }
 
 function loadMap() {
-    var id_p = $("#f_map_penyakit").val();
+    var raw_map = $("#f_map_penyakit").val();
+    var parts_map = raw_map.split("_");
+    var id_p = parts_map[0];
+    var dn_map = parts_map.length > 1 ? parts_map[1] : 0;
     var tgl1 = $("#f_tgl1").val();
     var tgl2 = $("#f_tgl2").val();
     var id_prop = $("#f_prop").val() || 0;
@@ -471,7 +506,7 @@ function loadMap() {
     var map_level = parseInt($('#f_map_level').val()) || 1;
     var map_prop  = $('#f_map_prop').val() || id_prop;
     var map_kota  = $('#f_map_kota').val() || 0;
-    $.ajax({url:BASE+"zoonosis/get_map_data", data:{id_penyakit:id_p,tgl1:tgl1,tgl2:tgl2,level:map_level,id_prop:map_prop,id_kota:map_kota}, dataType:"json",
+    $.ajax({url:BASE+"zoonosis/get_map_data", data:{id_penyakit:id_p,diagnosa_no:dn_map||0,tgl1:tgl1,tgl2:tgl2,level:map_level,id_prop:map_prop,id_kota:map_kota}, dataType:"json",
     success:function(data){
         // Level kecamatan/unit pelapor - bubble marker
         if (map_level == 3 || map_level == 4) {
@@ -522,7 +557,7 @@ function loadMap() {
             $("#map-zoo-legend").html(html);
             return; // stop - jangan lanjut ke choropleth
         }
-        if (_mapZoo) { _mapZoo.remove(); _mapZoo = null; }
+        if (_mapZoo) { try { _mapZoo.off(); _mapZoo.remove(); } catch(e){} _mapZoo = null; }
         _mapZoo = L.map("map-zoo", {scrollWheelZoom:false}).setView([-2.5, 118], 4);
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
             attribution:"(c) OSM", maxZoom:10, opacity:0.4

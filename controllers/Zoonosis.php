@@ -98,10 +98,11 @@ class Zoonosis extends BackendController {
     public function get_trend() {
         $this->_auth();
         $id_penyakit = (int)$this->input->get('id_penyakit');
+        $diagnosa_no = (int)$this->input->get('diagnosa_no');
         $tahun       = (int)$this->input->get('tahun') ?: date('Y');
         $id_prop     = (int)$this->input->get('id_prop');
         $id_kota     = (int)$this->input->get('id_kota');
-        echo json_encode($this->zm->get_trend($id_penyakit, $tahun, $id_prop, $id_kota));
+        echo json_encode($this->zm->get_trend($id_penyakit, $tahun, $id_prop, $id_kota, $diagnosa_no));
     }
 
     public function get_desa($id_kec=0) {
@@ -1164,6 +1165,7 @@ class Zoonosis extends BackendController {
     public function get_map_data() {
         $this->_auth();
         $id_penyakit = (int)$this->input->get('id_penyakit');
+        $diagnosa_no = (int)$this->input->get('diagnosa_no');
         $tgl1        = $this->input->get('tgl1') ?: date('Y-01-01');
         $tgl2        = $this->input->get('tgl2') ?: date('Y-m-d');
         $level       = (int)$this->input->get('level') ?: 1;
@@ -1171,6 +1173,7 @@ class Zoonosis extends BackendController {
         $id_kota     = (int)$this->input->get('id_kota');
         $tgl1 = $this->db->escape_str($tgl1);
         $tgl2 = $this->db->escape_str($tgl2);
+        $dn_sql = $diagnosa_no ? " AND z.diagnosa_no=".intval($diagnosa_no) : "";
 
         if ($level == 4) {
             // Per Unit Pelapor - koordinat dari kecamatan
@@ -1178,7 +1181,7 @@ class Zoonosis extends BackendController {
                   FROM ewarn_puskesmas pk
                   JOIN ewarn_distrik d ON d.id = pk.id_distrik
                   JOIN ewarn_kota k ON k.id = d.id_kota
-                  LEFT JOIN ewarn_ghs_zoonosis_pe z ON z.id_puskesmas=pk.id AND z.id_penyakit=".intval($id_penyakit)." AND z.tgl_laporan BETWEEN '{$tgl1}' AND '{$tgl2}'
+                  LEFT JOIN ewarn_ghs_zoonosis_pe z ON z.id_puskesmas=pk.id AND z.id_penyakit=".intval($id_penyakit)." AND z.tgl_laporan BETWEEN '{$tgl1}' AND '{$tgl2}'{$dn_sql}
                   WHERE ".($id_kota?"k.id=".intval($id_kota):"k.id_prop=".intval($id_prop))." AND pk.aktif='Y' GROUP BY pk.id";
             $rows = $this->db->query($q)->result_array();
             $out = array();
@@ -1194,7 +1197,7 @@ class Zoonosis extends BackendController {
                   LEFT JOIN ewarn_ghs_zoonosis_pe z
                     ON z.id_kecamatan = d.id
                     AND z.id_penyakit=".intval($id_penyakit)."
-                    AND z.tgl_laporan BETWEEN '{$tgl1}' AND '{$tgl2}'
+                    AND z.tgl_laporan BETWEEN '{$tgl1}' AND '{$tgl2}'{$dn_sql}
                   WHERE d.id_kota=".intval($id_kota)."
                   GROUP BY d.id";
             $rows = $this->db->query($q)->result_array();
@@ -1219,7 +1222,7 @@ class Zoonosis extends BackendController {
                   FROM ewarn_ghs_zoonosis_pe z
                   JOIN ewarn_kota k ON k.id=z.id_kota
                   WHERE z.id_penyakit=".intval($id_penyakit)."
-                  AND z.tgl_laporan BETWEEN '{$tgl1}' AND '{$tgl2}'";
+                  AND z.tgl_laporan BETWEEN '{$tgl1}' AND '{$tgl2}'{$dn_sql}";
             if ($id_prop) $q .= " AND z.id_prop=".intval($id_prop);
             $q .= " GROUP BY z.id_kota";
         } else {
@@ -1229,7 +1232,7 @@ class Zoonosis extends BackendController {
                   FROM ewarn_ghs_zoonosis_pe z
                   JOIN ewarn_propinsi p ON p.id=z.id_prop
                   WHERE z.id_penyakit=".intval($id_penyakit)."
-                  AND z.tgl_laporan BETWEEN '{$tgl1}' AND '{$tgl2}'
+                  AND z.tgl_laporan BETWEEN '{$tgl1}' AND '{$tgl2}'{$dn_sql}
                   GROUP BY z.id_prop";
             $rows = $this->db->query($q)->result_array();
             // Ambil EBS stats per provinsi
