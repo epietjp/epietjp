@@ -232,10 +232,12 @@
       </button>
     </div>
     <div class="row">
-      <div class="col-sm-8"><div id="map-zoo"></div></div>
-      <div class="col-sm-4">
-        <div style="font-weight:bold;margin-bottom:6px;font-size:13px">Top 10 Wilayah</div>
-        <div id="map-zoo-legend" style="font-size:12px"></div>
+      <div class="col-sm-12"><div id="map-zoo" style="height:420px"></div></div>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <div class="col-sm-12">
+        <div style="font-weight:bold;margin-bottom:8px;font-size:13px;color:#2c3e50"><i class="fa fa-bar-chart"></i> Top 10 Wilayah</div>
+        <div id="map-zoo-legend"></div>
       </div>
     </div>
     <br>
@@ -495,11 +497,26 @@ function loadMap() {
                 try { _mapZoo.fitBounds(grp.getBounds(), {padding:[10,10]}); } catch(e) {}
             loadAlertOverlay(_mapZoo);
             }
-            // Top 10
+            // Top 10 horizontal bar chart
             var sorted = data.slice().sort(function(a,b){return b.n-a.n;}).slice(0,10);
-            var html = '<table class="table table-condensed" style="margin:0;font-size:11px">';
-            sorted.forEach(function(d,i){ if(d.n>0) html += '<tr><td>'+(i+1)+'.</td><td>'+d.nama+'</td><td><b>'+d.n+'</b></td></tr>'; });
-            html += '</table>';
+            var maxN = sorted.length > 0 ? sorted[0].n : 1;
+            var tbl = '<table class="table table-condensed table-bordered" style="font-size:11px;margin:0"><thead><tr style="background:#2c3e50;color:#fff"><th>#</th><th>Wilayah</th><th>Kasus</th></tr></thead><tbody>';
+            var bars = '<div><div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;font-weight:bold;font-size:11px;background:#2c3e50;color:#fff;padding:4px 6px;border-radius:3px"><div style="width:130px">Wilayah</div><div style="flex:1"></div><div style="width:40px;text-align:right">Kasus</div></div>';
+            sorted.forEach(function(d,i){
+                if(d.n<=0) return;
+                var pct = Math.round(d.n/maxN*100);
+                var clr = d.n>5000?'#800026':d.n>3000?'#BD0026':d.n>1000?'#E31A1C':d.n>300?'#FC4E2A':'#FD8D3C';
+                tbl += '<tr><td>'+(i+1)+'</td><td>'+d.nama+'</td><td><b>'+d.n+'</b></td></tr>';
+                bars += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">'
+                    + '<div style="width:130px;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="'+d.nama+'">'+d.nama+'</div>'
+                    + '<div style="flex:1;background:#eee;border-radius:3px;height:14px">'
+                    + '<div style="width:'+pct+'%;background:'+clr+';height:100%;border-radius:3px"></div></div>'
+                    + '<div style="width:40px;text-align:right;font-size:11px;font-weight:bold">'+d.n+'</div>'
+                    + '</div>';
+            });
+            tbl += '</tbody></table>';
+            bars += '</div>';
+            var html = '<div class="row"><div class="col-sm-5">'+tbl+'</div><div class="col-sm-7" style="padding-top:4px">'+bars+'</div></div>';
             $("#map-zoo-legend").html(html);
             return; // stop - jangan lanjut ke choropleth
         }
@@ -563,10 +580,25 @@ function loadMap() {
             };
             legC.addTo(_mapZoo);
             var sorted=Object.keys(data).map(function(k){return{nm:data[k].nama||k,n:data[k].n};}).sort(function(a,b){return b.n-a.n;}).slice(0,10);
-            var html="<table class=\"table table-condensed\" style=\"margin:0;font-size:11px\">";
-            sorted.forEach(function(d,i){html+="<tr><td>"+(i+1)+".</td><td>"+d.nm+"</td><td><b>"+d.n+"</b></td></tr>";});
-            html+="</table>";
-            $("#map-zoo-legend").html(html);
+            var maxN2=sorted.length>0?sorted[0].n:1;
+            var tbl2='<table class="table table-condensed table-bordered" style="font-size:11px;margin:0"><thead><tr style="background:#2c3e50;color:#fff"><th>#</th><th>Wilayah</th><th>Kasus</th></tr></thead><tbody>';
+            var bars2='<div><div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;font-weight:bold;font-size:11px;background:#2c3e50;color:#fff;padding:4px 6px;border-radius:3px"><div style="width:130px">Wilayah</div><div style="flex:1"></div><div style="width:40px;text-align:right">Kasus</div></div>';
+            sorted.forEach(function(d,i){
+                if(d.n<=0) return;
+                var pct=Math.round(d.n/maxN2*100);
+                var clr=d.n>5000?'#800026':d.n>3000?'#BD0026':d.n>1000?'#E31A1C':d.n>300?'#FC4E2A':'#FD8D3C';
+                tbl2+='<tr><td>'+(i+1)+'</td><td>'+d.nm+'</td><td><b>'+d.n+'</b></td></tr>';
+                bars2+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">'
+                    +'<div style="width:130px;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="'+d.nm+'">'+d.nm+'</div>'
+                    +'<div style="flex:1;background:#eee;border-radius:3px;height:14px">'
+                    +'<div style="width:'+pct+'%;background:'+clr+';height:100%;border-radius:3px"></div></div>'
+                    +'<div style="width:40px;text-align:right;font-size:11px;font-weight:bold">'+d.n+'</div>'
+                    +'</div>';
+            });
+            tbl2+='</tbody></table>';
+            bars2+='</div>';
+            var html2='<div class="row"><div class="col-sm-5">'+tbl2+'</div><div class="col-sm-7" style="padding-top:4px">'+bars2+'</div></div>';
+            $("#map-zoo-legend").html(html2);
         });
     },
     error:function(xhr,st,err){ console.log("MapData error:",st,err,xhr.responseText.substr(0,200)); }
