@@ -508,12 +508,18 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         </div>
       </div>
       <div class="row">
-        <div class="col-sm-3">
+        <div class="col-sm-3" id="wrap_tgl_meninggal" style="display:<?=fv($v,'akhir_no')=='2'?'block':'none'?>">
           <div class="form-group">
             <label>Tanggal Meninggal</label>
             <input type="date" name="tgl_meninggal" class="form-control" value="<?=fv($v,'tgl_meninggal')?>">
           </div>
         </div>
+        <script>
+        $('select[name=akhir_no]').on('change', function(){
+            $('#wrap_tgl_meninggal').toggle($(this).val() == '2');
+            if($(this).val() != '2') $('input[name=tgl_meninggal]').val('');
+        });
+        </script>
         <!-- field gejala free text disembunyikan, digantikan checklist per penyakit -->
         <input type="hidden" name="gejala" value="<?=fv($v,'gejala')?>">
       </div>
@@ -846,12 +852,15 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Diperiksa Lab?</label>
-            <select name="diperiksa_lab" class="form-control">
+            <select name="diperiksa_lab" class="form-control" onchange="toggleLab(this.value)">
               <option value="0" <?=fv($v,'diperiksa_lab','0')=='0'?'selected':''?>>Tidak</option>
               <option value="1" <?=fv($v,'diperiksa_lab')=='1'?'selected':''?>>Ya</option>
             </select>
           </div>
         </div>
+      </div>
+      <div id="wrap_detail_lab" style="display:<?=fv($v,'diperiksa_lab')=='1'?'block':'none'?>">
+      <div class="row">
         <div class="col-sm-3">
           <div class="form-group">
             <label>Jenis Spesimen</label>
@@ -897,6 +906,12 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
           </div>
         </div>
       </div>
+      </div><!-- /wrap_detail_lab -->
+      <script>
+      function toggleLab(val) {
+        $('#wrap_detail_lab').toggle(val == '1');
+      }
+      </script>
     </div>
 
     <!-- SPESIMEN TAMBAHAN -->
