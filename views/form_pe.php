@@ -568,9 +568,874 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <?php endif; ?>
 
 
+    <!-- LABORATORIUM -->
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-flask"></i> <b>G. Pemeriksaan Laboratorium</b></div>
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Diperiksa Lab?</label>
+            <select name="diperiksa_lab" class="form-control" onchange="toggleLab(this.value)" required>
+              <option value="0" <?=fv($v,'diperiksa_lab','0')=='0'?'selected':''?>>Tidak</option>
+              <option value="1" <?=fv($v,'diperiksa_lab')=='1'?'selected':''?>>Ya</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div id="wrap_detail_lab" style="display:<?=fv($v,'diperiksa_lab')=='1'?'block':'none'?>">
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Jenis Spesimen</label>
+            <select name="jenis_sample" class="form-control">
+              <option value="">-- Pilih Jenis Spesimen --</option>
+              <option value="Serum Darah" <?=fv($v,'jenis_sample')=='Serum Darah'?'selected':''?>>Serum Darah</option>
+              <option value="Whole Blood" <?=fv($v,'jenis_sample')=='Whole Blood'?'selected':''?>>Whole Blood</option>
+              <option value="Urine" <?=fv($v,'jenis_sample')=='Urine'?'selected':''?>>Urine</option>
+              <option value="Usap Nasofaring" <?=fv($v,'jenis_sample')=='Usap Nasofaring'?'selected':''?>>Usap Nasofaring</option>
+              <option value="Usap Tenggorok" <?=fv($v,'jenis_sample')=='Usap Tenggorok'?'selected':''?>>Usap Tenggorok</option>
+              <option value="Swab Rektal" <?=fv($v,'jenis_sample')=='Swab Rektal'?'selected':''?>>Swab Rektal</option>
+              <option value="Kulit/Lesi" <?=fv($v,'jenis_sample')=='Kulit/Lesi'?'selected':''?>>Kulit/Lesi</option>
+              <option value="Jaringan/Eksudat" <?=fv($v,'jenis_sample')=='Jaringan/Eksudat'?'selected':''?>>Jaringan/Eksudat</option>
+              <option value="Otak Hewan (GHPR)" <?=fv($v,'jenis_sample')=='Otak Hewan (GHPR)'?'selected':''?>>Otak Hewan (GHPR)</option>
+              <option value="Lainnya" <?=fv($v,'jenis_sample')=='Lainnya'?'selected':''?>>Lainnya</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Tanggal Ambil Spesimen</label>
+            <input type="date" name="tgl_ambil_sample" class="form-control" value="<?=fv($v,'tgl_ambil_sample')?>">
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Tanggal Kirim Spesimen</label>
+            <input type="date" name="tgl_kirim_sample" class="form-control" value="<?=fv($v,'tgl_kirim_sample')?>">
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Tanggal Hasil Lab</label>
+            <input type="date" name="tgl_hasil_lab" class="form-control" value="<?=fv($v,'tgl_hasil_lab')?>">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Nama Laboratorium</label>
+            <input type="text" name="nama_lab" class="form-control" value="<?=fv($v,'nama_lab')?>">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Hasil Lab</label>
+            <input type="text" name="hasil_lab" class="form-control" value="<?=fv($v,'hasil_lab')?>">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Keterangan Lab</label>
+            <input type="text" name="ket_lab" class="form-control" value="<?=fv($v,'ket_lab')?>">
+          </div>
+        </div>
+      </div>
+      </div><!-- /wrap_detail_lab -->
+      <script>
+      function toggleLab(val) {
+        $('#wrap_detail_lab').toggle(val == '1');
+      }
+      </script>
+    </div>
+
+    <!-- SPESIMEN TAMBAHAN -->
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-flask"></i> <b>H. Spesimen Tambahan (Lab)</b></div>
+      <div id="tbl-spesimen">
+        <div class="row spesimen-row" style="margin-bottom:6px">
+          <div class="col-sm-2">
+            <input type="hidden" name="dkey[]" value="sp0_jenis">
+            <input type="hidden" name="dlabel[]" value="Jenis Spesimen 1">
+            <input type="hidden" name="dsub[]" value="Spesimen Lab">
+            <input type="hidden" name="dtype[]" value="text">
+            <select name="dval[]" class="form-control input-sm">
+              <option value="">-- Jenis --</option>
+              <option value="serum_darah">Serum Darah</option>
+              <option value="urine">Urine</option>
+              <option value="usap_nasofaring">Usap Nasofaring</option>
+              <option value="usap_tenggorok">Usap Tenggorok</option>
+              <option value="kulit_lesi">Kulit/Lesi</option>
+              <option value="jaringan">Jaringan/Eksudat</option>
+              <option value="otak_hewan">Otak Hewan (GHPR)</option>
+              <option value="lainnya">Lainnya</option>
+            </select>
+          </div>
+          <div class="col-sm-2">
+            <input type="hidden" name="dkey[]" value="sp0_nomor">
+            <input type="hidden" name="dlabel[]" value="Nomor Spesimen 1">
+            <input type="hidden" name="dsub[]" value="Spesimen Lab">
+            <input type="hidden" name="dtype[]" value="text">
+            <input type="text" name="dval[]" class="form-control input-sm" placeholder="Nomor Spesimen">
+          </div>
+          <div class="col-sm-2">
+            <input type="hidden" name="dkey[]" value="sp0_tgl_ambil">
+            <input type="hidden" name="dlabel[]" value="Tgl Ambil 1">
+            <input type="hidden" name="dsub[]" value="Spesimen Lab">
+            <input type="hidden" name="dtype[]" value="date">
+            <input type="date" name="dval[]" class="form-control input-sm" placeholder="Tgl Ambil">
+          </div>
+          <div class="col-sm-2">
+            <input type="hidden" name="dkey[]" value="sp0_tgl_hasil">
+            <input type="hidden" name="dlabel[]" value="Tgl Hasil 1">
+            <input type="hidden" name="dsub[]" value="Spesimen Lab">
+            <input type="hidden" name="dtype[]" value="date">
+            <input type="date" name="dval[]" class="form-control input-sm" placeholder="Tgl Hasil">
+          </div>
+          <div class="col-sm-2">
+            <input type="hidden" name="dkey[]" value="sp0_hasil">
+            <input type="hidden" name="dlabel[]" value="Hasil 1">
+            <input type="hidden" name="dsub[]" value="Spesimen Lab">
+            <input type="hidden" name="dtype[]" value="text">
+            <input type="text" name="dval[]" class="form-control input-sm" placeholder="Hasil">
+          </div>
+          <div class="col-sm-2">
+            <button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.spesimen-row').remove()"><i class="fa fa-times"></i></button>
+          </div>
+        </div>
+      </div>
+      <small class="text-muted">Jenis | Nomor | Tgl Ambil | Tgl Hasil | Hasil</small><br>
+      <button type="button" class="btn btn-xs btn-default" onclick="tambahSpesimen()"><i class="fa fa-plus"></i> Tambah Spesimen</button>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-hospital-o"></i> <b>I. Rawat Inap / RS</b></div>
+      <small class="text-muted">Nama RS/Klinik | Tanggal Masuk | Keterangan</small>
+      <div id="tbl-rawat-inap">
+        <div class="row rawat-row" style="margin-bottom:6px">
+          <div class="col-sm-5">
+            <input type="text" name="rs_nama[]" class="form-control input-sm" placeholder="Nama RS/Klinik" value="<?=fv($v,'nama_rs')?>">
+          </div>
+          <div class="col-sm-3">
+            <input type="date" name="rs_tgl[]" class="form-control input-sm" value="<?=fv($v,'tgl_masuk_rs')?>">
+          </div>
+          <div class="col-sm-3">
+            <input type="text" name="rs_ket[]" class="form-control input-sm" placeholder="Keterangan">
+          </div>
+          <div class="col-sm-1">
+            <button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.rawat-row').remove()"><i class="fa fa-times"></i></button>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-xs btn-default" onclick="tambahRawatInap()"><i class="fa fa-plus"></i> Tambah RS/Klinik</button>
+    </div>
+    <!-- ANGGOTA SERUMAH -->
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-users"></i> <b>J. Anggota Serumah</b></div>
+      <div class="row" style="margin-bottom:8px">
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label style="font-size:12px">Jumlah Anggota Serumah (orang)</label>
+            <input type="number" name="jumlah_anggota_serumah" class="form-control input-sm" min="0" max="30" value="<?=fv($v,'jumlah_anggota_serumah')?>">
+          </div>
+        </div>
+        <?php if(in_array($id_penyakit, array(11,14))): ?>
+        <div class="col-sm-9">
+          <label style="font-size:12px">Tempat Kerja Anggota Serumah yang Berisiko</label>
+          <div class="row">
+            <?php
+            $tempat_kerja_risiko = array(
+              11 => array('rs_klinik'=>'RS/Klinik','lab'=>'Laboratorium','veterinarian'=>'Veterinarian','peternak_unggas'=>'Peternak Unggas','peternak_babi'=>'Peternak Babi','pasar_unggas'=>'Pasar Unggas/Babi'),
+              14 => array('rs_klinik'=>'RS/Klinik','lab'=>'Laboratorium','veterinarian'=>'Veterinarian','peternakan'=>'Peternakan Hewan','pasar_hewan'=>'Pasar Hewan'),
+            );
+            $opts_tk = isset($tempat_kerja_risiko[$id_penyakit]) ? $tempat_kerja_risiko[$id_penyakit] : array();
+            $saved_tk = array();
+            if(!empty($eav_data)) foreach($eav_data as $ed) { if($ed['var_key']=='as_tempat_risiko') { $saved_tk=explode(',',$ed['var_value']); break; } }
+            foreach($opts_tk as $tk=>$tl):
+            ?>
+            <div class="col-sm-4" style="margin-bottom:4px">
+              <div class="checkbox" style="margin:0">
+                <label style="font-size:11px">
+                  <input type="checkbox" name="as_tempat_risiko[]" value="<?=$tk?>" <?=in_array($tk,$saved_tk)?'checked':''?>>
+                  <?=$tl?>
+                </label>
+              </div>
+            </div>
+            <?php endforeach; ?>
+            <input type="hidden" name="dkey[]" value="as_tempat_risiko">
+            <input type="hidden" name="dlabel[]" value="Tempat kerja anggota serumah berisiko">
+            <input type="hidden" name="dsub[]" value="Anggota Serumah">
+            <input type="hidden" name="dtype[]" value="text">
+            <input type="hidden" name="dval[]" id="as_tempat_risiko_val" value="<?=isset($saved_tk)?implode(',',$saved_tk):''?>">
+          </div>
+        </div>
+        <?php endif; ?>
+      </div>
+      <div id="tbl-anggota">
+        <?php foreach($anggota as $idx => $as): ?>
+        <div class="row anggota-row" style="margin-bottom:6px">
+          <div class="col-sm-5"><input type="text" name="as_nama[]" class="form-control input-sm" placeholder="Nama" value="<?=htmlspecialchars($as['nama'])?>"></div>
+          <div class="col-sm-5"><input type="text" name="as_tempat[]" class="form-control input-sm" placeholder="Tempat Kerja" value="<?=htmlspecialchars($as['tempat_kerja'])?>"></div>
+          <div class="col-sm-2"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.anggota-row').remove()"><i class="fa fa-times"></i></button></div>
+        </div>
+        <?php endforeach; ?>
+        <?php if(empty($anggota)): ?>
+        <div class="row anggota-row" style="margin-bottom:6px">
+          <div class="col-sm-5"><input type="text" name="as_nama[]" class="form-control input-sm" placeholder="Nama"></div>
+          <div class="col-sm-5"><input type="text" name="as_tempat[]" class="form-control input-sm" placeholder="Tempat Kerja"></div>
+          <div class="col-sm-2"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.anggota-row').remove()"><i class="fa fa-times"></i></button></div>
+        </div>
+        <?php endif; ?>
+      </div>
+      <button type="button" class="btn btn-xs btn-default" onclick="tambahAnggota()"><i class="fa fa-plus"></i> Tambah Anggota</button>
+    </div>
+    <!-- KONTAK PNEUMONIA (khusus Avian) -->
+    <?php if($id_penyakit==11): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-user-md"></i> <b>K. Kontak dengan Penderita Pneumonia</b></div>
+      <div id="tbl-kontak-pn">
+        <?php foreach($kontak_pn as $idx => $kp): ?>
+        <div class="row kontak-pn-row" style="margin-bottom:6px">
+          <div class="col-sm-2"><input type="text" name="kp_nama[]" class="form-control input-sm" placeholder="Nama" value="<?=htmlspecialchars($kp['nama'])?>"></div>
+          <div class="col-sm-1"><input type="number" name="kp_umur[]" class="form-control input-sm" placeholder="Umur" value="<?=htmlspecialchars($kp['umur'])?>"></div>
+          <div class="col-sm-2"><input type="text" name="kp_hub[]" class="form-control input-sm" placeholder="Hub. Penderita" value="<?=htmlspecialchars($kp['hub_penderita'])?>"></div>
+          <div class="col-sm-2"><input type="date" name="kp_tgl_awal[]" class="form-control input-sm" value="<?=htmlspecialchars($kp['tgl_kontak_awal'])?>"></div>
+          <div class="col-sm-2"><input type="date" name="kp_tgl_akhir[]" class="form-control input-sm" value="<?=htmlspecialchars($kp['tgl_kontak_akhir'])?>"></div>
+          <div class="col-sm-2"><input type="text" name="kp_status[]" class="form-control input-sm" placeholder="Status Flu" value="<?=htmlspecialchars($kp['status_flu'])?>"></div>
+          <div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.kontak-pn-row').remove()"><i class="fa fa-times"></i></button></div>
+        </div>
+        <?php endforeach; ?>
+        <?php if(empty($kontak_pn)): ?>
+        <div class="row kontak-pn-row" style="margin-bottom:6px">
+          <div class="col-sm-2"><input type="text" name="kp_nama[]" class="form-control input-sm" placeholder="Nama"></div>
+          <div class="col-sm-1"><input type="number" name="kp_umur[]" class="form-control input-sm" placeholder="Umur"></div>
+          <div class="col-sm-2"><input type="text" name="kp_hub[]" class="form-control input-sm" placeholder="Hub. Penderita"></div>
+          <div class="col-sm-2"><input type="date" name="kp_tgl_awal[]" class="form-control input-sm"></div>
+          <div class="col-sm-2"><input type="date" name="kp_tgl_akhir[]" class="form-control input-sm"></div>
+          <div class="col-sm-2"><input type="text" name="kp_status[]" class="form-control input-sm" placeholder="Status Flu"></div>
+          <div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.kontak-pn-row').remove()"><i class="fa fa-times"></i></button></div>
+        </div>
+        <?php endif; ?>
+      </div>
+      <small class="text-muted">Nama | Umur | Hub. Penderita | Tgl Kontak Awal | Tgl Kontak Akhir | Status Flu</small><br>
+      <button type="button" class="btn btn-xs btn-default" onclick="tambahKontakPN()"><i class="fa fa-plus"></i> Tambah Kontak</button>
+    </div>
+    <?php endif; ?>
+    <!-- KONTAK GEJALA SAMA (Avian - terpisah dari Kontak Pneumonia) -->
+    <?php if($id_penyakit==11): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-users"></i> <b>L. Kontak Gejala Sama (Keluarga/Tetangga Bergejala)</b></div>
+      <small class="text-muted">Nama | Umur | Alamat | Hubungan | Tgl Kontak | Status Flu Burung</small>
+      <div id="tbl-kontak-gs">
+        <div class="row kontak-gs-row" style="margin-bottom:6px">
+          <div class="col-sm-2"><input type="text" name="kg_nama[]" class="form-control input-sm" placeholder="Nama"></div>
+          <div class="col-sm-1"><input type="number" name="kg_umur[]" class="form-control input-sm" placeholder="Umur"></div>
+          <div class="col-sm-3"><input type="text" name="kg_alamat[]" class="form-control input-sm" placeholder="Alamat"></div>
+          <div class="col-sm-2"><input type="text" name="kg_hub[]" class="form-control input-sm" placeholder="Hubungan"></div>
+          <div class="col-sm-2"><input type="date" name="kg_tgl[]" class="form-control input-sm"></div>
+          <div class="col-sm-1"><input type="text" name="kg_status[]" class="form-control input-sm" placeholder="Status"></div>
+          <div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.kontak-gs-row').remove()"><i class="fa fa-times"></i></button></div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-xs btn-default" onclick="tambahKontakGS()"><i class="fa fa-plus"></i> Tambah</button>
+    </div>
+    <?php endif; ?>
+
+    <!-- KEBIASAAN RESPONDEN LEPTO -->
+    <?php if($id_penyakit==26): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-clipboard"></i> <b>M. Kebiasaan Responden (Faktor Risiko Leptospirosis)</b></div>
+      <?php
+      $kb_fields = array(
+        array('key'=>'kb_aktivitas_air',    'label'=>'A1. Bekerja/beraktivitas di sawah, ladang, kebun', 'sub'=>'A'),
+        array('key'=>'kb_renang_sungai',    'label'=>'A2. Berenang/mandi di sungai/danau', 'sub'=>'A'),
+        array('key'=>'kb_banjir',           'label'=>'A3. Tinggal/beraktivitas di daerah banjir', 'sub'=>'A'),
+        array('key'=>'kb_genangan_air',     'label'=>'A4. Kontak dengan genangan air/lumpur', 'sub'=>'A'),
+        array('key'=>'kb_parit_selokan',    'label'=>'A5. Tinggal dekat parit/selokan yang kotor', 'sub'=>'A'),
+        array('key'=>'kb_air_tercemar',     'label'=>'A6. Minum/gunakan air yang mungkin tercemar', 'sub'=>'A'),
+        array('key'=>'kb_kontak_hewan',     'label'=>'B1. Kontak langsung dengan hewan (tikus/sapi/babi/anjing)', 'sub'=>'B'),
+        array('key'=>'kb_apd',              'label'=>'B2. Menggunakan APD (sepatu boot/sarung tangan) saat bekerja', 'sub'=>'B'),
+        array('key'=>'kb_cuci_tangan',      'label'=>'C1. Cuci tangan sebelum makan', 'sub'=>'C'),
+        array('key'=>'kb_cuci_luka',        'label'=>'C2. Merawat luka/lecet dengan benar', 'sub'=>'C'),
+        array('key'=>'kb_makan_sembarangan','label'=>'C3. Makan di tempat yang tidak terlindung', 'sub'=>'C'),
+        array('key'=>'kb_minum_mentah',     'label'=>'C4. Minum air mentah/tidak dimasak', 'sub'=>'C'),
+        array('key'=>'kb_tikus_rumah',      'label'=>'D1. Ada tikus di dalam rumah/dapur', 'sub'=>'D'),
+        array('key'=>'kb_makanan_terbuka',  'label'=>'D2. Menyimpan makanan tidak tertutup/terlindung', 'sub'=>'D'),
+        array('key'=>'kb_sampah_terbuka',   'label'=>'D3. Membuang sampah sembarangan di sekitar rumah', 'sub'=>'D'),
+        array('key'=>'kb_drainase_buruk',   'label'=>'D4. Drainase/saluran air di sekitar rumah buruk', 'sub'=>'D'),
+      );
+      $kb_sub_labels = array('A'=>'A. Aktivitas Berhubungan Air', 'B'=>'B. Kontak & APD', 'C'=>'C. Personal Higiene', 'D'=>'D. Ketersediaan Pangan & Sanitasi');
+      $kb_sub_cur = '';
+      foreach($kb_fields as $kb):
+        if($kb['sub'] != $kb_sub_cur):
+          if($kb_sub_cur) echo '</div>';
+          echo '<div style="margin-bottom:10px"><div style="font-weight:600;font-size:12px;color:#1F4E79;margin:8px 0 4px">'.$kb_sub_labels[$kb['sub']].'</div>';
+          $kb_sub_cur = $kb['sub'];
+        endif;
+        // Ambil nilai EAV yang sudah tersimpan
+        $kb_val = '';
+        if(!empty($eav_data)) {
+          foreach($eav_data as $ed) {
+            if($ed['var_key']==$kb['key']) { $kb_val=$ed['var_value']; break; }
+          }
+        }
+      ?>
+      <div class="row" style="margin-bottom:4px">
+        <div class="col-sm-8" style="font-size:12px;padding-top:6px"><?=htmlspecialchars($kb['label'])?></div>
+        <div class="col-sm-4">
+          <input type="hidden" name="dkey[]" value="<?=$kb['key']?>">
+          <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($kb['label'])?>">
+          <input type="hidden" name="dsub[]" value="Kebiasaan Responden Lepto">
+          <input type="hidden" name="dtype[]" value="radio">
+          <select name="dval[]" class="form-control input-sm" style="width:150px">
+            <option value="">-- Pilih --</option>
+            <option value="ya" <?=$kb_val=='ya'?'selected':''?>>Ya</option>
+            <option value="tidak" <?=$kb_val=='tidak'?'selected':''?>>Tidak</option>
+            <option value="tidak_tahu" <?=$kb_val=='tidak_tahu'?'selected':''?>>Tidak Tahu</option>
+          </select>
+        </div>
+      </div>
+      <?php endforeach; echo '</div>'; ?>
+    </div>
+    <?php endif; ?>
+    <!-- KONTAK PENYELIDIKAN & TIM PE -->
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-phone"></i> <b>N. Kontak Penyelidikan</b></div>
+      <small class="text-muted">Narasumber (pejabat/petugas/dokter) yang dihubungi saat penyelidikan</small>
+      <div id="tbl-kontak-pe">
+        <div class="row kontak-pe-row" style="margin-bottom:6px">
+          <div class="col-sm-4"><input type="text" name="kpe_nama[]" class="form-control input-sm" placeholder="Nama"></div>
+          <div class="col-sm-4"><input type="text" name="kpe_jabatan[]" class="form-control input-sm" placeholder="Jabatan/Kantor/Alamat"></div>
+          <div class="col-sm-3"><input type="text" name="kpe_telp[]" class="form-control input-sm" placeholder="Telp/HP"></div>
+          <div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.kontak-pe-row').remove()"><i class="fa fa-times"></i></button></div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-xs btn-default" onclick="tambahKontakPE()"><i class="fa fa-plus"></i> Tambah</button>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-users"></i> <b>O. Tim Penyelidikan Epidemiologi</b></div>
+      <small class="text-muted">Anggota tim PE yang terlibat dalam penyelidikan</small>
+      <div id="tbl-tim-pe">
+        <?php for($ti=0;$ti<3;$ti++): ?>
+        <div class="row tim-pe-row" style="margin-bottom:6px">
+          <div class="col-sm-4"><input type="text" name="tpe_nama[]" class="form-control input-sm" placeholder="Nama"></div>
+          <div class="col-sm-4"><input type="text" name="tpe_kantor[]" class="form-control input-sm" placeholder="Kantor/Instansi"></div>
+          <div class="col-sm-3"><input type="text" name="tpe_telp[]" class="form-control input-sm" placeholder="Telp/HP"></div>
+          <div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.tim-pe-row').remove()"><i class="fa fa-times"></i></button></div>
+        </div>
+        <?php endfor; ?>
+      </div>
+      <button type="button" class="btn btn-xs btn-default" onclick="tambahTimPE()"><i class="fa fa-plus"></i> Tambah</button>
+    </div>
+
+    <!-- AVIAN: Kunjungan Wabah + Matriks Kontak Unggas -->
+    <?php if($id_penyakit==11): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-map-marker"></i> <b>P. Riwayat Kunjungan & Kontak Unggas (Avian)</b></div>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label>Kunjungan 14 hari terakhir ke daerah wabah kematian unggas?</label>
+            <input type="hidden" name="dkey[]" value="av_kunjungan_wabah">
+            <input type="hidden" name="dlabel[]" value="Kunjungan 14 hari ke daerah wabah unggas">
+            <input type="hidden" name="dsub[]" value="Riwayat Avian">
+            <input type="hidden" name="dtype[]" value="select">
+            <?php
+            $av_kunjungan = '';
+            if(!empty($eav_data)) foreach($eav_data as $ed) { if($ed['var_key']=='av_kunjungan_wabah') { $av_kunjungan=$ed['var_value']; break; } }
+            ?>
+            <select name="dval[]" class="form-control">
+              <option value="">-- Pilih --</option>
+              <option value="pernah" <?=$av_kunjungan=='pernah'?'selected':''?>>Pernah</option>
+              <option value="tidak_pernah" <?=$av_kunjungan=='tidak_pernah'?'selected':''?>>Tidak Pernah</option>
+              <option value="tidak_jelas" <?=$av_kunjungan=='tidak_jelas'?'selected':''?>>Tidak Jelas</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label>Keterangan Kunjungan</label>
+            <input type="hidden" name="dkey[]" value="av_kunjungan_ket">
+            <input type="hidden" name="dlabel[]" value="Keterangan kunjungan daerah wabah unggas">
+            <input type="hidden" name="dsub[]" value="Riwayat Avian">
+            <input type="hidden" name="dtype[]" value="text">
+            <?php
+            $av_kunjungan_ket = '';
+            if(!empty($eav_data)) foreach($eav_data as $ed) { if($ed['var_key']=='av_kunjungan_ket') { $av_kunjungan_ket=$ed['var_value']; break; } }
+            ?>
+            <input type="text" name="dval[]" class="form-control" placeholder="Lokasi, tanggal, keterangan" value="<?=htmlspecialchars($av_kunjungan_ket)?>">
+          </div>
+        </div>
+      </div>
+      <!-- Matriks Kontak Unggas -->
+      <div class="form-group">
+        <label><b>Matriks Kontak Unggas 7 Hari Terakhir</b></label>
+        <table class="table table-bordered table-condensed" style="font-size:12px">
+          <thead style="background:#2c3e50;color:#fff">
+            <tr>
+              <th>Jenis Unggas</th>
+              <th>Kondisi Sehat</th>
+              <th>Kondisi Sakit</th>
+              <th>Kondisi Mati</th>
+              <th>Jenis Kontak</th>
+            </tr>
+          </thead>
+          <tbody>
+          <?php
+          $unggas_list = array('ayam'=>'Ayam','bebek'=>'Bebek','puyuh'=>'Puyuh','burung'=>'Burung','babi'=>'Babi');
+          $kontak_types = array('tidak_ada'=>'Tidak Ada','tidak_erat'=>'Kontak Tidak Erat','erat'=>'Kontak Erat','sehari_hari'=>'Kontak Sehari-hari');
+          foreach($unggas_list as $uk=>$ul):
+            $val_sehat = $val_sakit = $val_mati = $val_kontak = '';
+            if(!empty($eav_data)) foreach($eav_data as $ed) {
+              if($ed['var_key']=='av_ung_'.$uk.'_sehat') $val_sehat=$ed['var_value'];
+              if($ed['var_key']=='av_ung_'.$uk.'_sakit') $val_sakit=$ed['var_value'];
+              if($ed['var_key']=='av_ung_'.$uk.'_mati')  $val_mati=$ed['var_value'];
+              if($ed['var_key']=='av_ung_'.$uk.'_kontak') $val_kontak=$ed['var_value'];
+            }
+          ?>
+          <tr>
+            <td><b><?=$ul?></b></td>
+            <td>
+              <input type="hidden" name="dkey[]" value="av_ung_<?=$uk?>_sehat">
+              <input type="hidden" name="dlabel[]" value="Kontak <?=$ul?> Sehat">
+              <input type="hidden" name="dsub[]" value="Matriks Unggas">
+              <input type="hidden" name="dtype[]" value="select">
+              <select name="dval[]" class="form-control input-sm">
+                <option value="tidak">Tidak</option>
+                <option value="ya" <?=$val_sehat=='ya'?'selected':''?>>Ya</option>
+              </select>
+            </td>
+            <td>
+              <input type="hidden" name="dkey[]" value="av_ung_<?=$uk?>_sakit">
+              <input type="hidden" name="dlabel[]" value="Kontak <?=$ul?> Sakit">
+              <input type="hidden" name="dsub[]" value="Matriks Unggas">
+              <input type="hidden" name="dtype[]" value="select">
+              <select name="dval[]" class="form-control input-sm">
+                <option value="tidak">Tidak</option>
+                <option value="ya" <?=$val_sakit=='ya'?'selected':''?>>Ya</option>
+              </select>
+            </td>
+            <td>
+              <input type="hidden" name="dkey[]" value="av_ung_<?=$uk?>_mati">
+              <input type="hidden" name="dlabel[]" value="Kontak <?=$ul?> Mati">
+              <input type="hidden" name="dsub[]" value="Matriks Unggas">
+              <input type="hidden" name="dtype[]" value="select">
+              <select name="dval[]" class="form-control input-sm">
+                <option value="tidak">Tidak</option>
+                <option value="ya" <?=$val_mati=='ya'?'selected':''?>>Ya</option>
+              </select>
+            </td>
+            <td>
+              <input type="hidden" name="dkey[]" value="av_ung_<?=$uk?>_kontak">
+              <input type="hidden" name="dlabel[]" value="Jenis Kontak <?=$ul?>">
+              <input type="hidden" name="dsub[]" value="Matriks Unggas">
+              <input type="hidden" name="dtype[]" value="select">
+              <select name="dval[]" class="form-control input-sm">
+                <?php foreach($kontak_types as $kv=>$kl): ?>
+                <option value="<?=$kv?>" <?=$val_kontak==$kv?'selected':''?>><?=$kl?></option>
+                <?php endforeach; ?>
+              </select>
+            </td>
+          </tr>
+          <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- AVIAN: Pemeriksaan Lingkungan Rumah -->
+    <?php if($id_penyakit==11): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-home"></i> <b>Q. Pemeriksaan Lingkungan Rumah (Avian)</b></div>
+      <div class="row">
+        <?php
+        $lingk_avian = array(
+          'av_lingk_piaraan'    => 'Ada unggas piaraan di rumah (Ayam/Bebek/Burung/dll)',
+          'av_lingk_peternakan' => 'Ada peternakan unggas di sekitar rumah (<100m)',
+          'av_lingk_pasar'      => 'Ada pasar unggas hidup di sekitar rumah',
+        );
+        foreach($lingk_avian as $lk=>$ll):
+          $lv = '';
+          if(!empty($eav_data)) foreach($eav_data as $ed) { if($ed['var_key']==$lk) { $lv=$ed['var_value']; break; } }
+        ?>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label style="font-size:12px"><?=$ll?></label>
+            <input type="hidden" name="dkey[]" value="<?=$lk?>">
+            <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($ll)?>">
+            <input type="hidden" name="dsub[]" value="Lingkungan Avian">
+            <input type="hidden" name="dtype[]" value="select">
+            <select name="dval[]" class="form-control input-sm">
+              <option value="">-- Pilih --</option>
+              <option value="ya" <?=$lv=='ya'?'selected':''?>>Ya</option>
+              <option value="tidak" <?=$lv=='tidak'?'selected':''?>>Tidak</option>
+              <option value="tidak_tahu" <?=$lv=='tidak_tahu'?'selected':''?>>Tidak Tahu</option>
+            </select>
+          </div>
+        </div>
+        <?php endforeach; ?>
+      </div>
+      <div class="form-group">
+        <label style="font-size:12px">Keterangan sumber penularan potensial</label>
+        <input type="hidden" name="dkey[]" value="av_lingk_ket">
+        <input type="hidden" name="dlabel[]" value="Keterangan lingkungan sumber penularan">
+        <input type="hidden" name="dsub[]" value="Lingkungan Avian">
+        <input type="hidden" name="dtype[]" value="text">
+        <?php
+        $av_lingk_ket = '';
+        if(!empty($eav_data)) foreach($eav_data as $ed) { if($ed['var_key']=='av_lingk_ket') { $av_lingk_ket=$ed['var_value']; break; } }
+        ?>
+        <input type="text" name="dval[]" class="form-control" placeholder="Keterangan tambahan lingkungan" value="<?=htmlspecialchars($av_lingk_ket)?>">
+      </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- ANTHRAKS: Gejala per Tipe Manifestasi -->
+    <?php if($id_penyakit==14): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-stethoscope"></i> <b>R. Gejala per Tipe Manifestasi (Anthraks)</b></div>
+      <?php
+      $anthrax_gejala = array(
+        'Kulit' => array(
+          'atx_g_gatal'      => 'Rasa gatal di lokasi kontak',
+          'atx_g_vesikel'    => 'Vesikel (gelembung berisi cairan)',
+          'atx_g_hemoragik'  => 'Lesi hemoragik',
+          'atx_g_eschar'     => 'Eschar (keropeng hitam)',
+          'atx_g_sesak_kulit'=> 'Nafas pendek/sesak',
+        ),
+        'Gastrointestinal' => array(
+          'atx_g_mual'       => 'Mual/Muntah',
+          'atx_g_sakit_perut'=> 'Sakit perut hebat',
+          'atx_g_nafsu'      => 'Tidak nafsu makan',
+          'atx_g_konstipasi' => 'Konstipasi',
+          'atx_g_gi_berdarah'=> 'Gastroenteritis berdarah',
+          'atx_g_hematemesis'=> 'Hematemesis (muntah darah)',
+          'atx_g_lemah'      => 'Kelemahan umum',
+          'atx_g_demam_gi'   => 'Demam',
+          'atx_g_lainnya'    => 'Lain-lain',
+        ),
+      );
+      foreach($anthrax_gejala as $tipe => $gejala_list):
+      ?>
+      <div style="margin-bottom:10px">
+        <div style="font-weight:700;font-size:12px;color:#1F4E79;margin-bottom:6px">Manifestasi <?=$tipe?></div>
+        <div class="row">
+        <?php foreach($gejala_list as $gk=>$gl):
+          $gv = '';
+          if(!empty($eav_data)) foreach($eav_data as $ed) { if($ed['var_key']==$gk) { $gv=$ed['var_value']; break; } }
+        ?>
+          <div class="col-sm-4" style="margin-bottom:6px">
+            <label style="font-size:11px;font-weight:normal"><?=$gl?></label>
+            <input type="hidden" name="dkey[]" value="<?=$gk?>">
+            <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($gl)?>">
+            <input type="hidden" name="dsub[]" value="Gejala Anthraks <?=$tipe?>">
+            <input type="hidden" name="dtype[]" value="select">
+            <select name="dval[]" class="form-control input-sm">
+              <option value="">--</option>
+              <option value="ya" <?=$gv=='ya'?'selected':''?>>Ya</option>
+              <option value="tidak" <?=$gv=='tidak'?'selected':''?>>Tidak</option>
+            </select>
+          </div>
+        <?php endforeach; ?>
+        </div>
+      </div>
+      <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+    <!-- ANTHRAKS: Kunjungan 7 hari -->
+    <?php if($id_penyakit==14): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-map-marker"></i> <b>S. Riwayat Kunjungan Daerah Wabah (Anthraks)</b></div>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Kunjungan 7 hari terakhir ke daerah wabah kematian hewan?</label>
+            <input type="hidden" name="dkey[]" value="atx_kunjungan_wabah">
+            <input type="hidden" name="dlabel[]" value="Kunjungan 7 hari ke daerah wabah hewan Anthraks">
+            <input type="hidden" name="dsub[]" value="Riwayat Anthraks">
+            <input type="hidden" name="dtype[]" value="select">
+            <?php $atx_kunjungan=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_kunjungan_wabah'){$atx_kunjungan=$ed['var_value'];break;}} ?>
+            <select name="dval[]" class="form-control">
+              <option value="">-- Pilih --</option>
+              <option value="pernah" <?=$atx_kunjungan=='pernah'?'selected':''?>>Pernah</option>
+              <option value="tidak_pernah" <?=$atx_kunjungan=='tidak_pernah'?'selected':''?>>Tidak Pernah</option>
+              <option value="tidak_jelas" <?=$atx_kunjungan=='tidak_jelas'?'selected':''?>>Tidak Jelas</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm-8">
+          <div class="form-group">
+            <label>Keterangan Kunjungan</label>
+            <input type="hidden" name="dkey[]" value="atx_kunjungan_ket">
+            <input type="hidden" name="dlabel[]" value="Keterangan kunjungan daerah wabah Anthraks">
+            <input type="hidden" name="dsub[]" value="Riwayat Anthraks">
+            <input type="hidden" name="dtype[]" value="text">
+            <?php $atx_kunjungan_ket=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_kunjungan_ket'){$atx_kunjungan_ket=$ed['var_value'];break;}} ?>
+            <input type="text" name="dval[]" class="form-control" placeholder="Lokasi, tanggal, keterangan" value="<?=htmlspecialchars($atx_kunjungan_ket)?>">
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- LEPTO: Kondisi Lingkungan Rumah -->
+    <?php if($id_penyakit==26): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-home"></i> <b>T. Kondisi Lingkungan Rumah (Leptospirosis)</b></div>
+      <div class="row">
+        <?php
+        $lepto_lingk = array(
+          'lp_tetangga_sakit'  => 'Ada tetangga/keluarga yang sakit dengan gejala sama',
+          'lp_riwayat_banjir'  => 'Riwayat banjir di sekitar rumah',
+          'lp_parit_kotor'     => 'Ada parit/selokan kotor di sekitar rumah',
+          'lp_ada_tikus'       => 'Ada tikus di dalam/sekitar rumah',
+          'lp_hewan_peliharaan'=> 'Ada hewan peliharaan (anjing/sapi/babi/dll)',
+          'lp_drainase_buruk'  => 'Drainase/saluran air sekitar rumah buruk',
+        );
+        foreach($lepto_lingk as $lk=>$ll):
+          $lv=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']==$lk){$lv=$ed['var_value'];break;}}
+        ?>
+        <div class="col-sm-4" style="margin-bottom:8px">
+          <label style="font-size:12px"><?=$ll?></label>
+          <input type="hidden" name="dkey[]" value="<?=$lk?>">
+          <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($ll)?>">
+          <input type="hidden" name="dsub[]" value="Kondisi Lingkungan Lepto">
+          <input type="hidden" name="dtype[]" value="select">
+          <select name="dval[]" class="form-control input-sm">
+            <option value="">-- Pilih --</option>
+            <option value="ya" <?=$lv=='ya'?'selected':''?>>Ya</option>
+            <option value="tidak" <?=$lv=='tidak'?'selected':''?>>Tidak</option>
+            <option value="tidak_tahu" <?=$lv=='tidak_tahu'?'selected':''?>>Tidak Tahu</option>
+          </select>
+        </div>
+        <?php endforeach; ?>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label style="font-size:12px">Durasi banjir (hari)</label>
+            <input type="hidden" name="dkey[]" value="lp_durasi_banjir">
+            <input type="hidden" name="dlabel[]" value="Durasi banjir (hari)">
+            <input type="hidden" name="dsub[]" value="Kondisi Lingkungan Lepto">
+            <input type="hidden" name="dtype[]" value="text">
+            <?php $lp_dur=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='lp_durasi_banjir'){$lp_dur=$ed['var_value'];break;}} ?>
+            <input type="text" name="dval[]" class="form-control input-sm" placeholder="Contoh: 3 hari" value="<?=htmlspecialchars($lp_dur)?>">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEPTO: Riwayat Kontak Faktor Risiko -->
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-exclamation-triangle"></i> <b>U. Riwayat Kontak Faktor Risiko (Leptospirosis)</b></div>
+      <div class="row">
+        <?php
+        $lepto_risiko = array(
+          'lp_rs_hutan_sawah'   => 'Pernah kunjungi hutan/sawah/kebun dalam 2 minggu terakhir',
+          'lp_rs_genangan_kerja'=> 'Ada genangan air di tempat kerja',
+          'lp_rs_tikus_kerja'   => 'Ada tikus di tempat kerja',
+          'lp_rs_kontak_air'    => 'Kontak dengan air/tanah yang mungkin tercemar urin hewan',
+        );
+        foreach($lepto_risiko as $rk=>$rl):
+          $rv=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']==$rk){$rv=$ed['var_value'];break;}}
+        ?>
+        <div class="col-sm-6" style="margin-bottom:8px">
+          <label style="font-size:12px"><?=$rl?></label>
+          <input type="hidden" name="dkey[]" value="<?=$rk?>">
+          <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($rl)?>">
+          <input type="hidden" name="dsub[]" value="Faktor Risiko Lepto">
+          <input type="hidden" name="dtype[]" value="select">
+          <select name="dval[]" class="form-control input-sm">
+            <option value="">-- Pilih --</option>
+            <option value="ya" <?=$rv=='ya'?'selected':''?>>Ya</option>
+            <option value="tidak" <?=$rv=='tidak'?'selected':''?>>Tidak</option>
+            <option value="tidak_tahu" <?=$rv=='tidak_tahu'?'selected':''?>>Tidak Tahu</option>
+          </select>
+        </div>
+        <?php endforeach; ?>
+      </div>
+      <div class="form-group">
+        <label style="font-size:12px">Hewan yang ditemui di tempat kerja/aktivitas</label>
+        <input type="hidden" name="dkey[]" value="lp_rs_hewan_kerja">
+        <input type="hidden" name="dlabel[]" value="Hewan yang ditemui di tempat kerja">
+        <input type="hidden" name="dsub[]" value="Faktor Risiko Lepto">
+        <input type="hidden" name="dtype[]" value="text">
+        <?php $lp_hw=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='lp_rs_hewan_kerja'){$lp_hw=$ed['var_value'];break;}} ?>
+        <input type="text" name="dval[]" class="form-control" placeholder="Contoh: tikus, sapi, babi" value="<?=htmlspecialchars($lp_hw)?>">
+      </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- GHPR: Riwayat Pengobatan -->
+    <?php if($id_penyakit==8): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-medkit"></i> <b>V. Riwayat Pengobatan Luka (GHPR)</b></div>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Cara Rawat Luka Pertama</label>
+            <input type="hidden" name="dkey[]" value="ghpr_cara_rawat_luka">
+            <input type="hidden" name="dlabel[]" value="Cara rawat luka pertama">
+            <input type="hidden" name="dsub[]" value="Pengobatan GHPR">
+            <input type="hidden" name="dtype[]" value="select">
+            <?php $ghpr_rawat=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='ghpr_cara_rawat_luka'){$ghpr_rawat=$ed['var_value'];break;}} ?>
+            <select name="dval[]" class="form-control">
+              <option value="">-- Pilih --</option>
+              <option value="cuci_air" <?=$ghpr_rawat=='cuci_air'?'selected':''?>>Dicuci dengan air mengalir</option>
+              <option value="cuci_sabun" <?=$ghpr_rawat=='cuci_sabun'?'selected':''?>>Dicuci dengan sabun</option>
+              <option value="antiseptik" <?=$ghpr_rawat=='antiseptik'?'selected':''?>>Diberi antiseptik</option>
+              <option value="dibalut" <?=$ghpr_rawat=='dibalut'?'selected':''?>>Dibalut saja</option>
+              <option value="tidak_dirawat" <?=$ghpr_rawat=='tidak_dirawat'?'selected':''?>>Tidak dirawat</option>
+              <option value="lainnya" <?=$ghpr_rawat=='lainnya'?'selected':''?>>Lainnya</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Tempat Pengobatan Pertama</label>
+            <input type="hidden" name="dkey[]" value="ghpr_tempat_pengobatan">
+            <input type="hidden" name="dlabel[]" value="Tempat pengobatan pertama GHPR">
+            <input type="hidden" name="dsub[]" value="Pengobatan GHPR">
+            <input type="hidden" name="dtype[]" value="text">
+            <?php $ghpr_tmpat=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='ghpr_tempat_pengobatan'){$ghpr_tmpat=$ed['var_value'];break;}} ?>
+            <input type="text" name="dval[]" class="form-control" placeholder="Contoh: Puskesmas, RS, Klinik, Dukun" value="<?=htmlspecialchars($ghpr_tmpat)?>">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Obat yang Diberikan</label>
+            <input type="hidden" name="dkey[]" value="ghpr_obat_diberikan">
+            <input type="hidden" name="dlabel[]" value="Obat yang diberikan GHPR">
+            <input type="hidden" name="dsub[]" value="Pengobatan GHPR">
+            <input type="hidden" name="dtype[]" value="text">
+            <?php $ghpr_obat=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='ghpr_obat_diberikan'){$ghpr_obat=$ed['var_value'];break;}} ?>
+            <input type="text" name="dval[]" class="form-control" placeholder="Nama obat yang diberikan" value="<?=htmlspecialchars($ghpr_obat)?>">
+          </div>
+        </div>
+      </div>
+      <!-- Riwayat Kontak Epidemiologis -->
+      <div class="row" style="margin-top:10px">
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Ada korban gigitan lain dari hewan yang sama?</label>
+            <input type="hidden" name="dkey[]" value="ghpr_korban_lain">
+            <input type="hidden" name="dlabel[]" value="Korban gigitan lain dari hewan yang sama">
+            <input type="hidden" name="dsub[]" value="Epidemiologi GHPR">
+            <input type="hidden" name="dtype[]" value="select">
+            <?php $ghpr_korban=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='ghpr_korban_lain'){$ghpr_korban=$ed['var_value'];break;}} ?>
+            <select name="dval[]" class="form-control">
+              <option value="">-- Pilih --</option>
+              <option value="ya" <?=$ghpr_korban=='ya'?'selected':''?>>Ya</option>
+              <option value="tidak" <?=$ghpr_korban=='tidak'?'selected':''?>>Tidak</option>
+              <option value="tidak_tahu" <?=$ghpr_korban=='tidak_tahu'?'selected':''?>>Tidak Tahu</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Jumlah hewan yang menggigit</label>
+            <input type="hidden" name="dkey[]" value="ghpr_jumlah_hewan">
+            <input type="hidden" name="dlabel[]" value="Jumlah hewan yang menggigit">
+            <input type="hidden" name="dsub[]" value="Epidemiologi GHPR">
+            <input type="hidden" name="dtype[]" value="text">
+            <?php $ghpr_jml=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='ghpr_jumlah_hewan'){$ghpr_jml=$ed['var_value'];break;}} ?>
+            <input type="text" name="dval[]" class="form-control" placeholder="Jumlah hewan" value="<?=htmlspecialchars($ghpr_jml)?>">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Kasus hewan penular rabies sebulan terakhir di sekitar?</label>
+            <input type="hidden" name="dkey[]" value="ghpr_kasus_hewan_sekitar">
+            <input type="hidden" name="dlabel[]" value="Kasus hewan penular rabies sebulan terakhir">
+            <input type="hidden" name="dsub[]" value="Epidemiologi GHPR">
+            <input type="hidden" name="dtype[]" value="select">
+            <?php $ghpr_kasus=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='ghpr_kasus_hewan_sekitar'){$ghpr_kasus=$ed['var_value'];break;}} ?>
+            <select name="dval[]" class="form-control">
+              <option value="">-- Pilih --</option>
+              <option value="ya" <?=$ghpr_kasus=='ya'?'selected':''?>>Ya</option>
+              <option value="tidak" <?=$ghpr_kasus=='tidak'?'selected':''?>>Tidak</option>
+              <option value="tidak_tahu" <?=$ghpr_kasus=='tidak_tahu'?'selected':''?>>Tidak Tahu</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- ANTHRAKS: Pemeriksaan Lingkungan Rumah -->
+    <?php if($id_penyakit==14): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-home"></i> <b>W. Pemeriksaan Lingkungan Rumah (Anthraks)</b></div>
+      <div class="row">
+        <?php
+        $lingk_anthrax = array(
+          'atx_lingk_piaraan'    => 'Ada hewan piaraan di rumah (kambing/sapi/kuda/dll)',
+          'atx_lingk_peternakan' => 'Ada peternakan hewan di sekitar rumah',
+          'atx_lingk_pasar'      => 'Ada pasar hewan di sekitar rumah',
+        );
+        foreach($lingk_anthrax as $lk=>$ll):
+          $lv=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']==$lk){$lv=$ed['var_value'];break;}}
+        ?>
+        <div class="col-sm-4" style="margin-bottom:8px">
+          <label style="font-size:12px"><?=$ll?></label>
+          <input type="hidden" name="dkey[]" value="<?=$lk?>">
+          <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($ll)?>">
+          <input type="hidden" name="dsub[]" value="Lingkungan Anthraks">
+          <input type="hidden" name="dtype[]" value="select">
+          <select name="dval[]" class="form-control input-sm">
+            <option value="">-- Pilih --</option>
+            <option value="ya" <?=$lv=='ya'?'selected':''?>>Ya</option>
+            <option value="tidak" <?=$lv=='tidak'?'selected':''?>>Tidak</option>
+            <option value="tidak_tahu" <?=$lv=='tidak_tahu'?'selected':''?>>Tidak Tahu</option>
+          </select>
+        </div>
+        <?php endforeach; ?>
+      </div>
+      <div class="form-group">
+        <label style="font-size:12px">Keterangan sumber penularan potensial</label>
+        <input type="hidden" name="dkey[]" value="atx_lingk_ket">
+        <input type="hidden" name="dlabel[]" value="Keterangan lingkungan sumber penularan Anthraks">
+        <input type="hidden" name="dsub[]" value="Lingkungan Anthraks">
+        <input type="hidden" name="dtype[]" value="text">
+        <?php $atx_lket=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_lingk_ket'){$atx_lket=$ed['var_value'];break;}} ?>
+        <input type="text" name="dval[]" class="form-control" placeholder="Keterangan tambahan lingkungan" value="<?=htmlspecialchars($atx_lket)?>">
+      </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- KONTAK KASUS LAIN (Lepto + Anthraks) -->
+    <?php if(in_array($id_penyakit, array(26,14))): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-users"></i> <b>X. Kontak Kasus Lain / Gejala Sama</b></div>
+      <small class="text-muted">Nama | Umur | Alamat | Hubungan | Tgl Kontak | Status (suspek/konfirmasi/tidak tahu)</small>
+      <div id="tbl-kontak-kasus">
+        <div class="row kontak-kasus-row" style="margin-bottom:6px">
+          <div class="col-sm-2"><input type="text" name="kk_nama[]" class="form-control input-sm" placeholder="Nama"></div>
+          <div class="col-sm-1"><input type="number" name="kk_umur[]" class="form-control input-sm" placeholder="Umur"></div>
+          <div class="col-sm-3"><input type="text" name="kk_alamat[]" class="form-control input-sm" placeholder="Alamat"></div>
+          <div class="col-sm-2"><input type="text" name="kk_hub[]" class="form-control input-sm" placeholder="Hub. Penderita"></div>
+          <div class="col-sm-2"><input type="date" name="kk_tgl[]" class="form-control input-sm"></div>
+          <div class="col-sm-1">
+            <select name="kk_status[]" class="form-control input-sm">
+              <option value="">--</option>
+              <option value="suspek">Suspek</option>
+              <option value="konfirmasi">Konfirmasi</option>
+              <option value="tidak_tahu">Tidak Tahu</option>
+            </select>
+          </div>
+          <div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.kontak-kasus-row').remove()"><i class="fa fa-times"></i></button></div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-xs btn-default" onclick="tambahKontakKasus()"><i class="fa fa-plus"></i> Tambah</button>
+    </div>
+    <?php endif; ?>
+
     <!-- KONTAK HEWAN -->
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-paw"></i> <b>G. Riwayat Kontak Hewan</b></div>
+      <div class="form-section-title"><i class="fa fa-paw"></i> <b>Y. Riwayat Kontak Hewan</b></div>
       <div class="row">
         <div class="col-sm-3">
           <div class="form-group">
@@ -903,871 +1768,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <?php endforeach; ?>
     <?php endif; ?>
 
-
-    <!-- LABORATORIUM -->
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-flask"></i> <b>H. Pemeriksaan Laboratorium</b></div>
-      <div class="row">
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Diperiksa Lab?</label>
-            <select name="diperiksa_lab" class="form-control" onchange="toggleLab(this.value)" required>
-              <option value="0" <?=fv($v,'diperiksa_lab','0')=='0'?'selected':''?>>Tidak</option>
-              <option value="1" <?=fv($v,'diperiksa_lab')=='1'?'selected':''?>>Ya</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div id="wrap_detail_lab" style="display:<?=fv($v,'diperiksa_lab')=='1'?'block':'none'?>">
-      <div class="row">
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Jenis Spesimen</label>
-            <select name="jenis_sample" class="form-control">
-              <option value="">-- Pilih Jenis Spesimen --</option>
-              <option value="Serum Darah" <?=fv($v,'jenis_sample')=='Serum Darah'?'selected':''?>>Serum Darah</option>
-              <option value="Whole Blood" <?=fv($v,'jenis_sample')=='Whole Blood'?'selected':''?>>Whole Blood</option>
-              <option value="Urine" <?=fv($v,'jenis_sample')=='Urine'?'selected':''?>>Urine</option>
-              <option value="Usap Nasofaring" <?=fv($v,'jenis_sample')=='Usap Nasofaring'?'selected':''?>>Usap Nasofaring</option>
-              <option value="Usap Tenggorok" <?=fv($v,'jenis_sample')=='Usap Tenggorok'?'selected':''?>>Usap Tenggorok</option>
-              <option value="Swab Rektal" <?=fv($v,'jenis_sample')=='Swab Rektal'?'selected':''?>>Swab Rektal</option>
-              <option value="Kulit/Lesi" <?=fv($v,'jenis_sample')=='Kulit/Lesi'?'selected':''?>>Kulit/Lesi</option>
-              <option value="Jaringan/Eksudat" <?=fv($v,'jenis_sample')=='Jaringan/Eksudat'?'selected':''?>>Jaringan/Eksudat</option>
-              <option value="Otak Hewan (GHPR)" <?=fv($v,'jenis_sample')=='Otak Hewan (GHPR)'?'selected':''?>>Otak Hewan (GHPR)</option>
-              <option value="Lainnya" <?=fv($v,'jenis_sample')=='Lainnya'?'selected':''?>>Lainnya</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Tanggal Ambil Spesimen</label>
-            <input type="date" name="tgl_ambil_sample" class="form-control" value="<?=fv($v,'tgl_ambil_sample')?>">
-          </div>
-        </div>
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Tanggal Kirim Spesimen</label>
-            <input type="date" name="tgl_kirim_sample" class="form-control" value="<?=fv($v,'tgl_kirim_sample')?>">
-          </div>
-        </div>
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Tanggal Hasil Lab</label>
-            <input type="date" name="tgl_hasil_lab" class="form-control" value="<?=fv($v,'tgl_hasil_lab')?>">
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Nama Laboratorium</label>
-            <input type="text" name="nama_lab" class="form-control" value="<?=fv($v,'nama_lab')?>">
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Hasil Lab</label>
-            <input type="text" name="hasil_lab" class="form-control" value="<?=fv($v,'hasil_lab')?>">
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Keterangan Lab</label>
-            <input type="text" name="ket_lab" class="form-control" value="<?=fv($v,'ket_lab')?>">
-          </div>
-        </div>
-      </div>
-      </div><!-- /wrap_detail_lab -->
-      <script>
-      function toggleLab(val) {
-        $('#wrap_detail_lab').toggle(val == '1');
-      }
-      </script>
-    </div>
-
-    <!-- SPESIMEN TAMBAHAN -->
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-flask"></i> <b>I. Spesimen Tambahan (Lab)</b></div>
-      <div id="tbl-spesimen">
-        <div class="row spesimen-row" style="margin-bottom:6px">
-          <div class="col-sm-2">
-            <input type="hidden" name="dkey[]" value="sp0_jenis">
-            <input type="hidden" name="dlabel[]" value="Jenis Spesimen 1">
-            <input type="hidden" name="dsub[]" value="Spesimen Lab">
-            <input type="hidden" name="dtype[]" value="text">
-            <select name="dval[]" class="form-control input-sm">
-              <option value="">-- Jenis --</option>
-              <option value="serum_darah">Serum Darah</option>
-              <option value="urine">Urine</option>
-              <option value="usap_nasofaring">Usap Nasofaring</option>
-              <option value="usap_tenggorok">Usap Tenggorok</option>
-              <option value="kulit_lesi">Kulit/Lesi</option>
-              <option value="jaringan">Jaringan/Eksudat</option>
-              <option value="otak_hewan">Otak Hewan (GHPR)</option>
-              <option value="lainnya">Lainnya</option>
-            </select>
-          </div>
-          <div class="col-sm-2">
-            <input type="hidden" name="dkey[]" value="sp0_nomor">
-            <input type="hidden" name="dlabel[]" value="Nomor Spesimen 1">
-            <input type="hidden" name="dsub[]" value="Spesimen Lab">
-            <input type="hidden" name="dtype[]" value="text">
-            <input type="text" name="dval[]" class="form-control input-sm" placeholder="Nomor Spesimen">
-          </div>
-          <div class="col-sm-2">
-            <input type="hidden" name="dkey[]" value="sp0_tgl_ambil">
-            <input type="hidden" name="dlabel[]" value="Tgl Ambil 1">
-            <input type="hidden" name="dsub[]" value="Spesimen Lab">
-            <input type="hidden" name="dtype[]" value="date">
-            <input type="date" name="dval[]" class="form-control input-sm" placeholder="Tgl Ambil">
-          </div>
-          <div class="col-sm-2">
-            <input type="hidden" name="dkey[]" value="sp0_tgl_hasil">
-            <input type="hidden" name="dlabel[]" value="Tgl Hasil 1">
-            <input type="hidden" name="dsub[]" value="Spesimen Lab">
-            <input type="hidden" name="dtype[]" value="date">
-            <input type="date" name="dval[]" class="form-control input-sm" placeholder="Tgl Hasil">
-          </div>
-          <div class="col-sm-2">
-            <input type="hidden" name="dkey[]" value="sp0_hasil">
-            <input type="hidden" name="dlabel[]" value="Hasil 1">
-            <input type="hidden" name="dsub[]" value="Spesimen Lab">
-            <input type="hidden" name="dtype[]" value="text">
-            <input type="text" name="dval[]" class="form-control input-sm" placeholder="Hasil">
-          </div>
-          <div class="col-sm-2">
-            <button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.spesimen-row').remove()"><i class="fa fa-times"></i></button>
-          </div>
-        </div>
-      </div>
-      <small class="text-muted">Jenis | Nomor | Tgl Ambil | Tgl Hasil | Hasil</small><br>
-      <button type="button" class="btn btn-xs btn-default" onclick="tambahSpesimen()"><i class="fa fa-plus"></i> Tambah Spesimen</button>
-    </div>
-
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-hospital-o"></i> <b>J. Rawat Inap / RS</b></div>
-      <small class="text-muted">Nama RS/Klinik | Tanggal Masuk | Keterangan</small>
-      <div id="tbl-rawat-inap">
-        <div class="row rawat-row" style="margin-bottom:6px">
-          <div class="col-sm-5">
-            <input type="text" name="rs_nama[]" class="form-control input-sm" placeholder="Nama RS/Klinik" value="<?=fv($v,'nama_rs')?>">
-          </div>
-          <div class="col-sm-3">
-            <input type="date" name="rs_tgl[]" class="form-control input-sm" value="<?=fv($v,'tgl_masuk_rs')?>">
-          </div>
-          <div class="col-sm-3">
-            <input type="text" name="rs_ket[]" class="form-control input-sm" placeholder="Keterangan">
-          </div>
-          <div class="col-sm-1">
-            <button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.rawat-row').remove()"><i class="fa fa-times"></i></button>
-          </div>
-        </div>
-      </div>
-      <button type="button" class="btn btn-xs btn-default" onclick="tambahRawatInap()"><i class="fa fa-plus"></i> Tambah RS/Klinik</button>
-    </div>
-    <!-- ANGGOTA SERUMAH -->
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-users"></i> <b>K. Anggota Serumah</b></div>
-      <div class="row" style="margin-bottom:8px">
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label style="font-size:12px">Jumlah Anggota Serumah (orang)</label>
-            <input type="number" name="jumlah_anggota_serumah" class="form-control input-sm" min="0" max="30" value="<?=fv($v,'jumlah_anggota_serumah')?>">
-          </div>
-        </div>
-        <?php if(in_array($id_penyakit, array(11,14))): ?>
-        <div class="col-sm-9">
-          <label style="font-size:12px">Tempat Kerja Anggota Serumah yang Berisiko</label>
-          <div class="row">
-            <?php
-            $tempat_kerja_risiko = array(
-              11 => array('rs_klinik'=>'RS/Klinik','lab'=>'Laboratorium','veterinarian'=>'Veterinarian','peternak_unggas'=>'Peternak Unggas','peternak_babi'=>'Peternak Babi','pasar_unggas'=>'Pasar Unggas/Babi'),
-              14 => array('rs_klinik'=>'RS/Klinik','lab'=>'Laboratorium','veterinarian'=>'Veterinarian','peternakan'=>'Peternakan Hewan','pasar_hewan'=>'Pasar Hewan'),
-            );
-            $opts_tk = isset($tempat_kerja_risiko[$id_penyakit]) ? $tempat_kerja_risiko[$id_penyakit] : array();
-            $saved_tk = array();
-            if(!empty($eav_data)) foreach($eav_data as $ed) { if($ed['var_key']=='as_tempat_risiko') { $saved_tk=explode(',',$ed['var_value']); break; } }
-            foreach($opts_tk as $tk=>$tl):
-            ?>
-            <div class="col-sm-4" style="margin-bottom:4px">
-              <div class="checkbox" style="margin:0">
-                <label style="font-size:11px">
-                  <input type="checkbox" name="as_tempat_risiko[]" value="<?=$tk?>" <?=in_array($tk,$saved_tk)?'checked':''?>>
-                  <?=$tl?>
-                </label>
-              </div>
-            </div>
-            <?php endforeach; ?>
-            <input type="hidden" name="dkey[]" value="as_tempat_risiko">
-            <input type="hidden" name="dlabel[]" value="Tempat kerja anggota serumah berisiko">
-            <input type="hidden" name="dsub[]" value="Anggota Serumah">
-            <input type="hidden" name="dtype[]" value="text">
-            <input type="hidden" name="dval[]" id="as_tempat_risiko_val" value="<?=isset($saved_tk)?implode(',',$saved_tk):''?>">
-          </div>
-        </div>
-        <?php endif; ?>
-      </div>
-      <div id="tbl-anggota">
-        <?php foreach($anggota as $idx => $as): ?>
-        <div class="row anggota-row" style="margin-bottom:6px">
-          <div class="col-sm-5"><input type="text" name="as_nama[]" class="form-control input-sm" placeholder="Nama" value="<?=htmlspecialchars($as['nama'])?>"></div>
-          <div class="col-sm-5"><input type="text" name="as_tempat[]" class="form-control input-sm" placeholder="Tempat Kerja" value="<?=htmlspecialchars($as['tempat_kerja'])?>"></div>
-          <div class="col-sm-2"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.anggota-row').remove()"><i class="fa fa-times"></i></button></div>
-        </div>
-        <?php endforeach; ?>
-        <?php if(empty($anggota)): ?>
-        <div class="row anggota-row" style="margin-bottom:6px">
-          <div class="col-sm-5"><input type="text" name="as_nama[]" class="form-control input-sm" placeholder="Nama"></div>
-          <div class="col-sm-5"><input type="text" name="as_tempat[]" class="form-control input-sm" placeholder="Tempat Kerja"></div>
-          <div class="col-sm-2"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.anggota-row').remove()"><i class="fa fa-times"></i></button></div>
-        </div>
-        <?php endif; ?>
-      </div>
-      <button type="button" class="btn btn-xs btn-default" onclick="tambahAnggota()"><i class="fa fa-plus"></i> Tambah Anggota</button>
-    </div>
-    <!-- KONTAK PNEUMONIA (khusus Avian) -->
-    <?php if($id_penyakit==11): ?>
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-user-md"></i> <b>L. Kontak dengan Penderita Pneumonia</b></div>
-      <div id="tbl-kontak-pn">
-        <?php foreach($kontak_pn as $idx => $kp): ?>
-        <div class="row kontak-pn-row" style="margin-bottom:6px">
-          <div class="col-sm-2"><input type="text" name="kp_nama[]" class="form-control input-sm" placeholder="Nama" value="<?=htmlspecialchars($kp['nama'])?>"></div>
-          <div class="col-sm-1"><input type="number" name="kp_umur[]" class="form-control input-sm" placeholder="Umur" value="<?=htmlspecialchars($kp['umur'])?>"></div>
-          <div class="col-sm-2"><input type="text" name="kp_hub[]" class="form-control input-sm" placeholder="Hub. Penderita" value="<?=htmlspecialchars($kp['hub_penderita'])?>"></div>
-          <div class="col-sm-2"><input type="date" name="kp_tgl_awal[]" class="form-control input-sm" value="<?=htmlspecialchars($kp['tgl_kontak_awal'])?>"></div>
-          <div class="col-sm-2"><input type="date" name="kp_tgl_akhir[]" class="form-control input-sm" value="<?=htmlspecialchars($kp['tgl_kontak_akhir'])?>"></div>
-          <div class="col-sm-2"><input type="text" name="kp_status[]" class="form-control input-sm" placeholder="Status Flu" value="<?=htmlspecialchars($kp['status_flu'])?>"></div>
-          <div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.kontak-pn-row').remove()"><i class="fa fa-times"></i></button></div>
-        </div>
-        <?php endforeach; ?>
-        <?php if(empty($kontak_pn)): ?>
-        <div class="row kontak-pn-row" style="margin-bottom:6px">
-          <div class="col-sm-2"><input type="text" name="kp_nama[]" class="form-control input-sm" placeholder="Nama"></div>
-          <div class="col-sm-1"><input type="number" name="kp_umur[]" class="form-control input-sm" placeholder="Umur"></div>
-          <div class="col-sm-2"><input type="text" name="kp_hub[]" class="form-control input-sm" placeholder="Hub. Penderita"></div>
-          <div class="col-sm-2"><input type="date" name="kp_tgl_awal[]" class="form-control input-sm"></div>
-          <div class="col-sm-2"><input type="date" name="kp_tgl_akhir[]" class="form-control input-sm"></div>
-          <div class="col-sm-2"><input type="text" name="kp_status[]" class="form-control input-sm" placeholder="Status Flu"></div>
-          <div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.kontak-pn-row').remove()"><i class="fa fa-times"></i></button></div>
-        </div>
-        <?php endif; ?>
-      </div>
-      <small class="text-muted">Nama | Umur | Hub. Penderita | Tgl Kontak Awal | Tgl Kontak Akhir | Status Flu</small><br>
-      <button type="button" class="btn btn-xs btn-default" onclick="tambahKontakPN()"><i class="fa fa-plus"></i> Tambah Kontak</button>
-    </div>
-    <?php endif; ?>
-    <!-- KONTAK GEJALA SAMA (Avian - terpisah dari Kontak Pneumonia) -->
-    <?php if($id_penyakit==11): ?>
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-users"></i> <b>M. Kontak Gejala Sama (Keluarga/Tetangga Bergejala)</b></div>
-      <small class="text-muted">Nama | Umur | Alamat | Hubungan | Tgl Kontak | Status Flu Burung</small>
-      <div id="tbl-kontak-gs">
-        <div class="row kontak-gs-row" style="margin-bottom:6px">
-          <div class="col-sm-2"><input type="text" name="kg_nama[]" class="form-control input-sm" placeholder="Nama"></div>
-          <div class="col-sm-1"><input type="number" name="kg_umur[]" class="form-control input-sm" placeholder="Umur"></div>
-          <div class="col-sm-3"><input type="text" name="kg_alamat[]" class="form-control input-sm" placeholder="Alamat"></div>
-          <div class="col-sm-2"><input type="text" name="kg_hub[]" class="form-control input-sm" placeholder="Hubungan"></div>
-          <div class="col-sm-2"><input type="date" name="kg_tgl[]" class="form-control input-sm"></div>
-          <div class="col-sm-1"><input type="text" name="kg_status[]" class="form-control input-sm" placeholder="Status"></div>
-          <div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.kontak-gs-row').remove()"><i class="fa fa-times"></i></button></div>
-        </div>
-      </div>
-      <button type="button" class="btn btn-xs btn-default" onclick="tambahKontakGS()"><i class="fa fa-plus"></i> Tambah</button>
-    </div>
-    <?php endif; ?>
-
-    <!-- KEBIASAAN RESPONDEN LEPTO -->
-    <?php if($id_penyakit==26): ?>
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-clipboard"></i> <b>N. Kebiasaan Responden (Faktor Risiko Leptospirosis)</b></div>
-      <?php
-      $kb_fields = array(
-        array('key'=>'kb_aktivitas_air',    'label'=>'A1. Bekerja/beraktivitas di sawah, ladang, kebun', 'sub'=>'A'),
-        array('key'=>'kb_renang_sungai',    'label'=>'A2. Berenang/mandi di sungai/danau', 'sub'=>'A'),
-        array('key'=>'kb_banjir',           'label'=>'A3. Tinggal/beraktivitas di daerah banjir', 'sub'=>'A'),
-        array('key'=>'kb_genangan_air',     'label'=>'A4. Kontak dengan genangan air/lumpur', 'sub'=>'A'),
-        array('key'=>'kb_parit_selokan',    'label'=>'A5. Tinggal dekat parit/selokan yang kotor', 'sub'=>'A'),
-        array('key'=>'kb_air_tercemar',     'label'=>'A6. Minum/gunakan air yang mungkin tercemar', 'sub'=>'A'),
-        array('key'=>'kb_kontak_hewan',     'label'=>'B1. Kontak langsung dengan hewan (tikus/sapi/babi/anjing)', 'sub'=>'B'),
-        array('key'=>'kb_apd',              'label'=>'B2. Menggunakan APD (sepatu boot/sarung tangan) saat bekerja', 'sub'=>'B'),
-        array('key'=>'kb_cuci_tangan',      'label'=>'C1. Cuci tangan sebelum makan', 'sub'=>'C'),
-        array('key'=>'kb_cuci_luka',        'label'=>'C2. Merawat luka/lecet dengan benar', 'sub'=>'C'),
-        array('key'=>'kb_makan_sembarangan','label'=>'C3. Makan di tempat yang tidak terlindung', 'sub'=>'C'),
-        array('key'=>'kb_minum_mentah',     'label'=>'C4. Minum air mentah/tidak dimasak', 'sub'=>'C'),
-        array('key'=>'kb_tikus_rumah',      'label'=>'D1. Ada tikus di dalam rumah/dapur', 'sub'=>'D'),
-        array('key'=>'kb_makanan_terbuka',  'label'=>'D2. Menyimpan makanan tidak tertutup/terlindung', 'sub'=>'D'),
-        array('key'=>'kb_sampah_terbuka',   'label'=>'D3. Membuang sampah sembarangan di sekitar rumah', 'sub'=>'D'),
-        array('key'=>'kb_drainase_buruk',   'label'=>'D4. Drainase/saluran air di sekitar rumah buruk', 'sub'=>'D'),
-      );
-      $kb_sub_labels = array('A'=>'A. Aktivitas Berhubungan Air', 'B'=>'B. Kontak & APD', 'C'=>'C. Personal Higiene', 'D'=>'D. Ketersediaan Pangan & Sanitasi');
-      $kb_sub_cur = '';
-      foreach($kb_fields as $kb):
-        if($kb['sub'] != $kb_sub_cur):
-          if($kb_sub_cur) echo '</div>';
-          echo '<div style="margin-bottom:10px"><div style="font-weight:600;font-size:12px;color:#1F4E79;margin:8px 0 4px">'.$kb_sub_labels[$kb['sub']].'</div>';
-          $kb_sub_cur = $kb['sub'];
-        endif;
-        // Ambil nilai EAV yang sudah tersimpan
-        $kb_val = '';
-        if(!empty($eav_data)) {
-          foreach($eav_data as $ed) {
-            if($ed['var_key']==$kb['key']) { $kb_val=$ed['var_value']; break; }
-          }
-        }
-      ?>
-      <div class="row" style="margin-bottom:4px">
-        <div class="col-sm-8" style="font-size:12px;padding-top:6px"><?=htmlspecialchars($kb['label'])?></div>
-        <div class="col-sm-4">
-          <input type="hidden" name="dkey[]" value="<?=$kb['key']?>">
-          <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($kb['label'])?>">
-          <input type="hidden" name="dsub[]" value="Kebiasaan Responden Lepto">
-          <input type="hidden" name="dtype[]" value="radio">
-          <select name="dval[]" class="form-control input-sm" style="width:150px">
-            <option value="">-- Pilih --</option>
-            <option value="ya" <?=$kb_val=='ya'?'selected':''?>>Ya</option>
-            <option value="tidak" <?=$kb_val=='tidak'?'selected':''?>>Tidak</option>
-            <option value="tidak_tahu" <?=$kb_val=='tidak_tahu'?'selected':''?>>Tidak Tahu</option>
-          </select>
-        </div>
-      </div>
-      <?php endforeach; echo '</div>'; ?>
-    </div>
-    <?php endif; ?>
-    <!-- KONTAK PENYELIDIKAN & TIM PE -->
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-phone"></i> <b>O. Kontak Penyelidikan</b></div>
-      <small class="text-muted">Narasumber (pejabat/petugas/dokter) yang dihubungi saat penyelidikan</small>
-      <div id="tbl-kontak-pe">
-        <div class="row kontak-pe-row" style="margin-bottom:6px">
-          <div class="col-sm-4"><input type="text" name="kpe_nama[]" class="form-control input-sm" placeholder="Nama"></div>
-          <div class="col-sm-4"><input type="text" name="kpe_jabatan[]" class="form-control input-sm" placeholder="Jabatan/Kantor/Alamat"></div>
-          <div class="col-sm-3"><input type="text" name="kpe_telp[]" class="form-control input-sm" placeholder="Telp/HP"></div>
-          <div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.kontak-pe-row').remove()"><i class="fa fa-times"></i></button></div>
-        </div>
-      </div>
-      <button type="button" class="btn btn-xs btn-default" onclick="tambahKontakPE()"><i class="fa fa-plus"></i> Tambah</button>
-    </div>
-
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-users"></i> <b>P. Tim Penyelidikan Epidemiologi</b></div>
-      <small class="text-muted">Anggota tim PE yang terlibat dalam penyelidikan</small>
-      <div id="tbl-tim-pe">
-        <?php for($ti=0;$ti<3;$ti++): ?>
-        <div class="row tim-pe-row" style="margin-bottom:6px">
-          <div class="col-sm-4"><input type="text" name="tpe_nama[]" class="form-control input-sm" placeholder="Nama"></div>
-          <div class="col-sm-4"><input type="text" name="tpe_kantor[]" class="form-control input-sm" placeholder="Kantor/Instansi"></div>
-          <div class="col-sm-3"><input type="text" name="tpe_telp[]" class="form-control input-sm" placeholder="Telp/HP"></div>
-          <div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.tim-pe-row').remove()"><i class="fa fa-times"></i></button></div>
-        </div>
-        <?php endfor; ?>
-      </div>
-      <button type="button" class="btn btn-xs btn-default" onclick="tambahTimPE()"><i class="fa fa-plus"></i> Tambah</button>
-    </div>
-
-    <!-- AVIAN: Kunjungan Wabah + Matriks Kontak Unggas -->
-    <?php if($id_penyakit==11): ?>
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-map-marker"></i> <b>Q. Riwayat Kunjungan & Kontak Unggas (Avian)</b></div>
-      <div class="row">
-        <div class="col-sm-6">
-          <div class="form-group">
-            <label>Kunjungan 14 hari terakhir ke daerah wabah kematian unggas?</label>
-            <input type="hidden" name="dkey[]" value="av_kunjungan_wabah">
-            <input type="hidden" name="dlabel[]" value="Kunjungan 14 hari ke daerah wabah unggas">
-            <input type="hidden" name="dsub[]" value="Riwayat Avian">
-            <input type="hidden" name="dtype[]" value="select">
-            <?php
-            $av_kunjungan = '';
-            if(!empty($eav_data)) foreach($eav_data as $ed) { if($ed['var_key']=='av_kunjungan_wabah') { $av_kunjungan=$ed['var_value']; break; } }
-            ?>
-            <select name="dval[]" class="form-control">
-              <option value="">-- Pilih --</option>
-              <option value="pernah" <?=$av_kunjungan=='pernah'?'selected':''?>>Pernah</option>
-              <option value="tidak_pernah" <?=$av_kunjungan=='tidak_pernah'?'selected':''?>>Tidak Pernah</option>
-              <option value="tidak_jelas" <?=$av_kunjungan=='tidak_jelas'?'selected':''?>>Tidak Jelas</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-sm-6">
-          <div class="form-group">
-            <label>Keterangan Kunjungan</label>
-            <input type="hidden" name="dkey[]" value="av_kunjungan_ket">
-            <input type="hidden" name="dlabel[]" value="Keterangan kunjungan daerah wabah unggas">
-            <input type="hidden" name="dsub[]" value="Riwayat Avian">
-            <input type="hidden" name="dtype[]" value="text">
-            <?php
-            $av_kunjungan_ket = '';
-            if(!empty($eav_data)) foreach($eav_data as $ed) { if($ed['var_key']=='av_kunjungan_ket') { $av_kunjungan_ket=$ed['var_value']; break; } }
-            ?>
-            <input type="text" name="dval[]" class="form-control" placeholder="Lokasi, tanggal, keterangan" value="<?=htmlspecialchars($av_kunjungan_ket)?>">
-          </div>
-        </div>
-      </div>
-      <!-- Matriks Kontak Unggas -->
-      <div class="form-group">
-        <label><b>Matriks Kontak Unggas 7 Hari Terakhir</b></label>
-        <table class="table table-bordered table-condensed" style="font-size:12px">
-          <thead style="background:#2c3e50;color:#fff">
-            <tr>
-              <th>Jenis Unggas</th>
-              <th>Kondisi Sehat</th>
-              <th>Kondisi Sakit</th>
-              <th>Kondisi Mati</th>
-              <th>Jenis Kontak</th>
-            </tr>
-          </thead>
-          <tbody>
-          <?php
-          $unggas_list = array('ayam'=>'Ayam','bebek'=>'Bebek','puyuh'=>'Puyuh','burung'=>'Burung','babi'=>'Babi');
-          $kontak_types = array('tidak_ada'=>'Tidak Ada','tidak_erat'=>'Kontak Tidak Erat','erat'=>'Kontak Erat','sehari_hari'=>'Kontak Sehari-hari');
-          foreach($unggas_list as $uk=>$ul):
-            $val_sehat = $val_sakit = $val_mati = $val_kontak = '';
-            if(!empty($eav_data)) foreach($eav_data as $ed) {
-              if($ed['var_key']=='av_ung_'.$uk.'_sehat') $val_sehat=$ed['var_value'];
-              if($ed['var_key']=='av_ung_'.$uk.'_sakit') $val_sakit=$ed['var_value'];
-              if($ed['var_key']=='av_ung_'.$uk.'_mati')  $val_mati=$ed['var_value'];
-              if($ed['var_key']=='av_ung_'.$uk.'_kontak') $val_kontak=$ed['var_value'];
-            }
-          ?>
-          <tr>
-            <td><b><?=$ul?></b></td>
-            <td>
-              <input type="hidden" name="dkey[]" value="av_ung_<?=$uk?>_sehat">
-              <input type="hidden" name="dlabel[]" value="Kontak <?=$ul?> Sehat">
-              <input type="hidden" name="dsub[]" value="Matriks Unggas">
-              <input type="hidden" name="dtype[]" value="select">
-              <select name="dval[]" class="form-control input-sm">
-                <option value="tidak">Tidak</option>
-                <option value="ya" <?=$val_sehat=='ya'?'selected':''?>>Ya</option>
-              </select>
-            </td>
-            <td>
-              <input type="hidden" name="dkey[]" value="av_ung_<?=$uk?>_sakit">
-              <input type="hidden" name="dlabel[]" value="Kontak <?=$ul?> Sakit">
-              <input type="hidden" name="dsub[]" value="Matriks Unggas">
-              <input type="hidden" name="dtype[]" value="select">
-              <select name="dval[]" class="form-control input-sm">
-                <option value="tidak">Tidak</option>
-                <option value="ya" <?=$val_sakit=='ya'?'selected':''?>>Ya</option>
-              </select>
-            </td>
-            <td>
-              <input type="hidden" name="dkey[]" value="av_ung_<?=$uk?>_mati">
-              <input type="hidden" name="dlabel[]" value="Kontak <?=$ul?> Mati">
-              <input type="hidden" name="dsub[]" value="Matriks Unggas">
-              <input type="hidden" name="dtype[]" value="select">
-              <select name="dval[]" class="form-control input-sm">
-                <option value="tidak">Tidak</option>
-                <option value="ya" <?=$val_mati=='ya'?'selected':''?>>Ya</option>
-              </select>
-            </td>
-            <td>
-              <input type="hidden" name="dkey[]" value="av_ung_<?=$uk?>_kontak">
-              <input type="hidden" name="dlabel[]" value="Jenis Kontak <?=$ul?>">
-              <input type="hidden" name="dsub[]" value="Matriks Unggas">
-              <input type="hidden" name="dtype[]" value="select">
-              <select name="dval[]" class="form-control input-sm">
-                <?php foreach($kontak_types as $kv=>$kl): ?>
-                <option value="<?=$kv?>" <?=$val_kontak==$kv?'selected':''?>><?=$kl?></option>
-                <?php endforeach; ?>
-              </select>
-            </td>
-          </tr>
-          <?php endforeach; ?>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <?php endif; ?>
-
-    <!-- AVIAN: Pemeriksaan Lingkungan Rumah -->
-    <?php if($id_penyakit==11): ?>
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-home"></i> <b>R. Pemeriksaan Lingkungan Rumah (Avian)</b></div>
-      <div class="row">
-        <?php
-        $lingk_avian = array(
-          'av_lingk_piaraan'    => 'Ada unggas piaraan di rumah (Ayam/Bebek/Burung/dll)',
-          'av_lingk_peternakan' => 'Ada peternakan unggas di sekitar rumah (<100m)',
-          'av_lingk_pasar'      => 'Ada pasar unggas hidup di sekitar rumah',
-        );
-        foreach($lingk_avian as $lk=>$ll):
-          $lv = '';
-          if(!empty($eav_data)) foreach($eav_data as $ed) { if($ed['var_key']==$lk) { $lv=$ed['var_value']; break; } }
-        ?>
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label style="font-size:12px"><?=$ll?></label>
-            <input type="hidden" name="dkey[]" value="<?=$lk?>">
-            <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($ll)?>">
-            <input type="hidden" name="dsub[]" value="Lingkungan Avian">
-            <input type="hidden" name="dtype[]" value="select">
-            <select name="dval[]" class="form-control input-sm">
-              <option value="">-- Pilih --</option>
-              <option value="ya" <?=$lv=='ya'?'selected':''?>>Ya</option>
-              <option value="tidak" <?=$lv=='tidak'?'selected':''?>>Tidak</option>
-              <option value="tidak_tahu" <?=$lv=='tidak_tahu'?'selected':''?>>Tidak Tahu</option>
-            </select>
-          </div>
-        </div>
-        <?php endforeach; ?>
-      </div>
-      <div class="form-group">
-        <label style="font-size:12px">Keterangan sumber penularan potensial</label>
-        <input type="hidden" name="dkey[]" value="av_lingk_ket">
-        <input type="hidden" name="dlabel[]" value="Keterangan lingkungan sumber penularan">
-        <input type="hidden" name="dsub[]" value="Lingkungan Avian">
-        <input type="hidden" name="dtype[]" value="text">
-        <?php
-        $av_lingk_ket = '';
-        if(!empty($eav_data)) foreach($eav_data as $ed) { if($ed['var_key']=='av_lingk_ket') { $av_lingk_ket=$ed['var_value']; break; } }
-        ?>
-        <input type="text" name="dval[]" class="form-control" placeholder="Keterangan tambahan lingkungan" value="<?=htmlspecialchars($av_lingk_ket)?>">
-      </div>
-    </div>
-    <?php endif; ?>
-
-    <!-- ANTHRAKS: Gejala per Tipe Manifestasi -->
-    <?php if($id_penyakit==14): ?>
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-stethoscope"></i> <b>S. Gejala per Tipe Manifestasi (Anthraks)</b></div>
-      <?php
-      $anthrax_gejala = array(
-        'Kulit' => array(
-          'atx_g_gatal'      => 'Rasa gatal di lokasi kontak',
-          'atx_g_vesikel'    => 'Vesikel (gelembung berisi cairan)',
-          'atx_g_hemoragik'  => 'Lesi hemoragik',
-          'atx_g_eschar'     => 'Eschar (keropeng hitam)',
-          'atx_g_sesak_kulit'=> 'Nafas pendek/sesak',
-        ),
-        'Gastrointestinal' => array(
-          'atx_g_mual'       => 'Mual/Muntah',
-          'atx_g_sakit_perut'=> 'Sakit perut hebat',
-          'atx_g_nafsu'      => 'Tidak nafsu makan',
-          'atx_g_konstipasi' => 'Konstipasi',
-          'atx_g_gi_berdarah'=> 'Gastroenteritis berdarah',
-          'atx_g_hematemesis'=> 'Hematemesis (muntah darah)',
-          'atx_g_lemah'      => 'Kelemahan umum',
-          'atx_g_demam_gi'   => 'Demam',
-          'atx_g_lainnya'    => 'Lain-lain',
-        ),
-      );
-      foreach($anthrax_gejala as $tipe => $gejala_list):
-      ?>
-      <div style="margin-bottom:10px">
-        <div style="font-weight:700;font-size:12px;color:#1F4E79;margin-bottom:6px">Manifestasi <?=$tipe?></div>
-        <div class="row">
-        <?php foreach($gejala_list as $gk=>$gl):
-          $gv = '';
-          if(!empty($eav_data)) foreach($eav_data as $ed) { if($ed['var_key']==$gk) { $gv=$ed['var_value']; break; } }
-        ?>
-          <div class="col-sm-4" style="margin-bottom:6px">
-            <label style="font-size:11px;font-weight:normal"><?=$gl?></label>
-            <input type="hidden" name="dkey[]" value="<?=$gk?>">
-            <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($gl)?>">
-            <input type="hidden" name="dsub[]" value="Gejala Anthraks <?=$tipe?>">
-            <input type="hidden" name="dtype[]" value="select">
-            <select name="dval[]" class="form-control input-sm">
-              <option value="">--</option>
-              <option value="ya" <?=$gv=='ya'?'selected':''?>>Ya</option>
-              <option value="tidak" <?=$gv=='tidak'?'selected':''?>>Tidak</option>
-            </select>
-          </div>
-        <?php endforeach; ?>
-        </div>
-      </div>
-      <?php endforeach; ?>
-    </div>
-    <?php endif; ?>
-
-    <!-- ANTHRAKS: Kunjungan 7 hari -->
-    <?php if($id_penyakit==14): ?>
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-map-marker"></i> <b>T. Riwayat Kunjungan Daerah Wabah (Anthraks)</b></div>
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Kunjungan 7 hari terakhir ke daerah wabah kematian hewan?</label>
-            <input type="hidden" name="dkey[]" value="atx_kunjungan_wabah">
-            <input type="hidden" name="dlabel[]" value="Kunjungan 7 hari ke daerah wabah hewan Anthraks">
-            <input type="hidden" name="dsub[]" value="Riwayat Anthraks">
-            <input type="hidden" name="dtype[]" value="select">
-            <?php $atx_kunjungan=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_kunjungan_wabah'){$atx_kunjungan=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control">
-              <option value="">-- Pilih --</option>
-              <option value="pernah" <?=$atx_kunjungan=='pernah'?'selected':''?>>Pernah</option>
-              <option value="tidak_pernah" <?=$atx_kunjungan=='tidak_pernah'?'selected':''?>>Tidak Pernah</option>
-              <option value="tidak_jelas" <?=$atx_kunjungan=='tidak_jelas'?'selected':''?>>Tidak Jelas</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-sm-8">
-          <div class="form-group">
-            <label>Keterangan Kunjungan</label>
-            <input type="hidden" name="dkey[]" value="atx_kunjungan_ket">
-            <input type="hidden" name="dlabel[]" value="Keterangan kunjungan daerah wabah Anthraks">
-            <input type="hidden" name="dsub[]" value="Riwayat Anthraks">
-            <input type="hidden" name="dtype[]" value="text">
-            <?php $atx_kunjungan_ket=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_kunjungan_ket'){$atx_kunjungan_ket=$ed['var_value'];break;}} ?>
-            <input type="text" name="dval[]" class="form-control" placeholder="Lokasi, tanggal, keterangan" value="<?=htmlspecialchars($atx_kunjungan_ket)?>">
-          </div>
-        </div>
-      </div>
-    </div>
-    <?php endif; ?>
-
-    <!-- LEPTO: Kondisi Lingkungan Rumah -->
-    <?php if($id_penyakit==26): ?>
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-home"></i> <b>U. Kondisi Lingkungan Rumah (Leptospirosis)</b></div>
-      <div class="row">
-        <?php
-        $lepto_lingk = array(
-          'lp_tetangga_sakit'  => 'Ada tetangga/keluarga yang sakit dengan gejala sama',
-          'lp_riwayat_banjir'  => 'Riwayat banjir di sekitar rumah',
-          'lp_parit_kotor'     => 'Ada parit/selokan kotor di sekitar rumah',
-          'lp_ada_tikus'       => 'Ada tikus di dalam/sekitar rumah',
-          'lp_hewan_peliharaan'=> 'Ada hewan peliharaan (anjing/sapi/babi/dll)',
-          'lp_drainase_buruk'  => 'Drainase/saluran air sekitar rumah buruk',
-        );
-        foreach($lepto_lingk as $lk=>$ll):
-          $lv=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']==$lk){$lv=$ed['var_value'];break;}}
-        ?>
-        <div class="col-sm-4" style="margin-bottom:8px">
-          <label style="font-size:12px"><?=$ll?></label>
-          <input type="hidden" name="dkey[]" value="<?=$lk?>">
-          <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($ll)?>">
-          <input type="hidden" name="dsub[]" value="Kondisi Lingkungan Lepto">
-          <input type="hidden" name="dtype[]" value="select">
-          <select name="dval[]" class="form-control input-sm">
-            <option value="">-- Pilih --</option>
-            <option value="ya" <?=$lv=='ya'?'selected':''?>>Ya</option>
-            <option value="tidak" <?=$lv=='tidak'?'selected':''?>>Tidak</option>
-            <option value="tidak_tahu" <?=$lv=='tidak_tahu'?'selected':''?>>Tidak Tahu</option>
-          </select>
-        </div>
-        <?php endforeach; ?>
-      </div>
-      <div class="row">
-        <div class="col-sm-6">
-          <div class="form-group">
-            <label style="font-size:12px">Durasi banjir (hari)</label>
-            <input type="hidden" name="dkey[]" value="lp_durasi_banjir">
-            <input type="hidden" name="dlabel[]" value="Durasi banjir (hari)">
-            <input type="hidden" name="dsub[]" value="Kondisi Lingkungan Lepto">
-            <input type="hidden" name="dtype[]" value="text">
-            <?php $lp_dur=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='lp_durasi_banjir'){$lp_dur=$ed['var_value'];break;}} ?>
-            <input type="text" name="dval[]" class="form-control input-sm" placeholder="Contoh: 3 hari" value="<?=htmlspecialchars($lp_dur)?>">
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- LEPTO: Riwayat Kontak Faktor Risiko -->
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-exclamation-triangle"></i> <b>V. Riwayat Kontak Faktor Risiko (Leptospirosis)</b></div>
-      <div class="row">
-        <?php
-        $lepto_risiko = array(
-          'lp_rs_hutan_sawah'   => 'Pernah kunjungi hutan/sawah/kebun dalam 2 minggu terakhir',
-          'lp_rs_genangan_kerja'=> 'Ada genangan air di tempat kerja',
-          'lp_rs_tikus_kerja'   => 'Ada tikus di tempat kerja',
-          'lp_rs_kontak_air'    => 'Kontak dengan air/tanah yang mungkin tercemar urin hewan',
-        );
-        foreach($lepto_risiko as $rk=>$rl):
-          $rv=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']==$rk){$rv=$ed['var_value'];break;}}
-        ?>
-        <div class="col-sm-6" style="margin-bottom:8px">
-          <label style="font-size:12px"><?=$rl?></label>
-          <input type="hidden" name="dkey[]" value="<?=$rk?>">
-          <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($rl)?>">
-          <input type="hidden" name="dsub[]" value="Faktor Risiko Lepto">
-          <input type="hidden" name="dtype[]" value="select">
-          <select name="dval[]" class="form-control input-sm">
-            <option value="">-- Pilih --</option>
-            <option value="ya" <?=$rv=='ya'?'selected':''?>>Ya</option>
-            <option value="tidak" <?=$rv=='tidak'?'selected':''?>>Tidak</option>
-            <option value="tidak_tahu" <?=$rv=='tidak_tahu'?'selected':''?>>Tidak Tahu</option>
-          </select>
-        </div>
-        <?php endforeach; ?>
-      </div>
-      <div class="form-group">
-        <label style="font-size:12px">Hewan yang ditemui di tempat kerja/aktivitas</label>
-        <input type="hidden" name="dkey[]" value="lp_rs_hewan_kerja">
-        <input type="hidden" name="dlabel[]" value="Hewan yang ditemui di tempat kerja">
-        <input type="hidden" name="dsub[]" value="Faktor Risiko Lepto">
-        <input type="hidden" name="dtype[]" value="text">
-        <?php $lp_hw=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='lp_rs_hewan_kerja'){$lp_hw=$ed['var_value'];break;}} ?>
-        <input type="text" name="dval[]" class="form-control" placeholder="Contoh: tikus, sapi, babi" value="<?=htmlspecialchars($lp_hw)?>">
-      </div>
-    </div>
-    <?php endif; ?>
-
-    <!-- GHPR: Riwayat Pengobatan -->
-    <?php if($id_penyakit==8): ?>
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-medkit"></i> <b>W. Riwayat Pengobatan Luka (GHPR)</b></div>
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Cara Rawat Luka Pertama</label>
-            <input type="hidden" name="dkey[]" value="ghpr_cara_rawat_luka">
-            <input type="hidden" name="dlabel[]" value="Cara rawat luka pertama">
-            <input type="hidden" name="dsub[]" value="Pengobatan GHPR">
-            <input type="hidden" name="dtype[]" value="select">
-            <?php $ghpr_rawat=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='ghpr_cara_rawat_luka'){$ghpr_rawat=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control">
-              <option value="">-- Pilih --</option>
-              <option value="cuci_air" <?=$ghpr_rawat=='cuci_air'?'selected':''?>>Dicuci dengan air mengalir</option>
-              <option value="cuci_sabun" <?=$ghpr_rawat=='cuci_sabun'?'selected':''?>>Dicuci dengan sabun</option>
-              <option value="antiseptik" <?=$ghpr_rawat=='antiseptik'?'selected':''?>>Diberi antiseptik</option>
-              <option value="dibalut" <?=$ghpr_rawat=='dibalut'?'selected':''?>>Dibalut saja</option>
-              <option value="tidak_dirawat" <?=$ghpr_rawat=='tidak_dirawat'?'selected':''?>>Tidak dirawat</option>
-              <option value="lainnya" <?=$ghpr_rawat=='lainnya'?'selected':''?>>Lainnya</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Tempat Pengobatan Pertama</label>
-            <input type="hidden" name="dkey[]" value="ghpr_tempat_pengobatan">
-            <input type="hidden" name="dlabel[]" value="Tempat pengobatan pertama GHPR">
-            <input type="hidden" name="dsub[]" value="Pengobatan GHPR">
-            <input type="hidden" name="dtype[]" value="text">
-            <?php $ghpr_tmpat=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='ghpr_tempat_pengobatan'){$ghpr_tmpat=$ed['var_value'];break;}} ?>
-            <input type="text" name="dval[]" class="form-control" placeholder="Contoh: Puskesmas, RS, Klinik, Dukun" value="<?=htmlspecialchars($ghpr_tmpat)?>">
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Obat yang Diberikan</label>
-            <input type="hidden" name="dkey[]" value="ghpr_obat_diberikan">
-            <input type="hidden" name="dlabel[]" value="Obat yang diberikan GHPR">
-            <input type="hidden" name="dsub[]" value="Pengobatan GHPR">
-            <input type="hidden" name="dtype[]" value="text">
-            <?php $ghpr_obat=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='ghpr_obat_diberikan'){$ghpr_obat=$ed['var_value'];break;}} ?>
-            <input type="text" name="dval[]" class="form-control" placeholder="Nama obat yang diberikan" value="<?=htmlspecialchars($ghpr_obat)?>">
-          </div>
-        </div>
-      </div>
-      <!-- Riwayat Kontak Epidemiologis -->
-      <div class="row" style="margin-top:10px">
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Ada korban gigitan lain dari hewan yang sama?</label>
-            <input type="hidden" name="dkey[]" value="ghpr_korban_lain">
-            <input type="hidden" name="dlabel[]" value="Korban gigitan lain dari hewan yang sama">
-            <input type="hidden" name="dsub[]" value="Epidemiologi GHPR">
-            <input type="hidden" name="dtype[]" value="select">
-            <?php $ghpr_korban=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='ghpr_korban_lain'){$ghpr_korban=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control">
-              <option value="">-- Pilih --</option>
-              <option value="ya" <?=$ghpr_korban=='ya'?'selected':''?>>Ya</option>
-              <option value="tidak" <?=$ghpr_korban=='tidak'?'selected':''?>>Tidak</option>
-              <option value="tidak_tahu" <?=$ghpr_korban=='tidak_tahu'?'selected':''?>>Tidak Tahu</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Jumlah hewan yang menggigit</label>
-            <input type="hidden" name="dkey[]" value="ghpr_jumlah_hewan">
-            <input type="hidden" name="dlabel[]" value="Jumlah hewan yang menggigit">
-            <input type="hidden" name="dsub[]" value="Epidemiologi GHPR">
-            <input type="hidden" name="dtype[]" value="text">
-            <?php $ghpr_jml=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='ghpr_jumlah_hewan'){$ghpr_jml=$ed['var_value'];break;}} ?>
-            <input type="text" name="dval[]" class="form-control" placeholder="Jumlah hewan" value="<?=htmlspecialchars($ghpr_jml)?>">
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Kasus hewan penular rabies sebulan terakhir di sekitar?</label>
-            <input type="hidden" name="dkey[]" value="ghpr_kasus_hewan_sekitar">
-            <input type="hidden" name="dlabel[]" value="Kasus hewan penular rabies sebulan terakhir">
-            <input type="hidden" name="dsub[]" value="Epidemiologi GHPR">
-            <input type="hidden" name="dtype[]" value="select">
-            <?php $ghpr_kasus=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='ghpr_kasus_hewan_sekitar'){$ghpr_kasus=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control">
-              <option value="">-- Pilih --</option>
-              <option value="ya" <?=$ghpr_kasus=='ya'?'selected':''?>>Ya</option>
-              <option value="tidak" <?=$ghpr_kasus=='tidak'?'selected':''?>>Tidak</option>
-              <option value="tidak_tahu" <?=$ghpr_kasus=='tidak_tahu'?'selected':''?>>Tidak Tahu</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-    <?php endif; ?>
-
-    <!-- ANTHRAKS: Pemeriksaan Lingkungan Rumah -->
-    <?php if($id_penyakit==14): ?>
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-home"></i> <b>X. Pemeriksaan Lingkungan Rumah (Anthraks)</b></div>
-      <div class="row">
-        <?php
-        $lingk_anthrax = array(
-          'atx_lingk_piaraan'    => 'Ada hewan piaraan di rumah (kambing/sapi/kuda/dll)',
-          'atx_lingk_peternakan' => 'Ada peternakan hewan di sekitar rumah',
-          'atx_lingk_pasar'      => 'Ada pasar hewan di sekitar rumah',
-        );
-        foreach($lingk_anthrax as $lk=>$ll):
-          $lv=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']==$lk){$lv=$ed['var_value'];break;}}
-        ?>
-        <div class="col-sm-4" style="margin-bottom:8px">
-          <label style="font-size:12px"><?=$ll?></label>
-          <input type="hidden" name="dkey[]" value="<?=$lk?>">
-          <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($ll)?>">
-          <input type="hidden" name="dsub[]" value="Lingkungan Anthraks">
-          <input type="hidden" name="dtype[]" value="select">
-          <select name="dval[]" class="form-control input-sm">
-            <option value="">-- Pilih --</option>
-            <option value="ya" <?=$lv=='ya'?'selected':''?>>Ya</option>
-            <option value="tidak" <?=$lv=='tidak'?'selected':''?>>Tidak</option>
-            <option value="tidak_tahu" <?=$lv=='tidak_tahu'?'selected':''?>>Tidak Tahu</option>
-          </select>
-        </div>
-        <?php endforeach; ?>
-      </div>
-      <div class="form-group">
-        <label style="font-size:12px">Keterangan sumber penularan potensial</label>
-        <input type="hidden" name="dkey[]" value="atx_lingk_ket">
-        <input type="hidden" name="dlabel[]" value="Keterangan lingkungan sumber penularan Anthraks">
-        <input type="hidden" name="dsub[]" value="Lingkungan Anthraks">
-        <input type="hidden" name="dtype[]" value="text">
-        <?php $atx_lket=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_lingk_ket'){$atx_lket=$ed['var_value'];break;}} ?>
-        <input type="text" name="dval[]" class="form-control" placeholder="Keterangan tambahan lingkungan" value="<?=htmlspecialchars($atx_lket)?>">
-      </div>
-    </div>
-    <?php endif; ?>
-
-    <!-- KONTAK KASUS LAIN (Lepto + Anthraks) -->
-    <?php if(in_array($id_penyakit, array(26,14))): ?>
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-users"></i> <b>Y. Kontak Kasus Lain / Gejala Sama</b></div>
-      <small class="text-muted">Nama | Umur | Alamat | Hubungan | Tgl Kontak | Status (suspek/konfirmasi/tidak tahu)</small>
-      <div id="tbl-kontak-kasus">
-        <div class="row kontak-kasus-row" style="margin-bottom:6px">
-          <div class="col-sm-2"><input type="text" name="kk_nama[]" class="form-control input-sm" placeholder="Nama"></div>
-          <div class="col-sm-1"><input type="number" name="kk_umur[]" class="form-control input-sm" placeholder="Umur"></div>
-          <div class="col-sm-3"><input type="text" name="kk_alamat[]" class="form-control input-sm" placeholder="Alamat"></div>
-          <div class="col-sm-2"><input type="text" name="kk_hub[]" class="form-control input-sm" placeholder="Hub. Penderita"></div>
-          <div class="col-sm-2"><input type="date" name="kk_tgl[]" class="form-control input-sm"></div>
-          <div class="col-sm-1">
-            <select name="kk_status[]" class="form-control input-sm">
-              <option value="">--</option>
-              <option value="suspek">Suspek</option>
-              <option value="konfirmasi">Konfirmasi</option>
-              <option value="tidak_tahu">Tidak Tahu</option>
-            </select>
-          </div>
-          <div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.kontak-kasus-row').remove()"><i class="fa fa-times"></i></button></div>
-        </div>
-      </div>
-      <button type="button" class="btn btn-xs btn-default" onclick="tambahKontakKasus()"><i class="fa fa-plus"></i> Tambah</button>
-    </div>
-    <?php endif; ?>
 
     <!-- KETERANGAN -->
     <div class="form-section">
