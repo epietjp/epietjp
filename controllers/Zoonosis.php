@@ -1457,6 +1457,59 @@ class Zoonosis extends BackendController {
     }
 
 
+
+    public function get_timeliness() {
+        $this->_auth();
+        $id_penyakit = (int)$this->input->get('id_penyakit');
+        $dari        = $this->input->get('dari') ?: date('Y-01-01');
+        $sampai      = $this->input->get('sampai') ?: date('Y-m-d');
+        $id_prop     = (int)$this->input->get('id_prop');
+        $id_kota     = (int)$this->input->get('id_kota');
+
+        $wil = "";
+        if ($id_kota)     $wil = " AND id_kota=".intval($id_kota);
+        elseif ($id_prop) $wil = " AND id_prop=".intval($id_prop);
+        $pwil = $id_penyakit ? " AND id_penyakit=".intval($id_penyakit) : "";
+
+        $base = " FROM ewarn_ghs_zoonosis_pe
+            WHERE tgl_laporan BETWEEN '{$dari}' AND '{$sampai}'
+            AND tgl_laporan > '2000-01-01'
+            AND tgl_pe > '2000-01-01'
+            AND tgl_pe >= tgl_laporan
+            {$wil}{$pwil}";
+
+        // T3: Respon = tgl_pe - tgl_laporan
+        $q = "SELECT
+            COUNT(*) as total,
+            SUM(CASE WHEN DATEDIFF(tgl_pe, tgl_laporan) <= 7 THEN 1 ELSE 0 END) as respon_le7,
+            SUM(CASE WHEN DATEDIFF(tgl_pe, tgl_laporan) BETWEEN 8 AND 14 THEN 1 ELSE 0 END) as respon_8_14,
+            SUM(CASE WHEN DATEDIFF(tgl_pe, tgl_laporan) > 14 THEN 1 ELSE 0 END) as respon_gt14,
+            ROUND(AVG(DATEDIFF(tgl_pe, tgl_laporan)),1) as avg_hari
+            {$base}";
+
+        $total = $this->db->query($q)->row_array();
+
+        // Per penyakit
+        $per_p = $this->db->query("SELECT p.nama_penyakit, COUNT(*) as n,
+            SUM(CASE WHEN DATEDIFF(tgl_pe, tgl_laporan) <= 7 THEN 1 ELSE 0 END) as tepat,
+            ROUND(AVG(DATEDIFF(tgl_pe, tgl_laporan)),1) as avg_hari
+            FROM ewarn_ghs_zoonosis_pe z
+            LEFT JOIN ewarn_penyakit p ON p.id=z.id_penyakit
+            WHERE tgl_laporan BETWEEN '{$dari}' AND '{$sampai}'
+            AND tgl_laporan > '2000-01-01'
+            AND tgl_pe > '2000-01-01'
+            AND tgl_pe >= tgl_laporan
+            {$wil}
+            GROUP BY z.id_penyakit ORDER BY n DESC")->result_array();
+
+        echo json_encode(array(
+            'total'   => $total,
+            'per_p'   => $per_p,
+            'dari'    => $dari,
+            'sampai'  => $sampai,
+        ));
+    }
+
     public function get_alert_summary() {
         $this->_auth();
         $id_prop = (int)$this->input->get('id_prop');
@@ -1488,19 +1541,13 @@ class Zoonosis extends BackendController {
 
         // Per penyakit bulan ini - pakai ewarn_diagnosa bukan ewarn_penyakit
         $penyakit_map = array(18=>'GHPR/Rabies',31=>'Rabies Konfirmasi',32=>'Flu Burung Manusia',226=>'Suspek Flu Burung',294=>'Anthraks',24=>'Leptospirosis',222=>'Suspek Leptospirosis');
-        $per_penyakit_raw = $this->db->query("SELECT diagnosa_no, COUNT(*) as n
-            FROM ewarn_form_ebs_new
-            WHERE diagnosa_no IN (18,31,32,226,294,24,222)
-            AND create_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+        $per_penyakit = $this->db->query("SELECT p.nama_penyakit, COUNT(*) as n
+            FROM ewarn_form_ebs_new e
+            JOIN ewarn_ghs_zoonosis_pe z ON z.no_ebs=e.no_ebs
+            JOIN ewarn_penyakit p ON p.id=z.id_penyakit
+            WHERE e.create_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
             {$wil_ebs}
-            GROUP BY diagnosa_no ORDER BY n DESC")->result_array();
-        $per_penyakit = array();
-        foreach($per_penyakit_raw as $r){
-            $per_penyakit[] = array(
-                'nama_penyakit' => isset($penyakit_map[$r['diagnosa_no']]) ? $penyakit_map[$r['diagnosa_no']] : 'Lainnya',
-                'n' => $r['n']
-            );
-        }
+            GROUP BY z.id_penyakit ORDER BY n DESC")->result_array();
 
         echo json_encode(array(
             'total'       => $total,

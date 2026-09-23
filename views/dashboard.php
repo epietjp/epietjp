@@ -238,13 +238,17 @@
             </h3>
           </div>
           <div class="box-body" style="padding:10px 15px">
-            <div class="row">
-              <div class="col-sm-3"><div style="background:#E67E22;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.6em;font-weight:700" id="as-minggu">-</div><div style="font-size:0.75em">Alert 7 Hari Terakhir</div></div></div>
-              <div class="col-sm-3"><div style="background:#D35400;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.6em;font-weight:700" id="as-bulan">-</div><div style="font-size:0.75em">Alert 30 Hari Terakhir</div></div></div>
-              <div class="col-sm-3"><div style="background:#922B21;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.6em;font-weight:700" id="as-tahun">-</div><div style="font-size:0.75em">Alert Tahun <?=date('Y')?></div></div></div>
-              <div class="col-sm-3"><div style="background:#641E16;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.6em;font-weight:700" id="as-meninggal">-</div><div style="font-size:0.75em">Meninggal 30 Hari</div></div></div>
+            <div style="margin-bottom:6px"><small class="text-muted"><i class="fa fa-filter"></i> Filter mengikuti filter utama (Wilayah &amp; Penyakit). Tahun: <span id="tl-periode"><?=date('Y')?></span></small></div>
             </div>
-            <div style="margin-top:6px"><small><b>Per Penyakit (30 hari):</b> <span id="as-per-penyakit" style="color:#666">-</span></small></div>
+            <div class="row">
+              <div class="col-sm-2"><div style="background:#2C3E50;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.5em;font-weight:700" id="tl-total">-</div><div style="font-size:0.7em">Total PE</div></div></div>
+              <div class="col-sm-2"><div style="background:#27AE60;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.5em;font-weight:700" id="tl-le7">-</div><div style="font-size:0.7em">Respon &lt;=7 Hari</div></div></div>
+              <div class="col-sm-2"><div style="background:#E67E22;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.5em;font-weight:700" id="tl-8-14">-</div><div style="font-size:0.7em">Respon 8-14 Hari</div></div></div>
+              <div class="col-sm-2"><div style="background:#C0392B;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.5em;font-weight:700" id="tl-gt14">-</div><div style="font-size:0.7em">Respon &gt;14 Hari</div></div></div>
+              <div class="col-sm-2"><div style="background:#8E44AD;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.5em;font-weight:700" id="tl-avg">-</div><div style="font-size:0.7em">Rata-rata (Hari)</div></div></div>
+              <div class="col-sm-2"><div style="background:#2E86AB;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.5em;font-weight:700" id="tl-pct">-%</div><div style="font-size:0.7em">% Tepat Waktu</div></div></div>
+            </div>
+            <div style="margin-top:6px" id="tl-per-penyakit"></div>
           </div>
         </div>
       </div>
@@ -816,6 +820,7 @@ $(function() {
     loadDashboard();
     loadTrend();
     $('#f_trend_p, #f_trend_tahun').change(loadTrend);
+    $('#f_prop, #f_kota, #f_level').change(function(){ loadTimeliness(); });
     // Default: tampilkan peta GHPR level provinsi
     $('#f_map_penyakit').val('8');
     $('#f_map_level').val('1');
@@ -823,6 +828,34 @@ $(function() {
 });
 // Sinkron filter penyakit utama ke trend dan peta (bind langsung)
 var chartRbHpr=null, chartRbKondisi=null, chartRbLokasi=null;
+function loadTimeliness(){
+    var pval=$('#f_penyakit').val()||'';
+    var p=pval.split('_')[0]||'';
+    var tahun=$('#f_tahun').val()||'<?=date("Y")?>';
+    var dari=tahun+'-01-01';
+    var sampai=tahun+'-12-31';
+    var id_prop=$('#f_prop').val()||0;
+    var id_kota=$('#f_kota').val()||0;
+    $('#tl-periode').text(tahun);
+    $.get(BASE+'zoonosis/get_timeliness',{id_penyakit:p,dari:dari,sampai:sampai,id_prop:id_prop,id_kota:id_kota},function(d){
+        if(!d||!d.total) return;
+        var t=d.total;
+        $('#tl-total').text(t.total||0);
+        $('#tl-le7').text(t.respon_le7||0);
+        $('#tl-8-14').text(t.respon_8_14||0);
+        $('#tl-gt14').text(t.respon_gt14||0);
+        $('#tl-avg').text(t.avg_hari||0);
+        var pct=t.total>0?Math.round(t.respon_le7/t.total*100):0;
+        $('#tl-pct').text(pct+'%');
+        var html='<small><b>Per Penyakit:</b> ';
+        html+=d.per_p.map(function(r){
+            var pp=r.n>0?Math.round(r.tepat/r.n*100):0;
+            return '<b>'+r.nama_penyakit+'</b>: '+r.n+' PE, '+pp+'% tepat';
+        }).join(' &nbsp;|&nbsp; ');
+        html+='</small>';
+        $('#tl-per-penyakit').html(html);
+    },'json');
+}
 function loadAlertSummary(){
     var id_prop=$('#f_prop').val()||0, id_kota=$('#f_kota').val()||0;
     $.get(BASE+'zoonosis/get_alert_summary',{id_prop:id_prop,id_kota:id_kota},function(d){
@@ -910,6 +943,7 @@ function syncPenyakit(){
     // Auto reload trend dan peta
     loadTrend();
     loadMap();
+    loadTimeliness();
     // Tampilkan panel faktor risiko sesuai penyakit
     var p = val.split('_')[0];
     if(p==='8' || val==='0'){
@@ -928,6 +962,7 @@ function syncPenyakit(){
 
 $(document).ready(function(){
     loadAlertSummary();
+    loadTimeliness();
     loadDashboard();
 });
 </script>
