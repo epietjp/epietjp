@@ -1456,6 +1456,58 @@ class Zoonosis extends BackendController {
         ));
     }
 
+
+    public function get_alert_summary() {
+        $this->_auth();
+        $id_prop = (int)$this->input->get('id_prop');
+        $id_kota = (int)$this->input->get('id_kota');
+
+        // Filter wilayah dari ewarn_ghs_zoonosis_pe
+        $wil = "";
+        if ($id_kota)     $wil = " AND z.id_kota=".intval($id_kota);
+        elseif ($id_prop) $wil = " AND z.id_prop=".intval($id_prop);
+
+        // Total EBS Zoonosis per periode langsung dari ewarn_form_ebs_new
+        // ewarn_form_ebs_new pakai id_distrik (kab/kota) dan id_unit (puskesmas)
+        // id_prop tidak ada langsung, pakai subquery via ewarn_kota
+        $wil_ebs = "";
+        if ($id_kota)     $wil_ebs = " AND id_distrik=".intval($id_kota);
+        elseif ($id_prop) $wil_ebs = " AND id_distrik IN (SELECT id FROM ewarn_kota WHERE id_propinsi=".intval($id_prop).")";
+
+        $q = "SELECT
+            SUM(CASE WHEN create_date >= DATE_SUB(NOW(), INTERVAL 7 DAY) THEN 1 ELSE 0 END) as minggu_ini,
+            SUM(CASE WHEN create_date >= DATE_SUB(NOW(), INTERVAL 30 DAY) THEN 1 ELSE 0 END) as bulan_ini,
+            SUM(CASE WHEN YEAR(create_date) = YEAR(NOW()) THEN 1 ELSE 0 END) as tahun_ini,
+            SUM(CASE WHEN create_date >= DATE_SUB(NOW(), INTERVAL 7 DAY) AND jml_kematian>0 THEN 1 ELSE 0 END) as meninggal_minggu,
+            SUM(CASE WHEN create_date >= DATE_SUB(NOW(), INTERVAL 30 DAY) AND jml_kematian>0 THEN 1 ELSE 0 END) as meninggal_bulan
+            FROM ewarn_form_ebs_new
+            WHERE diagnosa_no IN (18,31,32,226,294,24,222)
+            {$wil_ebs}";
+
+        $total = $this->db->query($q)->row_array();
+
+        // Per penyakit bulan ini - pakai ewarn_diagnosa bukan ewarn_penyakit
+        $penyakit_map = array(18=>'GHPR/Rabies',31=>'Rabies Konfirmasi',32=>'Flu Burung Manusia',226=>'Suspek Flu Burung',294=>'Anthraks',24=>'Leptospirosis',222=>'Suspek Leptospirosis');
+        $per_penyakit_raw = $this->db->query("SELECT diagnosa_no, COUNT(*) as n
+            FROM ewarn_form_ebs_new
+            WHERE diagnosa_no IN (18,31,32,226,294,24,222)
+            AND create_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+            {$wil_ebs}
+            GROUP BY diagnosa_no ORDER BY n DESC")->result_array();
+        $per_penyakit = array();
+        foreach($per_penyakit_raw as $r){
+            $per_penyakit[] = array(
+                'nama_penyakit' => isset($penyakit_map[$r['diagnosa_no']]) ? $penyakit_map[$r['diagnosa_no']] : 'Lainnya',
+                'n' => $r['n']
+            );
+        }
+
+        echo json_encode(array(
+            'total'       => $total,
+            'per_penyakit'=> $per_penyakit,
+        ));
+    }
+
     public function get_alert_ebs() {
         $this->_auth();
         $id_penyakit = (int)$this->input->get('id_penyakit');

@@ -228,6 +228,28 @@
       </div>
     </div>
 
+    <!-- ALERT SUMMARY -->
+    <div class="row" style="margin-bottom:12px">
+      <div class="col-sm-12">
+        <div class="box box-warning" style="margin-bottom:0">
+          <div class="box-header with-border" style="background:#E67E22;color:#fff;padding:8px 15px">
+            <h3 class="box-title" style="font-size:0.95em"><i class="fa fa-bell"></i> Ringkasan Alert EBS Zoonosis
+              <small style="font-size:0.8em;color:#fff;margin-left:8px;opacity:0.9">| Sinyal EBS penyakit zoonosis yang masuk ke SKDR</small>
+            </h3>
+          </div>
+          <div class="box-body" style="padding:10px 15px">
+            <div class="row">
+              <div class="col-sm-3"><div style="background:#E67E22;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.6em;font-weight:700" id="as-minggu">-</div><div style="font-size:0.75em">Alert 7 Hari Terakhir</div></div></div>
+              <div class="col-sm-3"><div style="background:#D35400;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.6em;font-weight:700" id="as-bulan">-</div><div style="font-size:0.75em">Alert 30 Hari Terakhir</div></div></div>
+              <div class="col-sm-3"><div style="background:#922B21;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.6em;font-weight:700" id="as-tahun">-</div><div style="font-size:0.75em">Alert Tahun <?=date('Y')?></div></div></div>
+              <div class="col-sm-3"><div style="background:#641E16;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.6em;font-weight:700" id="as-meninggal">-</div><div style="font-size:0.75em">Meninggal 30 Hari</div></div></div>
+            </div>
+            <div style="margin-top:6px"><small><b>Per Penyakit (30 hari):</b> <span id="as-per-penyakit" style="color:#666">-</span></small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Trend Chart + Input PE -->
     <div class="row">
       <div class="col-sm-8">
@@ -801,6 +823,19 @@ $(function() {
 });
 // Sinkron filter penyakit utama ke trend dan peta (bind langsung)
 var chartRbHpr=null, chartRbKondisi=null, chartRbLokasi=null;
+function loadAlertSummary(){
+    var id_prop=$('#f_prop').val()||0, id_kota=$('#f_kota').val()||0;
+    $.get(BASE+'zoonosis/get_alert_summary',{id_prop:id_prop,id_kota:id_kota},function(d){
+        if(!d||!d.total) return;
+        var t=d.total;
+        $('#as-minggu').text(t.minggu_ini||0);
+        $('#as-bulan').text(t.bulan_ini||0);
+        $('#as-tahun').text(t.tahun_ini||0);
+        $('#as-meninggal').text(t.meninggal_bulan||0);
+        var pp=d.per_penyakit.map(function(r){return r.nama_penyakit+': <b>'+r.n+'</b>';}).join(' &nbsp;|&nbsp; ');
+        $('#as-per-penyakit').html(pp||'-');
+    },'json');
+}
 function loadRabiesFaktor(){
     var tahun = $('#f_trend_tahun').val();
     var id_prop = $('#f_prop').val() || 0;
@@ -890,4 +925,9 @@ function syncPenyakit(){
         $('#panel-lepto-faktor').hide();
     }
 }
+
+$(document).ready(function(){
+    loadAlertSummary();
+    loadDashboard();
+});
 </script>
