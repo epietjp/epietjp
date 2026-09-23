@@ -232,8 +232,9 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       <div class="row">
         <div class="col-sm-3">
           <div class="form-group">
-            <label>No. Epid <small class="text-muted">(11 digit)</small></label>
-            <input type="text" name="no_epid" class="form-control" maxlength="11" pattern="[0-9]{11}" inputmode="numeric" placeholder="Contoh: 36740100001" value="<?=fv($v,'no_epid')?>">
+            <label>No. Epid <span class="req">*</span> <small class="text-muted">(11 digit)</small></label>
+            <input type="text" name="no_epid" id="f_no_epid" class="form-control" maxlength="11" pattern="[0-9]{11}" inputmode="numeric" placeholder="Contoh: 36740100001" value="<?=fv($v,'no_epid')?>" required>
+            <small class="text-muted">Format: Kode Prov(2)+Kabko(2)+Penyakit(2)+No Kasus(3)+Cek(2)</small>
           </div>
         </div>
       </div>
@@ -670,7 +671,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     }
     ?>
     <?php foreach($detail_by_sub as $submodule => $rows): ?>
-    <?php $rows = array_filter($rows, function($d){ return $d['var_key'] !== 'lokasi_gigitan'; }); if(empty($rows)) continue; ?>
+    <?php $rows = array_filter($rows, function($d){ return !in_array($d['var_key'], array('lokasi_gigitan','dp_satuan_hpr')); }); if(empty($rows)) continue; ?>
     <?php if($submodule === 'Gejala GHPR') continue; // Sudah dirender inline di section F ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-list-alt"></i> <?=htmlspecialchars($submodule)?></div>
@@ -831,6 +832,13 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               'paru'=>'Anthraks Paru/Inhalasi',
             ),
             // Lab Lepto
+            'lepto_urinalisis' => array(
+              'Proteinuria'=>'Proteinuria',
+              'Hematuria'=>'Hematuria',
+              'Proteinuria dan Hematuria'=>'Proteinuria dan Hematuria',
+              'Normal'=>'Normal',
+              'Tidak Dilakukan'=>'Tidak Dilakukan',
+            ),
             'lepto_rdt' => array(
               'Positif'=>'Positif',
               'Negatif'=>'Negatif',
@@ -1899,6 +1907,11 @@ $('#formPE').submit(function(e) {
     if (!tgl_pe) { errors.push('Tanggal PE wajib diisi'); }
     if (tgl_pe && tgl_laporan && tgl_pe > tgl_laporan) {
         errors.push('Tanggal PE tidak boleh lebih dari Tanggal Laporan');
+    }
+    // Validasi No Epid (wajib untuk non-GHPR)
+    var no_epid = $('#f_no_epid').val();
+    if($('#f_no_epid').length && (!no_epid || no_epid.length !== 11 || !/^[0-9]+$/.test(no_epid))) {
+        errors.push('No. Epid wajib diisi 11 digit angka untuk penyakit ini.');
     }
     if (nik && (nik.length !== 16 || !/^[0-9]+$/.test(nik))) {
         errors.push('NIK harus 16 digit angka (isi 0000000000000000 jika tidak ada NIK)');
