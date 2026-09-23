@@ -684,12 +684,13 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       <script>
       function toggleLab(val) {
         $('#wrap_detail_lab').toggle(val == '1');
+        $('#wrap_spesimen_tambahan').toggle(val == '1');
       }
       </script>
     </div>
 
     <!-- SPESIMEN TAMBAHAN -->
-    <div class="form-section">
+    <div class="form-section" id="wrap_spesimen_tambahan" style="display:<?=fv($v,'diperiksa_lab','0')=='1'?'block':'none'?>">
       <div class="form-section-title"><i class="fa fa-flask"></i> <b>H. Spesimen Tambahan (Lab)</b></div>
       <div id="tbl-spesimen">
         <div class="row spesimen-row" style="margin-bottom:6px">
