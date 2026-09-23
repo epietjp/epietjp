@@ -111,6 +111,30 @@
             <option value="4">Unit Pelapor</option>
           </select>
         </div>
+        <div class="col-sm-2">
+          <label style="font-size:0.82em;margin-bottom:3px">Penyakit</label>
+          <select id="f_penyakit" class="form-control" onchange="syncPenyakit()">
+            <option value="0">Semua Penyakit</option>
+            <optgroup label="GHPR / Rabies">
+              <option value="8">Semua GHPR+Rabies</option>
+              <option value="8_18">-- GHPR (Suspek)</option>
+              <option value="8_31">-- Rabies (Konfirmasi)</option>
+            </optgroup>
+            <optgroup label="Avian Flu">
+              <option value="11">Semua Avian Flu</option>
+              <option value="11_226">-- Suspek Flu Burung</option>
+              <option value="11_32">-- Flu Burung Pd Manusia</option>
+            </optgroup>
+            <optgroup label="Anthraks">
+              <option value="14">Anthraks</option>
+            </optgroup>
+            <optgroup label="Leptospirosis">
+              <option value="26">Semua Leptospirosis</option>
+              <option value="26_222">-- Suspek Lepto</option>
+              <option value="26_24">-- Leptospirosis</option>
+            </optgroup>
+          </select>
+        </div>
         <div class="col-sm-2" id="wrap-prop" style="display:none">
           <label style="font-size:0.82em;margin-bottom:3px">Provinsi</label>
           <select id="f_prop" class="form-control input-sm" onchange="loadKota()">
@@ -394,7 +418,11 @@ function loadDashboard() {
     var id_kota = $('#f_kota').val() || 0;
     var id_kec  = $('#f_kec').val() || 0;
     var id_pusk = $('#f_pusk').val() || 0;
-    $.get(BASE+'zoonosis/get_dashboard_data', {tgl1:tgl1,tgl2:tgl2,id_prop:id_prop,id_kota:id_kota,id_kec:id_kec,id_pusk:id_pusk}, function(d) {
+    var raw_p = $('#f_penyakit').val() || '0';
+    var parts_p = raw_p.split('_');
+    var id_penyakit_filter = parts_p[0];
+    var diagnosa_filter = parts_p.length > 1 ? parts_p[1] : 0;
+    $.get(BASE+'zoonosis/get_dashboard_data', {tgl1:tgl1,tgl2:tgl2,id_prop:id_prop,id_kota:id_kota,id_kec:id_kec,id_pusk:id_pusk,id_penyakit:id_penyakit_filter,diagnosa_no:diagnosa_filter}, function(d) {
         $.each(d, function(id_p, row) {
             $('#kpi-'+id_p+'-total').text(row.total || 0);
             // Build badge dari breakdown
@@ -674,4 +702,22 @@ $(function() {
     $('#f_map_level').val('1');
     loadMap();
 });
+// Sinkron filter penyakit utama ke trend dan peta (bind langsung)
+function syncPenyakit(){
+    var val = $('#f_penyakit').val() || '0';
+    var target = val === '0' ? '8' : val;
+    if($('#f_trend_p option[value="'+target+'"]').length){
+        $('#f_trend_p').val(target);
+    } else {
+        $('#f_trend_p').val(target.split('_')[0]);
+    }
+    if($('#f_map_penyakit option[value="'+target+'"]').length){
+        $('#f_map_penyakit').val(target);
+    } else {
+        $('#f_map_penyakit').val(target.split('_')[0]);
+    }
+    // Auto reload trend dan peta
+    loadTrend();
+    loadMap();
+}
 </script>
