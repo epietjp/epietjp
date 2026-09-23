@@ -255,7 +255,7 @@ class Zoonosis_model extends CI_Model {
     // Load EAV template per penyakit (id_pe=0) untuk form PE baru
     public function get_eav_template($id_penyakit) {
         $submodule_map = array(
-            8  => array('Gejala GHPR','Tata Laksana GHPR'),
+            8  => array('Gejala GHPR','Tata Laksana GHPR','Epidemiologi GHPR'),
             11 => array('Gejala Avian','Data Pendukung Avian','Klinis Avian','Identitas Avian','Lingkungan Avian'),
             14 => array('Gejala Anthraks','Data Pendukung Anthrax','Klinis Anthrax','Lingkungan Anthraks'),
             26 => array('Gejala Lepto','Data Pendukung Lepto','Klinis Lepto','Lab Lepto'),
