@@ -374,6 +374,38 @@
 
 
 
+  <!-- PANEL FAKTOR RISIKO RABIES -->
+  <div id="panel-rabies-faktor" style="display:none;margin-top:16px">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="box box-danger">
+          <div class="box-header with-border" style="background:#c0392b;color:#fff">
+            <h3 class="box-title"><i class="fa fa-paw"></i> Faktor Risiko Rabies
+              <small style="font-size:0.78em;color:#ffffff;margin-left:8px;opacity:1">| Sumber: Data Surveilans Rabies Indonesia</small>
+            </h3>
+          </div>
+          <div class="box-body">
+            <div class="row" id="rabies-kpi-row">
+              <div class="col-sm-2"><div style="background:#c0392b;color:#fff;border-radius:6px;padding:10px;text-align:center"><div style="font-size:1.8em;font-weight:700" id="rb-total">-</div><div style="font-size:0.78em">Total Kasus</div></div></div>
+              <div class="col-sm-2"><div style="background:#8e44ad;color:#fff;border-radius:6px;padding:10px;text-align:center"><div style="font-size:1.8em;font-weight:700" id="rb-inkubasi">-</div><div style="font-size:0.78em">Rerata Inkubasi (hr)</div></div></div>
+              <div class="col-sm-2"><div style="background:#e67e22;color:#fff;border-radius:6px;padding:10px;text-align:center"><div style="font-size:1.8em;font-weight:700" id="rb-onset">-</div><div style="font-size:0.78em">Onset-Kematian (hr)</div></div></div>
+              <div class="col-sm-2"><div style="background:#27ae60;color:#fff;border-radius:6px;padding:10px;text-align:center"><div style="font-size:1.8em;font-weight:700" id="rb-cuci">-</div><div style="font-size:0.78em">Cuci Luka Sesuai SOP</div></div></div>
+              <div class="col-sm-4">
+                <div style="font-size:0.82em;font-weight:700;margin-bottom:4px;color:#c0392b">Cakupan VAR</div>
+                <div id="rb-var-bar"></div>
+              </div>
+            </div>
+            <div class="row" style="margin-top:14px">
+              <div class="col-sm-4"><div style="font-size:0.85em;font-weight:700;color:#2c3e50;margin-bottom:6px"><i class="fa fa-paw"></i> Jenis HPR</div><canvas id="chartRbHpr" height="180"></canvas></div>
+              <div class="col-sm-4"><div style="font-size:0.85em;font-weight:700;color:#2c3e50;margin-bottom:6px"><i class="fa fa-question-circle"></i> Kondisi HPR</div><canvas id="chartRbKondisi" height="180"></canvas></div>
+              <div class="col-sm-4"><div style="font-size:0.85em;font-weight:700;color:#2c3e50;margin-bottom:6px"><i class="fa fa-map-marker"></i> Lokasi Gigitan (Top 10)</div><canvas id="chartRbLokasi" height="180"></canvas></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   </section>
 </div>
 </div>
@@ -740,6 +772,41 @@ $(function() {
     loadMap();
 });
 // Sinkron filter penyakit utama ke trend dan peta (bind langsung)
+var chartRbHpr=null, chartRbKondisi=null, chartRbLokasi=null;
+function loadRabiesFaktor(){
+    var tahun = $('#f_trend_tahun').val();
+    var id_prop = $('#f_prop').val() || 0;
+    $.get(BASE+'zoonosis/get_rabies_faktor', {tahun:tahun,id_prop:id_prop}, function(d){
+        if(!d||!d.kpi) return;
+        var k = d.kpi;
+        var total = parseInt(k.total)||0;
+        $('#rb-total').text(total);
+        $('#rb-inkubasi').text(k.avg_inkubasi||'-');
+        $('#rb-onset').text(k.avg_onset_mat||'-');
+        $('#rb-cuci').text((parseInt(k.cuci_luka_ya)||0)+' / '+total);
+        // VAR bar
+        var varHtml = '';
+        ['d1','d2','d3','d4'].forEach(function(d,i){
+            var n = parseInt(k['var_'+d])||0;
+            var pct = total>0?Math.round(n/total*100):0;
+            varHtml += '<div style="margin-bottom:3px"><span style="font-size:0.78em;display:inline-block;width:50px">Dosis '+(i+1)+'</span>';
+            varHtml += '<div style="display:inline-block;background:#27ae60;height:12px;width:'+pct+'%;min-width:2px;vertical-align:middle"></div>';
+            varHtml += ' <span style="font-size:0.78em">'+n+' ('+pct+'%)</span></div>';
+        });
+        $('#rb-var-bar').html(varHtml);
+        // Charts
+        var BL=['#c0392b','#e67e22','#8e44ad','#2980b9','#27ae60','#2c3e50','#1abc9c','#f39c12','#16a085','#7f8c8d'];
+        var hprL=d.hpr.map(function(r){return r.hpr;}), hprV=d.hpr.map(function(r){return parseInt(r.n);});
+        var konL=d.kondisi.map(function(r){return r.kondisi_hpr;}), konV=d.kondisi.map(function(r){return parseInt(r.n);});
+        var lokL=d.lokasi.map(function(r){return r.lokasi_gigitan;}), lokV=d.lokasi.map(function(r){return parseInt(r.n);});
+        if(chartRbHpr) chartRbHpr.destroy();
+        chartRbHpr = new Chart(document.getElementById('chartRbHpr').getContext('2d'),{type:'pie',data:{labels:hprL,datasets:[{data:hprV,backgroundColor:BL}]},options:{legend:{position:'bottom',labels:{fontSize:10}}}});
+        if(chartRbKondisi) chartRbKondisi.destroy();
+        chartRbKondisi = new Chart(document.getElementById('chartRbKondisi').getContext('2d'),{type:'pie',data:{labels:konL,datasets:[{data:konV,backgroundColor:BL}]},options:{legend:{position:'bottom',labels:{fontSize:10}}}});
+        if(chartRbLokasi) chartRbLokasi.destroy();
+        chartRbLokasi = new Chart(document.getElementById('chartRbLokasi').getContext('2d'),{type:'horizontalBar',data:{labels:lokL,datasets:[{data:lokV,backgroundColor:'#c0392b'}]},options:{legend:{display:false},scales:{xAxes:[{ticks:{beginAtZero:true,precision:0}}],yAxes:[{ticks:{fontSize:9}}]}}});
+    },'json');
+}
 function syncPenyakit(){
     var val = $('#f_penyakit').val() || '0';
     var target = val === '0' ? '8' : val;
@@ -756,5 +823,13 @@ function syncPenyakit(){
     // Auto reload trend dan peta
     loadTrend();
     loadMap();
+    // Tampilkan panel faktor risiko saat pilih GHPR/Rabies
+    var p = val.split('_')[0];
+    if(p==='8' || val==='0'){
+        $('#panel-rabies-faktor').show();
+        loadRabiesFaktor();
+    } else {
+        $('#panel-rabies-faktor').hide();
+    }
 }
 </script>

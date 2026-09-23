@@ -1167,6 +1167,54 @@ class Zoonosis extends BackendController {
     }
 
 
+
+    public function get_rabies_faktor() {
+        $this->_auth();
+        $tahun = (int)$this->input->get('tahun') ?: date('Y');
+        $id_prop = (int)$this->input->get('id_prop');
+
+        $wil = $id_prop ? " AND id_prop_mapped=".intval($id_prop) : "";
+
+        // KPI
+        $kpi = $this->db->query("SELECT
+            COUNT(*) as total,
+            ROUND(AVG(gigitan_onset),1) as avg_inkubasi,
+            ROUND(AVG(onset_kematian),1) as avg_onset_mat,
+            SUM(CASE WHEN cuci_luka IN ('Iya','Ya','iya','ya') THEN 1 ELSE 0 END) as cuci_luka_ya,
+            SUM(CASE WHEN vaksinasi_1 IN ('Iya','Ya','iya','ya') THEN 1 ELSE 0 END) as var_d1,
+            SUM(CASE WHEN vaksinasi_2 IN ('Iya','Ya','iya','ya') THEN 1 ELSE 0 END) as var_d2,
+            SUM(CASE WHEN vaksinasi_3 IN ('Iya','Ya','iya','ya') THEN 1 ELSE 0 END) as var_d3,
+            SUM(CASE WHEN vaksinasi_4 IN ('Iya','Ya','iya','ya') THEN 1 ELSE 0 END) as var_d4
+            FROM ewarn_rabies_surveilans WHERE tahun={$tahun}")->row_array();
+
+        // HPR
+        $hpr = $this->db->query("SELECT hpr, COUNT(*) as n FROM ewarn_rabies_surveilans
+            WHERE tahun={$tahun} AND hpr IS NOT NULL AND hpr!=''
+            GROUP BY hpr ORDER BY n DESC")->result_array();
+
+        // Kondisi HPR
+        $kondisi = $this->db->query("SELECT kondisi_hpr, COUNT(*) as n FROM ewarn_rabies_surveilans
+            WHERE tahun={$tahun} AND kondisi_hpr IS NOT NULL AND kondisi_hpr!=''
+            GROUP BY kondisi_hpr ORDER BY n DESC")->result_array();
+
+        // Lokasi gigitan
+        $lokasi = $this->db->query("SELECT lokasi_gigitan, COUNT(*) as n FROM ewarn_rabies_surveilans
+            WHERE tahun={$tahun} AND lokasi_gigitan IS NOT NULL AND lokasi_gigitan!=''
+            GROUP BY lokasi_gigitan ORDER BY n DESC LIMIT 10")->result_array();
+
+        // Per bulan
+        $trend = $this->db->query("SELECT bulan, COUNT(*) as n FROM ewarn_rabies_surveilans
+            WHERE tahun={$tahun} GROUP BY bulan ORDER BY bulan ASC")->result_array();
+
+        echo json_encode(array(
+            'kpi' => $kpi,
+            'hpr' => $hpr,
+            'kondisi' => $kondisi,
+            'lokasi' => $lokasi,
+            'trend' => $trend,
+        ));
+    }
+
     public function get_map_data() {
         $this->_auth();
         $id_penyakit = (int)$this->input->get('id_penyakit');
