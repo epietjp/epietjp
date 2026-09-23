@@ -1168,6 +1168,61 @@ class Zoonosis extends BackendController {
 
 
 
+
+    public function get_lepto_faktor() {
+        $this->_auth();
+        $tahun   = (int)$this->input->get('tahun') ?: date('Y');
+        $id_prop = (int)$this->input->get('id_prop');
+        $id_kota = (int)$this->input->get('id_kota');
+
+        $wil = "";
+        if ($id_kota)     $wil = " AND z.id_kota=".intval($id_kota);
+        elseif ($id_prop) $wil = " AND z.id_prop=".intval($id_prop);
+
+        $base = " FROM ewarn_ghs_zoonosis_pe z WHERE z.id_penyakit=26 AND YEAR(z.tgl_laporan)={$tahun}{$wil}";
+
+        // KPI
+        $kpi = $this->db->query("SELECT COUNT(*) as total,
+            SUM(CASE WHEN z.diagnosa_no IN(222,24) THEN 1 ELSE 0 END) as suspek,
+            SUM(CASE WHEN z.diagnosa_no=24 THEN 1 ELSE 0 END) as konfirmasi,
+            SUM(CASE WHEN z.akhir_no=2 THEN 1 ELSE 0 END) as meninggal
+            {$base}")->row_array();
+
+        // Distribusi usia
+        $usia = $this->db->query("SELECT
+            CASE
+                WHEN z.umur_thn < 5 THEN '<5 tahun'
+                WHEN z.umur_thn BETWEEN 5 AND 9 THEN '5-9 tahun'
+                WHEN z.umur_thn BETWEEN 10 AND 14 THEN '10-14 tahun'
+                WHEN z.umur_thn BETWEEN 15 AND 19 THEN '15-19 tahun'
+                WHEN z.umur_thn BETWEEN 20 AND 35 THEN '20-35 tahun'
+                WHEN z.umur_thn BETWEEN 36 AND 45 THEN '36-45 tahun'
+                WHEN z.umur_thn BETWEEN 46 AND 64 THEN '46-64 tahun'
+                ELSE '>65 tahun'
+            END as kat_usia,
+            COUNT(*) as n
+            {$base} AND z.umur_thn IS NOT NULL
+            GROUP BY kat_usia ORDER BY MIN(z.umur_thn)")->result_array();
+
+        // Distribusi kelamin
+        $kelamin = $this->db->query("SELECT
+            CASE z.kelamin WHEN 'L' THEN 'Laki-laki' WHEN 'P' THEN 'Perempuan' ELSE 'Tidak Diketahui' END as kelamin,
+            COUNT(*) as n
+            {$base} GROUP BY z.kelamin")->result_array();
+
+        // Distribusi pekerjaan (top 8)
+        $pekerjaan = $this->db->query("SELECT pekerjaan, COUNT(*) as n
+            {$base} AND pekerjaan IS NOT NULL AND pekerjaan!=''
+            GROUP BY pekerjaan ORDER BY n DESC LIMIT 8")->result_array();
+
+        echo json_encode(array(
+            'kpi'      => $kpi,
+            'usia'     => $usia,
+            'kelamin'  => $kelamin,
+            'pekerjaan'=> $pekerjaan,
+        ));
+    }
+
     public function get_rabies_faktor() {
         $this->_auth();
         $tahun = (int)$this->input->get('tahun') ?: date('Y');

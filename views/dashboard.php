@@ -406,6 +406,34 @@
     </div>
   </div>
 
+  <!-- PANEL FAKTOR RISIKO LEPTO -->
+  <div id="panel-lepto-faktor" style="display:none;margin-top:16px">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="box box-info">
+          <div class="box-header with-border" style="background:#2E86AB;color:#fff">
+            <h3 class="box-title"><i class="fa fa-tint"></i> Faktor Risiko Leptospirosis
+              <small style="font-size:0.78em;color:#ffffff;margin-left:8px;opacity:1">| Sumber: Data PE SKDR</small>
+            </h3>
+          </div>
+          <div class="box-body">
+            <div class="row" id="lepto-kpi-row">
+              <div class="col-sm-3"><div style="background:#2E86AB;color:#fff;border-radius:6px;padding:10px;text-align:center"><div style="font-size:1.8em;font-weight:700" id="lp-total">-</div><div style="font-size:0.78em">Total Kasus</div></div></div>
+              <div class="col-sm-3"><div style="background:#16A085;color:#fff;border-radius:6px;padding:10px;text-align:center"><div style="font-size:1.8em;font-weight:700" id="lp-konfirmasi">-</div><div style="font-size:0.78em">Konfirmasi</div></div></div>
+              <div class="col-sm-3"><div style="background:#8E44AD;color:#fff;border-radius:6px;padding:10px;text-align:center"><div style="font-size:1.8em;font-weight:700" id="lp-suspek">-</div><div style="font-size:0.78em">Suspek</div></div></div>
+              <div class="col-sm-3"><div style="background:#C0392B;color:#fff;border-radius:6px;padding:10px;text-align:center"><div style="font-size:1.8em;font-weight:700" id="lp-meninggal">-</div><div style="font-size:0.78em">Meninggal</div></div></div>
+            </div>
+            <div class="row" style="margin-top:14px">
+              <div class="col-sm-4"><div style="font-size:0.85em;font-weight:700;color:#2c3e50;margin-bottom:6px"><i class="fa fa-users"></i> Distribusi Kelompok Usia</div><canvas id="chartLpUsia" height="200"></canvas></div>
+              <div class="col-sm-4"><div style="font-size:0.85em;font-weight:700;color:#2c3e50;margin-bottom:6px"><i class="fa fa-venus-mars"></i> Distribusi Jenis Kelamin</div><canvas id="chartLpKelamin" height="200"></canvas></div>
+              <div class="col-sm-4"><div style="font-size:0.85em;font-weight:700;color:#2c3e50;margin-bottom:6px"><i class="fa fa-briefcase"></i> Distribusi Pekerjaan (Top 8)</div><canvas id="chartLpPekerjaan" height="200"></canvas></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   </section>
 </div>
 </div>
@@ -807,6 +835,30 @@ function loadRabiesFaktor(){
         chartRbLokasi = new Chart(document.getElementById('chartRbLokasi').getContext('2d'),{type:'horizontalBar',data:{labels:lokL,datasets:[{data:lokV,backgroundColor:'#c0392b'}]},options:{legend:{display:false},scales:{xAxes:[{ticks:{beginAtZero:true,precision:0}}],yAxes:[{ticks:{fontSize:9}}]}}});
     },'json');
 }
+var chartLpUsia=null, chartLpKelamin=null, chartLpPekerjaan=null;
+function loadLeptoFaktor(){
+    var tahun = $('#f_trend_tahun').val();
+    var id_prop = $('#f_prop').val() || 0;
+    var id_kota = $('#f_kota').val() || 0;
+    $.get(BASE+'zoonosis/get_lepto_faktor', {tahun:tahun,id_prop:id_prop,id_kota:id_kota}, function(d){
+        if(!d||!d.kpi) return;
+        var k = d.kpi;
+        $('#lp-total').text(k.total||0);
+        $('#lp-konfirmasi').text(k.konfirmasi||0);
+        $('#lp-suspek').text(k.suspek||0);
+        $('#lp-meninggal').text(k.meninggal||0);
+        var BL=['#2E86AB','#16A085','#8E44AD','#C0392B','#E67E22','#27AE60','#2C3E50','#F39C12'];
+        var usiaL=d.usia.map(function(r){return r.kat_usia;}), usiaV=d.usia.map(function(r){return parseInt(r.n);});
+        var kelL=d.kelamin.map(function(r){return r.kelamin;}), kelV=d.kelamin.map(function(r){return parseInt(r.n);});
+        var pkjL=d.pekerjaan.map(function(r){return r.pekerjaan;}), pkjV=d.pekerjaan.map(function(r){return parseInt(r.n);});
+        if(chartLpUsia) chartLpUsia.destroy();
+        chartLpUsia = new Chart(document.getElementById('chartLpUsia').getContext('2d'),{type:'horizontalBar',data:{labels:usiaL,datasets:[{data:usiaV,backgroundColor:BL}]},options:{legend:{display:false},scales:{xAxes:[{ticks:{beginAtZero:true,precision:0}}],yAxes:[{ticks:{fontSize:9}}]}}});
+        if(chartLpKelamin) chartLpKelamin.destroy();
+        chartLpKelamin = new Chart(document.getElementById('chartLpKelamin').getContext('2d'),{type:'doughnut',data:{labels:kelL,datasets:[{data:kelV,backgroundColor:['#2E86AB','#E74C3C','#95A5A6']}]},options:{legend:{position:'bottom'}}});
+        if(chartLpPekerjaan) chartLpPekerjaan.destroy();
+        chartLpPekerjaan = new Chart(document.getElementById('chartLpPekerjaan').getContext('2d'),{type:'horizontalBar',data:{labels:pkjL,datasets:[{data:pkjV,backgroundColor:'#2E86AB'}]},options:{legend:{display:false},scales:{xAxes:[{ticks:{beginAtZero:true,precision:0}}],yAxes:[{ticks:{fontSize:9}}]}}});
+    },'json');
+}
 function syncPenyakit(){
     var val = $('#f_penyakit').val() || '0';
     var target = val === '0' ? '8' : val;
@@ -823,13 +875,19 @@ function syncPenyakit(){
     // Auto reload trend dan peta
     loadTrend();
     loadMap();
-    // Tampilkan panel faktor risiko saat pilih GHPR/Rabies
+    // Tampilkan panel faktor risiko sesuai penyakit
     var p = val.split('_')[0];
     if(p==='8' || val==='0'){
         $('#panel-rabies-faktor').show();
+        $('#panel-lepto-faktor').hide();
         loadRabiesFaktor();
+    } else if(p==='26'){
+        $('#panel-lepto-faktor').show();
+        $('#panel-rabies-faktor').hide();
+        loadLeptoFaktor();
     } else {
         $('#panel-rabies-faktor').hide();
+        $('#panel-lepto-faktor').hide();
     }
 }
 </script>
