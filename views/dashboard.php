@@ -229,7 +229,7 @@
     </div>
 
     <!-- ALERT SUMMARY -->
-    <div class="row" style="margin-bottom:12px">
+    <div class="row" style="margin-bottom:10px">
       <div class="col-sm-12">
         <div class="box box-warning" style="margin-bottom:0">
           <div class="box-header with-border" style="background:#E67E22;color:#fff;padding:8px 15px">
@@ -237,9 +237,8 @@
               <small style="font-size:0.8em;color:#fff;margin-left:8px;opacity:0.9">| Sinyal EBS penyakit zoonosis yang masuk ke SKDR</small>
             </h3>
           </div>
-          <div class="box-body" style="padding:10px 15px">
+          <div class="box-body" style="padding:6px 10px">
             <div style="margin-bottom:6px"><small class="text-muted"><i class="fa fa-filter"></i> Filter mengikuti filter utama (Wilayah &amp; Penyakit). Tahun: <span id="tl-periode"><?=date('Y')?></span></small></div>
-            </div>
             <div class="row">
               <div class="col-sm-2"><div style="background:#2C3E50;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.5em;font-weight:700" id="tl-total">-</div><div style="font-size:0.7em">Total PE</div></div></div>
               <div class="col-sm-2"><div style="background:#27AE60;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.5em;font-weight:700" id="tl-le7">-</div><div style="font-size:0.7em">Respon &lt;=7 Hari</div></div></div>
@@ -248,7 +247,7 @@
               <div class="col-sm-2"><div style="background:#8E44AD;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.5em;font-weight:700" id="tl-avg">-</div><div style="font-size:0.7em">Rata-rata (Hari)</div></div></div>
               <div class="col-sm-2"><div style="background:#2E86AB;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.5em;font-weight:700" id="tl-pct">-%</div><div style="font-size:0.7em">% Tepat Waktu</div></div></div>
             </div>
-            <div style="margin-top:6px" id="tl-per-penyakit"></div>
+            <div style="margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="tl-per-penyakit"></div>
           </div>
         </div>
       </div>
