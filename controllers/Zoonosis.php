@@ -100,9 +100,11 @@ class Zoonosis extends BackendController {
         $id_penyakit = (int)$this->input->get('id_penyakit');
         $diagnosa_no = (int)$this->input->get('diagnosa_no');
         $tahun       = (int)$this->input->get('tahun') ?: date('Y');
+        $mode        = $this->input->get('mode') === 'bulan' ? 'bulan' : 'minggu';
+        $bulan       = (int)$this->input->get('bulan');
         $id_prop     = (int)$this->input->get('id_prop');
         $id_kota     = (int)$this->input->get('id_kota');
-        echo json_encode($this->zm->get_trend($id_penyakit, $tahun, $id_prop, $id_kota, $diagnosa_no));
+        echo json_encode($this->zm->get_trend($id_penyakit, $tahun, $id_prop, $id_kota, $diagnosa_no, $mode, $bulan));
     }
 
     public function get_desa($id_kec=0) {

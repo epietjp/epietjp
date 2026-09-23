@@ -233,9 +233,11 @@
       <div class="col-sm-8">
         <div class="box box-primary">
           <div class="box-header with-border">
-            <h3 class="box-title"><i class="fa fa-line-chart"></i> Trend Mingguan</h3>
-            <div class="box-tools pull-right">
-              <select id="f_trend_p" class="form-control input-sm" style="width:190px;display:inline-block">
+            <h3 class="box-title"><i class="fa fa-line-chart"></i> Trend</h3>
+          </div>
+          <div class="box-body">
+            <div style="margin-bottom:8px;display:flex;flex-wrap:wrap;gap:4px;align-items:center">
+              <select id="f_trend_p" class="form-control input-sm" style="width:180px">
                 <optgroup label="GHPR / Rabies">
                   <option value="8">Semua GHPR+Rabies</option>
                   <option value="8_18">-- GHPR (Suspek)</option>
@@ -255,15 +257,26 @@
                   <option value="26_24">-- Leptospirosis</option>
                 </optgroup>
               </select>
-              <select id="f_trend_tahun" class="form-control input-sm" style="width:80px;display:inline-block">
+              <select id="f_trend_mode" class="form-control input-sm" style="width:100px" onchange="toggleTrendMode()">
+                <option value="minggu">Mingguan</option>
+                <option value="bulan">Bulanan</option>
+              </select>
+              <select id="f_trend_tahun" class="form-control input-sm" style="width:75px">
                 <?php for($y=date('Y');$y>=2020;$y--): ?>
                 <option value="<?=$y?>" <?=$y==date('Y')?'selected':''?>><?=$y?></option>
                 <?php endfor; ?>
               </select>
-              <button class="btn btn-xs btn-default" onclick="loadTrend()"><i class="fa fa-refresh"></i> Tampilkan</button>
+              <select id="f_trend_bulan" class="form-control input-sm" style="width:100px;display:none">
+                <option value="0">Semua Bulan</option>
+                <option value="1">Januari</option><option value="2">Februari</option>
+                <option value="3">Maret</option><option value="4">April</option>
+                <option value="5">Mei</option><option value="6">Juni</option>
+                <option value="7">Juli</option><option value="8">Agustus</option>
+                <option value="9">September</option><option value="10">Oktober</option>
+                <option value="11">November</option><option value="12">Desember</option>
+              </select>
+              <button class="btn btn-xs btn-primary" onclick="loadTrend()"><i class="fa fa-refresh"></i> Tampilkan</button>
             </div>
-          </div>
-          <div class="box-body">
             <canvas id="chartTrend" height="120"></canvas>
           </div>
         </div>
@@ -455,18 +468,30 @@ function loadDashboard() {
     }, 'json');
 }
 
+function toggleTrendMode(){
+    var mode = $('#f_trend_mode').val();
+    if(mode === 'bulan'){
+        $('#f_trend_bulan').show();
+    } else {
+        $('#f_trend_bulan').hide().val('0');
+    }
+}
+
 function loadTrend() {
     var raw = $('#f_trend_p').val();
     var parts = raw.split('_');
     var id_p = parts[0];
     var dn = parts.length > 1 ? parts[1] : 0;
     var tahun = $('#f_trend_tahun').val();
+    var mode = $('#f_trend_mode').val() || 'minggu';
+    var bulan = $('#f_trend_bulan').val() || 0;
     var id_prop = $('#f_prop').val();
     var id_kota = $('#f_kota').val() || 0;
-    $.get(BASE+'zoonosis/get_trend', {id_penyakit:id_p,diagnosa_no:dn,tahun:tahun,id_prop:id_prop,id_kota:id_kota}, function(rows) {
+    $.get(BASE+'zoonosis/get_trend', {id_penyakit:id_p,diagnosa_no:dn,tahun:tahun,mode:mode,bulan:bulan,id_prop:id_prop,id_kota:id_kota}, function(rows) {
         var labels = [], tot = [], kon = [], mati = [];
         $.each(rows, function(i,r) {
-            labels.push('M'+r.minggu);
+            var mode_aktif = $('#f_trend_mode').val() || 'minggu';
+            labels.push(mode_aktif==='bulan' ? (r.bulan_label||'Bln '+r.bulan) : 'M'+r.minggu);
             tot.push(r.total || 0);
             kon.push(r.konfirmasi || 0);
             mati.push(r.meninggal || 0);

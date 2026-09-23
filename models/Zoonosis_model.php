@@ -39,22 +39,44 @@ class Zoonosis_model extends CI_Model {
     }
 
     // Trend mingguan per penyakit
-    public function get_trend($id_penyakit, $tahun, $id_prop=0, $id_kota=0, $diagnosa_no=0) {
+    public function get_trend($id_penyakit, $tahun, $id_prop=0, $id_kota=0, $diagnosa_no=0, $mode='minggu', $bulan=0) {
         $tahun = intval($tahun);
         $dn_filter = $diagnosa_no ? " AND z.diagnosa_no=".intval($diagnosa_no) : "";
+        $wil_filter = "";
+        if ($id_kota)     $wil_filter = " AND z.id_kota=".intval($id_kota);
+        elseif ($id_prop) $wil_filter = " AND z.id_prop=".intval($id_prop);
+
+        if ($mode === 'bulan') {
+            $bulan_names = array(1=>'Jan',2=>'Feb',3=>'Mar',4=>'Apr',5=>'Mei',6=>'Jun',7=>'Jul',8=>'Agu',9=>'Sep',10=>'Okt',11=>'Nov',12=>'Des');
+            $bulan_filter = $bulan ? " AND MONTH(z.tgl_laporan)=".intval($bulan) : "";
+            $q = "SELECT
+                    MONTH(z.tgl_laporan) AS bulan,
+                    COUNT(z.id) AS total,
+                    SUM(CASE WHEN z.diagnosa_no IN (31,32,24) THEN 1 ELSE 0 END) AS konfirmasi,
+                    SUM(CASE WHEN z.akhir_no=2 THEN 1 ELSE 0 END) AS meninggal
+                  FROM ewarn_ghs_zoonosis_pe z
+                  WHERE z.id_penyakit=".intval($id_penyakit)."
+                  AND YEAR(z.tgl_laporan)={$tahun}
+                  {$dn_filter}{$wil_filter}{$bulan_filter}
+                  GROUP BY MONTH(z.tgl_laporan) ORDER BY bulan ASC";
+            $rows = $this->db->query($q)->result_array();
+            foreach ($rows as &$r) {
+                $r['bulan_label'] = isset($bulan_names[$r['bulan']]) ? $bulan_names[$r['bulan']] : 'Bln '.$r['bulan'];
+            }
+            return $rows;
+        }
+
         $q = "SELECT
                 m.week AS minggu,
                 COUNT(z.id) AS total,
                 SUM(CASE WHEN z.diagnosa_no IN (31,32,24) THEN 1 ELSE 0 END) AS konfirmasi,
-                SUM(CASE WHEN z.akhir_no=2     THEN 1 ELSE 0 END) AS meninggal
+                SUM(CASE WHEN z.akhir_no=2 THEN 1 ELSE 0 END) AS meninggal
               FROM ewarn_minggu m
               LEFT JOIN ewarn_ghs_zoonosis_pe z
                 ON z.id_penyakit=".intval($id_penyakit)."
                 AND z.tgl_laporan BETWEEN DATE_SUB(m.week_date, INTERVAL 6 DAY) AND m.week_date
-                {$dn_filter}";
-        if ($id_kota)       $q .= " AND z.id_kota=".intval($id_kota);
-        elseif ($id_prop)   $q .= " AND z.id_prop=".intval($id_prop);
-        $q .= " WHERE m.week_year={$tahun}
+                {$dn_filter}{$wil_filter}
+              WHERE m.week_year={$tahun}
               GROUP BY m.week ORDER BY m.week ASC";
         return $this->db->query($q)->result_array();
     }
