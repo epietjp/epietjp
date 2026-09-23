@@ -434,7 +434,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-6">
           <div class="form-group">
             <label>Tlp/HP Pasien</label>
-            <input type="tel" name="telp_pasien" class="form-control" maxlength="13" pattern="[0-9]{10,13}" inputmode="numeric" placeholder="10-13 digit angka" value="<?=fv($v,'telp_pasien')?>">
+            <input type="tel" name="telp_pasien" class="form-control" maxlength="13" pattern="[0-9]{10,13}" inputmode="numeric" placeholder="10-13 digit angka" value="<?=fv($v,'telp_pasien')?>" required>
           </div>
         </div>
       </div>
@@ -1467,7 +1467,17 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Lokasi Kontak</label>
-            <input type="text" name="lokasi_kontak" class="form-control" value="<?=fv($v,'lokasi_kontak')?>">
+            <select name="lokasi_kontak" class="form-control">
+              <option value="">-- Pilih Lokasi --</option>
+              <option value="Rumah" <?=fv($v,'lokasi_kontak')=='Rumah'?'selected':''?>>Rumah</option>
+              <option value="Peternakan" <?=fv($v,'lokasi_kontak')=='Peternakan'?'selected':''?>>Peternakan</option>
+              <option value="Pasar Hewan" <?=fv($v,'lokasi_kontak')=='Pasar Hewan'?'selected':''?>>Pasar Hewan</option>
+              <option value="Sawah/Kebun" <?=fv($v,'lokasi_kontak')=='Sawah/Kebun'?'selected':''?>>Sawah/Kebun</option>
+              <option value="Hutan" <?=fv($v,'lokasi_kontak')=='Hutan'?'selected':''?>>Hutan</option>
+              <option value="Sungai/Danau" <?=fv($v,'lokasi_kontak')=='Sungai/Danau'?'selected':''?>>Sungai/Danau</option>
+              <option value="Tempat Kerja" <?=fv($v,'lokasi_kontak')=='Tempat Kerja'?'selected':''?>>Tempat Kerja</option>
+              <option value="Lainnya" <?=fv($v,'lokasi_kontak')=='Lainnya'?'selected':''?>>Lainnya</option>
+            </select>
           </div>
         </div>
       </div>
@@ -1587,6 +1597,36 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               'genitalia'=>'Genitalia',
             ),
             /* lokasi_gigitan dihapus - pakai dp_lokasi */
+            'dp_kategori_hpr' => array(
+              'peliharaan'=>'Peliharaan',
+              'liar'=>'Liar',
+              'tidak_diketahui'=>'Tidak Diketahui',
+            ),
+            'dp_sabun' => array(
+              'ya_sabun'=>'Ya, dengan sabun',
+              'ya_air'=>'Ya, dengan air saja',
+              'tidak'=>'Tidak dicuci',
+            ),
+            'dp_sar' => array(
+              'var'=>'VAR saja',
+              'var_sar'=>'VAR + SAR',
+              'tidak'=>'Tidak diberikan',
+            ),
+            'riwayat_gigitan_sebelumnya' => array(
+              'Ya'=>'Ya',
+              'Tidak'=>'Tidak',
+              'Tidak Diketahui'=>'Tidak Diketahui',
+            ),
+            'hewan_dibunuh' => array(
+              'Ya'=>'Ya, dibunuh/mati',
+              'Tidak'=>'Tidak, masih hidup',
+              'Tidak Diketahui'=>'Tidak Diketahui',
+            ),
+            'vaksin_hewan' => array(
+              'Ya'=>'Ya, sudah divaksin',
+              'Tidak'=>'Belum divaksin',
+              'Tidak Diketahui'=>'Tidak Diketahui',
+            ),
             'dp_hpr' => array(
               'anjing'=>'Anjing',
               'kucing'=>'Kucing',
