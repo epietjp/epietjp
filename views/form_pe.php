@@ -295,72 +295,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         </div>
       </div>
       <div class="row">
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Pekerjaan</label>
-            <select name="pekerjaan" class="form-control" <?=$id_penyakit==26?"required":"" ?>>
-              <option value="">-- Pilih Pekerjaan --</option>
-              <?php
-              // Opsi pekerjaan per penyakit sesuai form PE kertas
-              $pekerjaan_opts = array(
-                8 => array( // GHPR/Rabies
-                  'petani'=>'Petani','peternakan'=>'Peternakan/Peternak','veterinarian'=>'Veterinarian',
-                  'karyawan'=>'Karyawan/Pekerja Swasta','ibu_rumah_tangga'=>'Ibu Rumah Tangga',
-                  'tni'=>'TNI','polri'=>'POLRI','pelajar'=>'Pelajar/Mahasiswa',
-                  'tukang'=>'Tukang/Buruh','nelayan'=>'Nelayan','pedagang'=>'Pedagang',
-                  'belum_bekerja'=>'Belum/Tidak Bekerja','lainnya'=>'Lainnya',
-                ),
-                11 => array( // Avian Flu
-                  'rs_klinik'=>'RS/Klinik','veterinarian'=>'Veterinarian',
-                  'laboratorium'=>'Laboratorium','peternak_unggas'=>'Peternak Unggas',
-                  'peternak_babi'=>'Peternak Babi','pasar_unggas'=>'Pasar Unggas/Babi',
-                  'belum_bekerja'=>'Belum/Tidak Bekerja','lainnya'=>'Lainnya',
-                ),
-                14 => array( // Anthraks
-                  'rs_klinik'=>'RS/Klinik','veterinarian'=>'Veterinarian',
-                  'laboratorium'=>'Laboratorium','peternak'=>'Peternak Hewan',
-                  'pasar_hewan'=>'Pasar Hewan','lainnya'=>'Lainnya',
-                ),
-                26 => array( // Leptospirosis
-                  'petani'=>'Petani','laboratorium'=>'Laboratorium',
-                  'veterinarian'=>'Veterinarian','peternak'=>'Peternak',
-                  'petugas_kebersihan'=>'Petugas Kebersihan/Sanitasi',
-                  'nelayan'=>'Nelayan',
-                  'belum_bekerja'=>'Belum/Tidak Bekerja','lainnya'=>'Lainnya',
-                ),
-              );
-              $opts = isset($pekerjaan_opts[$id_penyakit]) ? $pekerjaan_opts[$id_penyakit] : $pekerjaan_opts[8];
-              foreach($opts as $val=>$label): ?>
-              <option value="<?=$val?>" <?=fv($v,'pekerjaan')==$val?'selected':''?>><?=$label?></option>
-              <?php endforeach; ?>
-            </select>
-            <input type="text" id="pekerjaan_lainnya" class="form-control" placeholder="Tulis pekerjaan lainnya"
-              style="margin-top:5px;display:<?=fv($v,'pekerjaan')=='lainnya'?'block':'none'?>"
-              value="">
-            <script>
-            $('select[name=pekerjaan]').on('change',function(){
-              if($(this).val()=='lainnya'){
-                $('#pekerjaan_lainnya').show().focus();
-              } else {
-                $('#pekerjaan_lainnya').hide().val('');
-              }
-            });
-            $('form').on('submit',function(){
-              if($('select[name=pekerjaan]').val()=='lainnya' && $('#pekerjaan_lainnya').val()){
-                $('select[name=pekerjaan]').append('<option value="'+$('#pekerjaan_lainnya').val()+'" selected>'+$('#pekerjaan_lainnya').val()+'</option>').val($('#pekerjaan_lainnya').val());
-              }
-            });
-            </script>
-          </div>
-        </div>
-        <div class="col-sm-6">
-          <div class="form-group">
-            <label>Tlp/HP Pasien</label>
-            <input type="tel" name="telp_pasien" class="form-control" maxlength="13" pattern="[0-9]{10,13}" inputmode="numeric" placeholder="10-13 digit angka" value="<?=fv($v,'telp_pasien')?>">
-          </div>
-        </div>
-      </div>
-      <div class="row">
         <div class="col-sm-6">
           <div class="form-group">
             <label>Alamat</label>
@@ -438,6 +372,73 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         </div>
       </div>
     </div>
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Pekerjaan</label>
+            <select name="pekerjaan" class="form-control" <?=$id_penyakit==26?"required":"" ?>>
+              <option value="">-- Pilih Pekerjaan --</option>
+              <?php
+              // Opsi pekerjaan per penyakit sesuai form PE kertas
+              $pekerjaan_opts = array(
+                8 => array( // GHPR/Rabies
+                  'petani'=>'Petani','peternakan'=>'Peternakan/Peternak','veterinarian'=>'Veterinarian',
+                  'karyawan'=>'Karyawan/Pekerja Swasta','ibu_rumah_tangga'=>'Ibu Rumah Tangga',
+                  'tni'=>'TNI','polri'=>'POLRI','pelajar'=>'Pelajar/Mahasiswa',
+                  'tukang'=>'Tukang/Buruh','nelayan'=>'Nelayan','pedagang'=>'Pedagang',
+                  'belum_bekerja'=>'Belum/Tidak Bekerja','lainnya'=>'Lainnya',
+                ),
+                11 => array( // Avian Flu
+                  'rs_klinik'=>'RS/Klinik','veterinarian'=>'Veterinarian',
+                  'laboratorium'=>'Laboratorium','peternak_unggas'=>'Peternak Unggas',
+                  'peternak_babi'=>'Peternak Babi','pasar_unggas'=>'Pasar Unggas/Babi',
+                  'belum_bekerja'=>'Belum/Tidak Bekerja','lainnya'=>'Lainnya',
+                ),
+                14 => array( // Anthraks
+                  'rs_klinik'=>'RS/Klinik','veterinarian'=>'Veterinarian',
+                  'laboratorium'=>'Laboratorium','peternak'=>'Peternak Hewan',
+                  'pasar_hewan'=>'Pasar Hewan','lainnya'=>'Lainnya',
+                ),
+                26 => array( // Leptospirosis
+                  'petani'=>'Petani','laboratorium'=>'Laboratorium',
+                  'veterinarian'=>'Veterinarian','peternak'=>'Peternak',
+                  'petugas_kebersihan'=>'Petugas Kebersihan/Sanitasi',
+                  'nelayan'=>'Nelayan',
+                  'belum_bekerja'=>'Belum/Tidak Bekerja','lainnya'=>'Lainnya',
+                ),
+              );
+              $opts = isset($pekerjaan_opts[$id_penyakit]) ? $pekerjaan_opts[$id_penyakit] : $pekerjaan_opts[8];
+              foreach($opts as $val=>$label): ?>
+              <option value="<?=$val?>" <?=fv($v,'pekerjaan')==$val?'selected':''?>><?=$label?></option>
+              <?php endforeach; ?>
+            </select>
+            <input type="text" id="pekerjaan_lainnya" class="form-control" placeholder="Tulis pekerjaan lainnya"
+              style="margin-top:5px;display:<?=fv($v,'pekerjaan')=='lainnya'?'block':'none'?>"
+              value="">
+            <script>
+            $('select[name=pekerjaan]').on('change',function(){
+              if($(this).val()=='lainnya'){
+                $('#pekerjaan_lainnya').show().focus();
+              } else {
+                $('#pekerjaan_lainnya').hide().val('');
+              }
+            });
+            $('form').on('submit',function(){
+              if($('select[name=pekerjaan]').val()=='lainnya' && $('#pekerjaan_lainnya').val()){
+                $('select[name=pekerjaan]').append('<option value="'+$('#pekerjaan_lainnya').val()+'" selected>'+$('#pekerjaan_lainnya').val()+'</option>').val($('#pekerjaan_lainnya').val());
+              }
+            });
+            </script>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label>Tlp/HP Pasien</label>
+            <input type="tel" name="telp_pasien" class="form-control" maxlength="13" pattern="[0-9]{10,13}" inputmode="numeric" placeholder="10-13 digit angka" value="<?=fv($v,'telp_pasien')?>">
+          </div>
+        </div>
+      </div>
+
       <div class="row">
         <div class="col-sm-6">
           <div class="form-group">
