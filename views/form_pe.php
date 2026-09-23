@@ -470,6 +470,43 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="date" name="tgl_bergejala" class="form-control" value="<?=fv($v,'tgl_bergejala')?>">
           </div>
         </div>
+      </div>
+      <?php if($id_penyakit==11): ?>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="form-group">
+            <label><b>Gejala dan Tanda Sakit (Avian Influenza)</b> <span class="req">*</span></label>
+            <div class="row">
+              <?php
+              $avian_gejala = array(
+                'g_demam'=>'Demam','g_batuk'=>'Batuk','g_pilek'=>'Pilek',
+                'g_sakit_tenggorok'=>'Sakit Tenggorok','g_sesak'=>'Sesak Nafas'
+              );
+              $avian_val = array();
+              if(!empty($eav_data)) foreach($eav_data as $ed){
+                if(in_array($ed['var_key'], array_keys($avian_gejala))) $avian_val[$ed['var_key']]=$ed['var_value'];
+              }
+              foreach($avian_gejala as $key=>$label): ?>
+              <div class="col-sm-2">
+                <div class="checkbox">
+                  <label>
+                    <input type="hidden" name="dkey[]" value="<?=$key?>">
+                    <input type="hidden" name="dlabel[]" value="<?=$label?>">
+                    <input type="hidden" name="dsub[]" value="Gejala Avian">
+                    <input type="hidden" name="dtype[]" value="boolean">
+                    <input type="checkbox" name="dval[]" value="Ya" <?=isset($avian_val[$key])&&$avian_val[$key]=='Ya'?'checked':''?>> <?=$label?>
+                  </label>
+                </div>
+              </div>
+              <?php endforeach; ?>
+            </div>
+          </div>
+        </div>
+      </div>
+      <?php endif; ?>
+      <div class="row" style="display:none"><div class="col-sm-3"><div class="form-group">
+          </div>
+        </div>
         <div class="col-sm-3">
           <div class="form-group">
             <label>Tanggal Sakit (Berobat)</label>
