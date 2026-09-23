@@ -120,19 +120,19 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-4">
           <div class="form-group">
             <label>Nama Petugas PE</label>
-            <input type="text" name="nama_petugas" class="form-control" value="<?=fv($v,'nama_petugas')?>">
+            <input type="text" name="nama_petugas" class="form-control" value="<?=fv($v,'nama_petugas')?>" required>
           </div>
         </div>
         <div class="col-sm-3">
           <div class="form-group">
             <label>Telp Petugas</label>
-            <input type="tel" name="telp_petugas" class="form-control" maxlength="13" pattern="[0-9]{10,13}" inputmode="numeric" placeholder="10-13 digit angka" value="<?=fv($v,'telp_petugas')?>">
+            <input type="tel" name="telp_petugas" class="form-control" maxlength="13" pattern="[0-9]{10,13}" inputmode="numeric" placeholder="10-13 digit angka" value="<?=fv($v,'telp_petugas')?>" required>
           </div>
         </div>
         <div class="col-sm-3">
           <div class="form-group">
             <label>Jabatan Petugas</label>
-            <select name="jabatan_petugas" class="form-control">
+            <select name="jabatan_petugas" class="form-control" required>
               <option value="">-- Pilih Jabatan --</option>
               <?php
               $jab_opts = array('Petugas Surveilans Puskesmas','Dokter','Perawat','Bidan','Epidemiolog','Sanitarian','Lainnya');
@@ -207,7 +207,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Kecamatan</label>
-            <select name="id_kecamatan" id="sel_kec_unit" class="form-control" <?=$has_wilayah&&!$is_edit&&!empty($v["id_kecamatan"])?"disabled":""?>>
+            <select name="id_kecamatan" id="sel_kec_unit" class="form-control" required <?=$has_wilayah&&!$is_edit&&!empty($v["id_kecamatan"])?"disabled":""?>>
               <option value="">-- Pilih Kab/Kota dulu --</option>
             </select>
             <?php if($has_wilayah && !$is_edit && !empty($v["id_kecamatan"])): echo "<input type=hidden name=id_kecamatan value=" . fv($v,"id_kecamatan") . ">"; endif; ?>
@@ -216,7 +216,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Unit Pelapor</label>
-            <select name="id_puskesmas" id="sel_pusk" class="form-control" <?=$has_wilayah&&!$is_edit&&!empty($v["id_puskesmas"])?"disabled":""?>>
+            <select name="id_puskesmas" id="sel_pusk" class="form-control" required <?=$has_wilayah&&!$is_edit&&!empty($v["id_puskesmas"])?"disabled":""?>>
               <option value="">-- Pilih Kab/Kota --</option>
             </select>
             <?php if($has_wilayah && !$is_edit && !empty($v["id_puskesmas"])): echo "<input type=hidden name=id_puskesmas value=" . fv($v,"id_puskesmas") . ">"; endif; ?>
@@ -263,7 +263,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-2">
           <div class="form-group">
             <label>Jenis Kelamin</label>
-            <select name="kelamin" class="form-control">
+            <select name="kelamin" class="form-control" required>
               <option value="L" <?=fv($v,'kelamin')=='L'?'selected':''?>>Laki-laki</option>
               <option value="P" <?=fv($v,'kelamin')=='P'?'selected':''?>>Perempuan</option>
             </select>
@@ -272,13 +272,13 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-2">
           <div class="form-group">
             <label>Tanggal Lahir</label>
-            <input type="date" name="tgl_lahir" class="form-control" value="<?=fv($v,'tgl_lahir')?>">
+            <input type="date" name="tgl_lahir" class="form-control" value="<?=fv($v,'tgl_lahir')?>" required>
           </div>
         </div>
         <div class="col-sm-2">
           <div class="form-group">
             <label>Umur (Tahun)</label>
-            <input type="number" name="umur_thn" class="form-control" min="0" value="<?=fv($v,'umur_thn',0)?>">
+            <input type="number" name="umur_thn" class="form-control" min="0" value="<?=fv($v,'umur_thn',0)?>" required>
           </div>
         </div>
         <div class="col-sm-2">
@@ -298,7 +298,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Pekerjaan</label>
-            <select name="pekerjaan" class="form-control">
+            <select name="pekerjaan" class="form-control" <?=$id_penyakit==26?"required":"" ?>>
               <option value="">-- Pilih Pekerjaan --</option>
               <?php
               // Opsi pekerjaan per penyakit sesuai form PE kertas
@@ -308,13 +308,13 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
                   'karyawan'=>'Karyawan/Pekerja Swasta','ibu_rumah_tangga'=>'Ibu Rumah Tangga',
                   'tni'=>'TNI','polri'=>'POLRI','pelajar'=>'Pelajar/Mahasiswa',
                   'tukang'=>'Tukang/Buruh','nelayan'=>'Nelayan','pedagang'=>'Pedagang',
-                  'lainnya'=>'Lainnya',
+                  'belum_bekerja'=>'Belum/Tidak Bekerja','lainnya'=>'Lainnya',
                 ),
                 11 => array( // Avian Flu
                   'rs_klinik'=>'RS/Klinik','veterinarian'=>'Veterinarian',
                   'laboratorium'=>'Laboratorium','peternak_unggas'=>'Peternak Unggas',
                   'peternak_babi'=>'Peternak Babi','pasar_unggas'=>'Pasar Unggas/Babi',
-                  'lainnya'=>'Lainnya',
+                  'belum_bekerja'=>'Belum/Tidak Bekerja','lainnya'=>'Lainnya',
                 ),
                 14 => array( // Anthraks
                   'rs_klinik'=>'RS/Klinik','veterinarian'=>'Veterinarian',
@@ -325,7 +325,8 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
                   'petani'=>'Petani','laboratorium'=>'Laboratorium',
                   'veterinarian'=>'Veterinarian','peternak'=>'Peternak',
                   'petugas_kebersihan'=>'Petugas Kebersihan/Sanitasi',
-                  'nelayan'=>'Nelayan','lainnya'=>'Lainnya',
+                  'nelayan'=>'Nelayan',
+                  'belum_bekerja'=>'Belum/Tidak Bekerja','lainnya'=>'Lainnya',
                 ),
               );
               $opts = isset($pekerjaan_opts[$id_penyakit]) ? $pekerjaan_opts[$id_penyakit] : $pekerjaan_opts[8];
@@ -1440,20 +1441,26 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Riwayat Kontak Hewan</label>
-            <select name="riwayat_kontak_hewan" class="form-control">
+            <select name="riwayat_kontak_hewan" class="form-control" onchange="toggleKontakHewan(this.value)">
               <option value="">-- Tidak Diketahui --</option>
               <option value="1" <?=fv($v,'riwayat_kontak_hewan')=='1'?'selected':''?>>Ya</option>
               <option value="0" <?=fv($v,'riwayat_kontak_hewan')=='0'?'selected':''?>>Tidak</option>
             </select>
+            <script>
+            function toggleKontakHewan(val){
+                $('#detail-kontak-hewan').toggle(val === '1');
+            }
+            $(function(){ toggleKontakHewan('<?=fv($v,"riwayat_kontak_hewan")?>'); });
+            </script>
           </div>
         </div>
 <!-- jenis_hewan dihapus, gunakan dp_hpr di variabel tambahan -->
       </div>
-      <div class="row" id="detail-kontak-hewan">
+      <div class="row" id="detail-kontak-hewan" style="display:<?=fv($v,'riwayat_kontak_hewan')=='1'?'block':'none'?>">
         <div class="col-sm-3">
           <div class="form-group">
             <label>Tanggal Kontak</label>
-            <input type="date" name="tgl_kontak" class="form-control" value="<?=fv($v,'tgl_kontak')?>">
+            <input type="date" name="tgl_kontak" id="f_tgl_kontak" class="form-control" value="<?=fv($v,'tgl_kontak')?>" onblur="cekTglKontak()">
           </div>
         </div>
         <div class="col-sm-3">
@@ -2089,6 +2096,21 @@ $(function(){
     }
     $('select[name=riwayat_vaksinasi]').on('change', toggleVaksinasi);
     toggleVaksinasi();
+    // Validasi tanggal kontak hewan
+    window.cekTglKontak = function(){
+        var tgl_kontak = $('#f_tgl_kontak').val();
+        var tgl_bergejala = $('input[name=tgl_bergejala]').val();
+        var tgl_sakit = $('input[name=tgl_sakit]').val();
+        if(tgl_kontak && tgl_bergejala && tgl_kontak > tgl_bergejala){
+            $('#f_tgl_kontak').css('border-color','#e74c3c');
+            alert('Tanggal kontak hewan harus lebih awal dari tanggal mulai bergejala');
+        } else if(tgl_kontak && tgl_sakit && tgl_kontak > tgl_sakit){
+            $('#f_tgl_kontak').css('border-color','#e74c3c');
+            alert('Tanggal kontak hewan harus lebih awal dari tanggal mulai berobat');
+        } else {
+            $('#f_tgl_kontak').css('border-color','');
+        }
+    };
 });
 
 function tambahRawatInap() {
