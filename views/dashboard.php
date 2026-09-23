@@ -277,6 +277,9 @@
               </select>
               <button class="btn btn-xs btn-primary" onclick="loadTrend()"><i class="fa fa-refresh"></i> Tampilkan</button>
             </div>
+            <div id="trend-wilayah-info" style="font-size:0.95em;font-weight:bold;color:#2980b9;margin-bottom:6px;display:none">
+              <i class="fa fa-map-marker"></i> <span id="trend-wilayah-label"></span>
+            </div>
             <canvas id="chartTrend" height="120"></canvas>
           </div>
         </div>
@@ -436,6 +439,7 @@ function loadDashboard() {
     var id_penyakit_filter = parts_p[0];
     var diagnosa_filter = parts_p.length > 1 ? parts_p[1] : 0;
     $.get(BASE+'zoonosis/get_dashboard_data', {tgl1:tgl1,tgl2:tgl2,id_prop:id_prop,id_kota:id_kota,id_kec:id_kec,id_pusk:id_pusk,id_penyakit:id_penyakit_filter,diagnosa_no:diagnosa_filter}, function(d) {
+    loadTrend(); // Auto reload trend setelah load dashboard
         $.each(d, function(id_p, row) {
             $('#kpi-'+id_p+'-total').text(row.total || 0);
             // Build badge dari breakdown
@@ -487,6 +491,14 @@ function loadTrend() {
     var bulan = $('#f_trend_bulan').val() || 0;
     var id_prop = $('#f_prop').val();
     var id_kota = $('#f_kota').val() || 0;
+    // Tampilkan info wilayah aktif
+    var wilayah_label = '';
+    var sel_kota = $('#f_kota option:selected').text();
+    var sel_prop = $('#f_prop option:selected').text();
+    if(id_kota && id_kota!='0' && sel_kota.indexOf('Pilih')<0) wilayah_label = sel_kota;
+    else if(id_prop && id_prop!='0' && sel_prop.indexOf('Pilih')<0) wilayah_label = sel_prop;
+    if(wilayah_label){ $('#trend-wilayah-info').show(); $('#trend-wilayah-label').text('Wilayah: '+wilayah_label); }
+    else { $('#trend-wilayah-info').hide(); }
     $.get(BASE+'zoonosis/get_trend', {id_penyakit:id_p,diagnosa_no:dn,tahun:tahun,mode:mode,bulan:bulan,id_prop:id_prop,id_kota:id_kota}, function(rows) {
         var labels = [], tot = [], kon = [], mati = [];
         $.each(rows, function(i,r) {
