@@ -256,9 +256,9 @@ class Zoonosis_model extends CI_Model {
     public function get_eav_template($id_penyakit) {
         $submodule_map = array(
             8  => array('Gejala GHPR','Tata Laksana GHPR','Epidemiologi GHPR','Kontak Penyelidikan','Tim Penyelidikan'),
-            11 => array('Gejala Avian','Data Pendukung Avian','Klinis Avian','Identitas Avian','Lingkungan Avian','Kontak Penyelidikan','Tim Penyelidikan'),
-            14 => array('Gejala Anthraks','Data Pendukung Anthrax','Klinis Anthrax','Lingkungan Anthraks','Kontak Penyelidikan','Tim Penyelidikan'),
-            26 => array('Gejala Lepto','Data Pendukung Lepto','Klinis Lepto','Lab Lepto','Lingkungan Lepto','Faktor Risiko Lepto','Kontak Penyelidikan','Tim Penyelidikan'),
+            11 => array('Gejala Avian','Data Pendukung Avian','Klinis Avian','Identitas Avian','Lingkungan Avian','Matriks Kontak Avian','Kontak Penyelidikan','Tim Penyelidikan'),
+            14 => array('Gejala Anthraks','Data Pendukung Anthrax','Klinis Anthrax','Lingkungan Anthraks','Gejala Klinis Anthraks','Matriks Kontak Anthraks','Kontak Penyelidikan','Tim Penyelidikan'),
+            26 => array('Gejala Lepto','Data Pendukung Lepto','Klinis Lepto','Lab Lepto','Lingkungan Lepto','Faktor Risiko Lepto','Kebiasaan Lepto','Kontak Penyelidikan','Tim Penyelidikan'),
         );
         if (!isset($submodule_map[$id_penyakit])) return array();
         $subs = $submodule_map[$id_penyakit];

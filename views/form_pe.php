@@ -831,6 +831,24 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               'gastrointestinal'=>'Anthraks Gastrointestinal',
               'paru'=>'Anthraks Paru/Inhalasi',
             ),
+            // Matriks Kontak Anthraks
+            'ant_tipe_manifestasi' => array('kulit'=>'Anthraks Kulit (Cutaneous)','gi'=>'Anthraks Gastrointestinal','paru'=>'Anthraks Paru/Inhalasi'),
+            'ant_kambing_kondisi' => array('Sehat'=>'Sehat','Sakit'=>'Sakit','Mati'=>'Mati','Tidak Kontak'=>'Tidak Kontak'),
+            'ant_sapi_kondisi' => array('Sehat'=>'Sehat','Sakit'=>'Sakit','Mati'=>'Mati','Tidak Kontak'=>'Tidak Kontak'),
+            'ant_kuda_kondisi' => array('Sehat'=>'Sehat','Sakit'=>'Sakit','Mati'=>'Mati','Tidak Kontak'=>'Tidak Kontak'),
+            'ant_kambing_kontak' => array('tidak_erat'=>'Kontak Tidak Erat','erat'=>'Kontak Erat','sehari_hari'=>'Kontak Sehari-hari'),
+            'ant_sapi_kontak' => array('tidak_erat'=>'Kontak Tidak Erat','erat'=>'Kontak Erat','sehari_hari'=>'Kontak Sehari-hari'),
+            'ant_kuda_kontak' => array('tidak_erat'=>'Kontak Tidak Erat','erat'=>'Kontak Erat','sehari_hari'=>'Kontak Sehari-hari'),
+            // Matriks Kontak Avian
+            'av_ayam_kondisi' => array('Sehat'=>'Sehat','Sakit'=>'Sakit','Mati'=>'Mati','Tidak Kontak'=>'Tidak Kontak'),
+            'av_bebek_kondisi' => array('Sehat'=>'Sehat','Sakit'=>'Sakit','Mati'=>'Mati','Tidak Kontak'=>'Tidak Kontak'),
+            'av_puyuh_kondisi' => array('Sehat'=>'Sehat','Sakit'=>'Sakit','Mati'=>'Mati','Tidak Kontak'=>'Tidak Kontak'),
+            'av_babi_kondisi' => array('Sehat'=>'Sehat','Sakit'=>'Sakit','Mati'=>'Mati','Tidak Kontak'=>'Tidak Kontak'),
+            'av_lain_kondisi' => array('Sehat'=>'Sehat','Sakit'=>'Sakit','Mati'=>'Mati','Tidak Kontak'=>'Tidak Kontak'),
+            'av_ayam_kontak' => array('tidak_erat'=>'Kontak Tidak Erat','erat'=>'Kontak Erat','sehari_hari'=>'Kontak Sehari-hari'),
+            'av_bebek_kontak' => array('tidak_erat'=>'Kontak Tidak Erat','erat'=>'Kontak Erat','sehari_hari'=>'Kontak Sehari-hari'),
+            'av_puyuh_kontak' => array('tidak_erat'=>'Kontak Tidak Erat','erat'=>'Kontak Erat','sehari_hari'=>'Kontak Sehari-hari'),
+            'av_babi_kontak' => array('tidak_erat'=>'Kontak Tidak Erat','erat'=>'Kontak Erat','sehari_hari'=>'Kontak Sehari-hari'),
             // Lab Lepto
             'lepto_urinalisis' => array(
               'Proteinuria'=>'Proteinuria',
