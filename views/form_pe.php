@@ -105,15 +105,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <?php $existing_no_ebs=fv($v,"no_ebs"); $ebs_keys=array_column($list_ebs,"no_ebs"); if($existing_no_ebs && !in_array($existing_no_ebs,$ebs_keys)): ?>
               <option value="<?=$existing_no_ebs?>" selected><?=$existing_no_ebs?> [EBS Existing]</option>
               <?php endif; ?>
-        <?php if($id_penyakit==26): // Lepto only ?>
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Tanggal Berkunjung Pertama ke Fasyankes <small class="text-muted">(Lepto)</small></label>
-            <input type="date" name="tgl_fasyankes" class="form-control" value="<?=fv($v,'tgl_fasyankes')?>">
-            <small class="text-muted">Tanggal pertama datang ke fasilitas kesehatan</small>
-          </div>
-        </div>
-        <?php endif; ?>
               <?php foreach($list_ebs as $ebs): ?>
               <option value="<?=htmlspecialchars($ebs['no_ebs'])?>"
                 <?=fv($v,'no_ebs')==$ebs['no_ebs']?'selected':''?>
@@ -124,6 +115,15 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             </select>
           </div>
         </div>
+        <?php if($id_penyakit==26): ?>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Tanggal Berkunjung Pertama ke Fasyankes <small class="text-muted">(Lepto)</small></label>
+            <input type="date" name="tgl_fasyankes" class="form-control" value="<?=fv($v,'tgl_fasyankes')?>">
+            <small class="text-muted">Tanggal pertama datang ke fasilitas kesehatan</small>
+          </div>
+        </div>
+        <?php endif; ?>
       </div>
       <div class="row">
         <div class="col-sm-4">
