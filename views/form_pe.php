@@ -105,6 +105,15 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <?php $existing_no_ebs=fv($v,"no_ebs"); $ebs_keys=array_column($list_ebs,"no_ebs"); if($existing_no_ebs && !in_array($existing_no_ebs,$ebs_keys)): ?>
               <option value="<?=$existing_no_ebs?>" selected><?=$existing_no_ebs?> [EBS Existing]</option>
               <?php endif; ?>
+        <?php if($id_penyakit==26): // Lepto only ?>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Tanggal Berkunjung Pertama ke Fasyankes <small class="text-muted">(Lepto)</small></label>
+            <input type="date" name="tgl_fasyankes" class="form-control" value="<?=fv($v,'tgl_fasyankes')?>">
+            <small class="text-muted">Tanggal pertama datang ke fasilitas kesehatan</small>
+          </div>
+        </div>
+        <?php endif; ?>
               <?php foreach($list_ebs as $ebs): ?>
               <option value="<?=htmlspecialchars($ebs['no_ebs'])?>"
                 <?=fv($v,'no_ebs')==$ebs['no_ebs']?'selected':''?>
@@ -368,6 +377,12 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               }
             });
             </script>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label>Alamat Detail <small class="text-muted">(Jalan/RT/RW/Blok/Pemukiman)</small></label>
+            <input type="text" name="alamat_detail" class="form-control" placeholder="Contoh: Jl. Mawar No.5 RT 02/RW 03" value="<?=fv($v,'alamat_detail')?>">
           </div>
         </div>
       </div>
@@ -1601,6 +1616,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     ?>
     <?php foreach($detail_by_sub as $submodule => $rows): ?>
     <?php $rows = array_filter($rows, function($d){ return !in_array($d['var_key'], array('lokasi_gigitan','dp_satuan_hpr')); }); if(empty($rows)) continue; ?>
+    <?php if($submodule=='Gejala Lepto' && $id_penyakit==26) continue; ?>
     <?php if($submodule === 'Gejala GHPR') continue; // Sudah dirender inline di section F ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-list-alt"></i> <?=htmlspecialchars($submodule)?></div>
@@ -1791,6 +1807,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               'paru'=>'Anthraks Paru/Inhalasi',
             ),
             // Matriks Kontak Anthraks
+            'ant_status_kontak' => array('tidak'=>'Tidak','suspek'=>'Suspek','probable'=>'Probable','konfirmasi'=>'Konfirmasi','tidak_tahu'=>'Tidak Tahu'),
             'ant_tipe_manifestasi' => array('kulit'=>'Anthraks Kulit (Cutaneous)','gi'=>'Anthraks Gastrointestinal','paru'=>'Anthraks Paru/Inhalasi'),
             'ant_kambing_kondisi' => array('Sehat'=>'Sehat','Sakit'=>'Sakit','Mati'=>'Mati','Tidak Kontak'=>'Tidak Kontak'),
             'ant_sapi_kondisi' => array('Sehat'=>'Sehat','Sakit'=>'Sakit','Mati'=>'Mati','Tidak Kontak'=>'Tidak Kontak'),
@@ -1809,6 +1826,8 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             'av_puyuh_kontak' => array('tidak_erat'=>'Kontak Tidak Erat','erat'=>'Kontak Erat','sehari_hari'=>'Kontak Sehari-hari'),
             'av_babi_kontak' => array('tidak_erat'=>'Kontak Tidak Erat','erat'=>'Kontak Erat','sehari_hari'=>'Kontak Sehari-hari'),
             // Lab Lepto
+            'lepto_foto_paru' => array('normal'=>'Normal','infiltrat'=>'Infiltrat','tidak_diperiksa'=>'Tidak Diperiksa'),
+            'kb_rawat_luka' => array('plester_kedap'=>'Dibersihkan & Ditutup Plester Kedap Air','plester_biasa'=>'Dibersihkan & Ditutup Plester Biasa','dibersihkan'=>'Dibersihkan Saja (Tanpa Ditutup)','tidak_dirawat'=>'Tidak Dirawat'),
             'lepto_urinalisis' => array(
               'Proteinuria'=>'Proteinuria',
               'Hematuria'=>'Hematuria',
