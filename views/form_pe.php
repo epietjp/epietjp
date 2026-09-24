@@ -1842,6 +1842,18 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             'av_babi_kontak' => array('tidak_erat'=>'Kontak Tidak Erat','erat'=>'Kontak Erat','sehari_hari'=>'Kontak Sehari-hari'),
             // Lab Lepto
             'lepto_foto_paru' => array('normal'=>'Normal','infiltrat'=>'Infiltrat','tidak_diperiksa'=>'Tidak Diperiksa'),
+            'kb_makanan_terbuka' => array(
+              'lemari_tertutup'=>'Disimpan di lemari/tempat tertutup',
+              'meja_tertutup'=>'Di meja tapi tertutup rapat',
+              'meja_terbuka'=>'Di meja terbuka/tidak tertutup',
+              'lantai_terbuka'=>'Di lantai/tempat terbuka',
+            ),
+            'kb_makanan_siap_saji' => array(
+              'lemari_tertutup'=>'Disimpan di lemari/tempat tertutup',
+              'meja_tertutup'=>'Di meja tapi tertutup rapat',
+              'meja_terbuka'=>'Di meja terbuka/tidak tertutup',
+              'lantai_terbuka'=>'Di lantai/tempat terbuka',
+            ),
             'kb_rawat_luka' => array('plester_kedap'=>'Dibersihkan & Ditutup Plester Kedap Air','plester_biasa'=>'Dibersihkan & Ditutup Plester Biasa','dibersihkan'=>'Dibersihkan Saja (Tanpa Ditutup)','tidak_dirawat'=>'Tidak Dirawat'),
             'lepto_urinalisis' => array(
               'Proteinuria'=>'Proteinuria',
