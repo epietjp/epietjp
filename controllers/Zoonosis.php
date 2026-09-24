@@ -397,14 +397,28 @@ class Zoonosis extends BackendController {
         $this->_auth();
         $id_penyakit = (int)$id_penyakit;
         if (!isset($this->PENYAKIT_ZOO[$id_penyakit])) { redirect('zoonosis'); }
+
+        // OCR pre-fill: ambil dari GET params jika ada
+        $ocr_fields = array('nama_pasien','nik','umur','jenis_kelamin','alamat',
+            'tgl_bergejala','tgl_laporan','tgl_pe','nama_petugas','no_telp',
+            'dp_tanggal','dp_lokasi','dp_hpr','dp_sabun','dp_sar');
+        $ocr_data = array();
+        foreach($ocr_fields as $f){
+            $v = $this->input->get($f);
+            if($v !== FALSE && $v !== '') $ocr_data[$f] = $v;
+        }
+        $from_ocr = !empty($ocr_data);
+
         $data = array(
-            'title'       => 'Form PE - '.$this->PENYAKIT_ZOO[$id_penyakit]['nama'],
+            'title'       => 'Form PE - '.$this->PENYAKIT_ZOO[$id_penyakit]['nama'].($from_ocr?' <span class="label label-warning">OCR</span>':''),
             'id_penyakit' => $id_penyakit,
             'info_p'      => $this->PENYAKIT_ZOO[$id_penyakit],
             'list_prop'   => $this->db->query("SELECT id, propinsi FROM ewarn_propinsi WHERE aktif='Y' ORDER BY propinsi")->result_array(),
             'user'        => $this->_user(),
             'level'       => $this->_level(),
-            'pe'          => array(
+            'from_ocr'    => $from_ocr,
+            'ocr_data'    => $ocr_data,
+            'pe'          => array_merge(array(
                 'no_pe'        => $this->_generate_no_pe($id_penyakit),
                 'id_prop'      => isset($this->detail_place['id_prop'])      ? $this->detail_place['id_prop']      : '',
                 'id_kota'      => isset($this->detail_place['id_kota'])      ? $this->detail_place['id_kota']      : '',
@@ -412,7 +426,7 @@ class Zoonosis extends BackendController {
                 'id_puskesmas' => isset($this->detail_place['id_puskesmas']) ? $this->detail_place['id_puskesmas'] : '',
                 'tgl_pe'       => date('Y-m-d'),
                 'tgl_laporan'  => date('Y-m-d'),
-            ),
+            ), $ocr_data),
             'detail'      => $this->zm->get_eav_template($id_penyakit),
             'anggota'     => array(),
             'kontak_pn'   => array(),
