@@ -652,6 +652,10 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="Kulit/Lesi" <?=fv($v,'jenis_sample')=='Kulit/Lesi'?'selected':''?>>Kulit/Lesi</option>
               <option value="Jaringan/Eksudat" <?=fv($v,'jenis_sample')=='Jaringan/Eksudat'?'selected':''?>>Jaringan/Eksudat</option>
               <option value="Otak Hewan (GHPR)" <?=fv($v,'jenis_sample')=='Otak Hewan (GHPR)'?'selected':''?>>Otak Hewan (GHPR)</option>
+              <option value="Eksudat/Keropeng Lesi" <?=fv($v,'jenis_sample')=='Eksudat/Keropeng Lesi'?'selected':''?>>Eksudat/Keropeng Lesi (Antraks)</option>
+              <option value="Darah Vena" <?=fv($v,'jenis_sample')=='Darah Vena'?'selected':''?>>Darah Vena</option>
+              <option value="Cairan Pleura" <?=fv($v,'jenis_sample')=='Cairan Pleura'?'selected':''?>>Cairan Pleura</option>
+              <option value="Feses" <?=fv($v,'jenis_sample')=='Feses'?'selected':''?>>Feses</option>
               <option value="Lainnya" <?=fv($v,'jenis_sample')=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
           </div>
