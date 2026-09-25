@@ -410,7 +410,7 @@ class Zoonosis extends BackendController {
         $from_ocr = !empty($ocr_data);
 
         $data = array(
-            'title'       => 'Form PE - '.$this->PENYAKIT_ZOO[$id_penyakit]['nama'].($from_ocr?' <span class="label label-warning">OCR</span>':''),
+            'title'       => 'Form PE - '.$this->PENYAKIT_ZOO[$id_penyakit]['nama'].($from_ocr?' [OCR]':''),
             'id_penyakit' => $id_penyakit,
             'info_p'      => $this->PENYAKIT_ZOO[$id_penyakit],
             'list_prop'   => $this->db->query("SELECT id, propinsi FROM ewarn_propinsi WHERE aktif='Y' ORDER BY propinsi")->result_array(),
