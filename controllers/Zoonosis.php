@@ -971,7 +971,7 @@ class Zoonosis extends BackendController {
         'id_prop','id_kota','id_puskesmas','id_kecamatan',
         'kd_prop_kasus','kd_kota_kasus','id_kecamatan_kasus',
         'nama_pasien','nama_kk','nik','no_epid','kelamin','umur_thn','umur_bln','umur_hari','tgl_lahir','pekerjaan','telp_pasien',
-        'alamat','alamat_detail','alamat_kerja','kontak_darurat','tgl_fasyankes','telp_kontak_darurat','kelurahan','kecamatan',
+        'alamat','alamat_detail','alamat_kerja','kontak_darurat','tgl_fasyankes','nama_ortu','umur_hari','alamat_kerja_detail','telp_kontak_darurat','kelurahan','kecamatan',
         'tgl_bergejala','tgl_sakit','tgl_pajanan','status_kasus','akhir_no','tgl_meninggal','gejala',
         'riwayat_kontak_hewan','jenis_hewan','tgl_kontak','lokasi_kontak',
         'riwayat_vaksinasi','jenis_vaksin','tgl_vaksinasi_hewan','nama_pemilik_hewan','alamat_pemilik_hewan','oseltamivir','tgl_oseltamivir',
