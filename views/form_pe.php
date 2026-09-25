@@ -617,6 +617,69 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       </div>
     </div>
 
+    <!-- STATUS LAPORAN ANTRAKS -->
+    <?php if($id_penyakit==14): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-flag"></i> <b>Status Laporan Antraks</b></div>
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Status Laporan <span class="req">*</span></label>
+            <input type="hidden" name="dkey[]" value="atx_status_laporan">
+            <input type="hidden" name="dlabel[]" value="Status Laporan">
+            <input type="hidden" name="dsub[]" value="Status Laporan">
+            <input type="hidden" name="dtype[]" value="select">
+            <?php $atx_sl=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_status_laporan'){$atx_sl=$ed['var_value'];break;}} ?>
+            <select name="dval[]" class="form-control" required>
+              <option value="">-- Pilih --</option>
+              <option value="Suspek Antraks" <?=$atx_sl=='Suspek Antraks'?'selected':''?>>Suspek Antraks</option>
+              <option value="Probable Antraks" <?=$atx_sl=='Probable Antraks'?'selected':''?>>Probable Antraks</option>
+              <option value="Konfirmasi Antraks" <?=$atx_sl=='Konfirmasi Antraks'?'selected':''?>>Konfirmasi Antraks</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Berkaitan dengan Rumor KLB/Wabah?</label>
+            <input type="hidden" name="dkey[]" value="atx_rumor_klb">
+            <input type="hidden" name="dlabel[]" value="Berkaitan Rumor KLB">
+            <input type="hidden" name="dsub[]" value="Status Laporan">
+            <input type="hidden" name="dtype[]" value="select">
+            <?php $atx_rumor=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_rumor_klb'){$atx_rumor=$ed['var_value'];break;}} ?>
+            <select name="dval[]" class="form-control" onchange="toggleAtxRumor(this.value)">
+              <option value="">-- Pilih --</option>
+              <option value="Ya" <?=$atx_rumor=='Ya'?'selected':''?>>Ya</option>
+              <option value="Tidak" <?=$atx_rumor=='Tidak'?'selected':''?>>Tidak</option>
+              <option value="Tidak tahu" <?=$atx_rumor=='Tidak tahu'?'selected':''?>>Tidak tahu</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm-3" id="wrap_atx_rumor" style="display:<?=$atx_rumor=='Ya'?'block':'none'?>">
+          <div class="form-group">
+            <label>Tanggal Rumor</label>
+            <input type="hidden" name="dkey[]" value="atx_tgl_rumor">
+            <input type="hidden" name="dlabel[]" value="Tanggal Rumor">
+            <input type="hidden" name="dsub[]" value="Status Laporan">
+            <input type="hidden" name="dtype[]" value="date">
+            <?php $v_tr=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_tgl_rumor'){$v_tr=$ed['var_value'];break;}} ?>
+            <input type="date" name="dval[]" class="form-control" value="<?=htmlspecialchars($v_tr)?>">
+          </div>
+        </div>
+        <div class="col-sm-3" id="wrap_atx_lokasi_rumor" style="display:<?=$atx_rumor=='Ya'?'block':'none'?>">
+          <div class="form-group">
+            <label>Lokasi Rumor</label>
+            <input type="hidden" name="dkey[]" value="atx_lokasi_rumor">
+            <input type="hidden" name="dlabel[]" value="Lokasi Rumor">
+            <input type="hidden" name="dsub[]" value="Status Laporan">
+            <input type="hidden" name="dtype[]" value="text">
+            <?php $v_lr=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_lokasi_rumor'){$v_lr=$ed['var_value'];break;}} ?>
+            <input type="text" name="dval[]" class="form-control" value="<?=htmlspecialchars($v_lr)?>" placeholder="Kelurahan/Desa, Kecamatan">
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php endif; ?>
+
     <!-- GEJALA INLINE setelah onset (khusus GHPR dan Lepto) -->
     <?php if(in_array($id_penyakit, array(8,26))): ?>
     <div class="form-section">
