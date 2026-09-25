@@ -239,13 +239,41 @@
           </div>
           <div class="box-body" style="padding:6px 10px">
             <div style="margin-bottom:6px"><small class="text-muted"><i class="fa fa-filter"></i> Filter mengikuti filter utama (Wilayah &amp; Penyakit). Tahun: <span id="tl-periode"><?=date('Y')?></span></small></div>
-            <div class="row">
-              <div class="col-sm-2"><div style="background:#2C3E50;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.5em;font-weight:700" id="tl-total">-</div><div style="font-size:0.7em">Total PE</div></div></div>
-              <div class="col-sm-2"><div style="background:#27AE60;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.5em;font-weight:700" id="tl-le7">-</div><div style="font-size:0.7em">Respon &lt;=7 Hari</div></div></div>
-              <div class="col-sm-2"><div style="background:#E67E22;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.5em;font-weight:700" id="tl-8-14">-</div><div style="font-size:0.7em">Respon 8-14 Hari</div></div></div>
-              <div class="col-sm-2"><div style="background:#C0392B;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.5em;font-weight:700" id="tl-gt14">-</div><div style="font-size:0.7em">Respon &gt;14 Hari</div></div></div>
-              <div class="col-sm-2"><div style="background:#8E44AD;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.5em;font-weight:700" id="tl-avg">-</div><div style="font-size:0.7em">Rata-rata (Hari)</div></div></div>
-              <div class="col-sm-2"><div style="background:#2E86AB;color:#fff;border-radius:6px;padding:8px;text-align:center"><div style="font-size:1.5em;font-weight:700" id="tl-pct">-%</div><div style="font-size:0.7em">% Tepat Waktu</div></div></div>
+            <!-- T1: Onset -> Deteksi -->
+            <div style="margin-bottom:6px">
+              <small><b style="color:#1F4E79">T1 — Onset ke Deteksi</b> <span class="text-muted">(tgl_bergejala &rarr; tgl_laporan, target &le;7 hari)</span></small>
+              <div class="row" style="margin-top:4px">
+                <div class="col-sm-3"><div style="background:#1F4E79;color:#fff;border-radius:5px;padding:6px;text-align:center"><div style="font-size:1.3em;font-weight:700" id="t1-valid">-</div><div style="font-size:0.65em">Data Valid</div></div></div>
+                <div class="col-sm-3"><div style="background:#27AE60;color:#fff;border-radius:5px;padding:6px;text-align:center"><div style="font-size:1.3em;font-weight:700" id="t1-ok">-</div><div style="font-size:0.65em">&le;7 Hari</div></div></div>
+                <div class="col-sm-3"><div style="background:#C0392B;color:#fff;border-radius:5px;padding:6px;text-align:center"><div style="font-size:1.3em;font-weight:700" id="t1-late">-</div><div style="font-size:0.65em">&gt;7 Hari</div></div></div>
+                <div class="col-sm-3"><div style="background:#8E44AD;color:#fff;border-radius:5px;padding:6px;text-align:center"><div style="font-size:1.3em;font-weight:700" id="t1-pct">-%</div><div style="font-size:0.65em">% Tepat</div></div></div>
+              </div>
+            </div>
+            <!-- T2: Deteksi -> Notifikasi -->
+            <div style="margin-bottom:6px">
+              <small><b style="color:#E67E22">T2 — Deteksi ke Notifikasi</b> <span class="text-muted">(tgl_laporan &rarr; EBS create_date, target &le;1 hari)</span></small>
+              <div class="row" style="margin-top:4px">
+                <div class="col-sm-3"><div style="background:#1F4E79;color:#fff;border-radius:5px;padding:6px;text-align:center"><div style="font-size:1.3em;font-weight:700" id="t2-valid">-</div><div style="font-size:0.65em">Data Valid</div></div></div>
+                <div class="col-sm-3"><div style="background:#27AE60;color:#fff;border-radius:5px;padding:6px;text-align:center"><div style="font-size:1.3em;font-weight:700" id="t2-ok">-</div><div style="font-size:0.65em">&le;1 Hari</div></div></div>
+                <div class="col-sm-3"><div style="background:#C0392B;color:#fff;border-radius:5px;padding:6px;text-align:center"><div style="font-size:1.3em;font-weight:700" id="t2-late">-</div><div style="font-size:0.65em">&gt;1 Hari</div></div></div>
+                <div class="col-sm-3"><div style="background:#8E44AD;color:#fff;border-radius:5px;padding:6px;text-align:center"><div style="font-size:1.3em;font-weight:700" id="t2-pct">-%</div><div style="font-size:0.65em">% Tepat</div></div></div>
+              </div>
+            </div>
+            <!-- T3: Notifikasi -> Respon -->
+            <div style="margin-bottom:4px">
+              <small><b style="color:#27AE60">T3 — Notifikasi ke Respon PE</b> <span class="text-muted">(tgl_laporan &rarr; tgl_pe, target &le;7 hari)</span></small>
+              <div class="row" style="margin-top:4px">
+                <div class="col-sm-2"><div style="background:#1F4E79;color:#fff;border-radius:5px;padding:6px;text-align:center"><div style="font-size:1.3em;font-weight:700" id="t3-valid">-</div><div style="font-size:0.65em">Data Valid</div></div></div>
+                <div class="col-sm-2"><div style="background:#27AE60;color:#fff;border-radius:5px;padding:6px;text-align:center"><div style="font-size:1.3em;font-weight:700" id="t3-ok">-</div><div style="font-size:0.65em">&le;7 Hari</div></div></div>
+                <div class="col-sm-2"><div style="background:#E67E22;color:#fff;border-radius:5px;padding:6px;text-align:center"><div style="font-size:1.3em;font-weight:700" id="t3-8-14">-</div><div style="font-size:0.65em">8-14 Hari</div></div></div>
+                <div class="col-sm-2"><div style="background:#C0392B;color:#fff;border-radius:5px;padding:6px;text-align:center"><div style="font-size:1.3em;font-weight:700" id="t3-gt14">-</div><div style="font-size:0.65em">&gt;14 Hari</div></div></div>
+                <div class="col-sm-2"><div style="background:#8E44AD;color:#fff;border-radius:5px;padding:6px;text-align:center"><div style="font-size:1.3em;font-weight:700" id="t3-avg">-</div><div style="font-size:0.65em">Rata-rata</div></div></div>
+                <div class="col-sm-2"><div style="background:#2E86AB;color:#fff;border-radius:5px;padding:6px;text-align:center"><div style="font-size:1.3em;font-weight:700" id="t3-pct">-%</div><div style="font-size:0.65em">% Tepat</div></div></div>
+              </div>
+            </div>
+            <div style="margin-top:5px;padding:5px 8px;background:#F8F9FA;border-radius:4px;font-size:11px;color:#666" id="tl-note">
+              <i class="fa fa-info-circle"></i> <b>Catatan metodologi:</b>
+              T1 menggunakan data dengan tgl_bergejala terisi | T2 menggunakan PE yang terhubung sinyal EBS | T3 menggunakan PE dengan tgl_pe terisi (data backfill umumnya tidak punya tgl_pe)
             </div>
             <div style="margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="tl-per-penyakit"></div>
           </div>
@@ -839,20 +867,52 @@ function loadTimeliness(){
     $.get(BASE+'zoonosis/get_timeliness',{id_penyakit:p,dari:dari,sampai:sampai,id_prop:id_prop,id_kota:id_kota},function(d){
         if(!d||!d.total) return;
         var t=d.total;
-        $('#tl-total').text(t.total||0);
-        $('#tl-le7').text(t.respon_le7||0);
-        $('#tl-8-14').text(t.respon_8_14||0);
-        $('#tl-gt14').text(t.respon_gt14||0);
-        $('#tl-avg').text(t.avg_hari||0);
-        var pct=t.total>0?Math.round(t.respon_le7/t.total*100):0;
-        $('#tl-pct').text(pct+'%');
-        var html='<small><b>Per Penyakit:</b> ';
-        html+=d.per_p.map(function(r){
-            var pp=r.n>0?Math.round(r.tepat/r.n*100):0;
-            return '<b>'+r.nama_penyakit+'</b>: '+r.n+' PE, '+pp+'% tepat';
-        }).join(' &nbsp;|&nbsp; ');
-        html+='</small>';
+        // T1
+        $('#t1-valid').text(t.t1_valid||0);
+        $('#t1-ok').text(t.t1_ok||0);
+        $('#t1-late').text(t.t1_late||0);
+        var p1=t.t1_valid>0?Math.round(t.t1_ok/t.t1_valid*100):0;
+        $('#t1-pct').text(p1+'%');
+        // T2
+        $('#t2-valid').text(t.t2_valid||0);
+        $('#t2-ok').text(t.t2_ok||0);
+        $('#t2-late').text(t.t2_late||0);
+        var p2=t.t2_valid>0?Math.round(t.t2_ok/t.t2_valid*100):0;
+        $('#t2-pct').text(p2+'%');
+        // T3
+        $('#t3-valid').text(t.t3_valid||0);
+        $('#t3-ok').text(t.t3_ok||0);
+        $('#t3-8-14').text(t.t3_8_14||0);
+        $('#t3-gt14').text(t.t3_gt14||0);
+        $('#t3-avg').text(t.t3_avg||0);
+        var p3=t.t3_valid>0?Math.round(t.t3_ok/t.t3_valid*100):0;
+        $('#t3-pct').text(p3+'%');
+        // Per penyakit
+        var html='<small><b>Per Penyakit:</b></small><br>';
+        html+='<table style="font-size:11px;width:100%;border-collapse:collapse;margin-top:3px">';
+        html+='<tr style="background:#1F4E79;color:#fff"><th style="padding:3px 6px;text-align:left">Penyakit</th><th>Total PE</th><th>T1 Valid</th><th>T1 %Tepat</th><th>T2 Valid</th><th>T3 Valid</th><th>T3 %Tepat</th></tr>';
+        d.per_p.forEach(function(r,i){
+            var bg=i%2===0?'#F8F9FA':'#FFFFFF';
+            var p1=r.n_t1>0?Math.round(r.t1_ok/r.n_t1*100):0;
+            var p3=r.n_t3>0?Math.round(r.t3_ok/r.n_t3*100):0;
+            var c1=p1>=70?'#27AE60':p1>=50?'#E67E22':'#C0392B';
+            var c3=p3>=70?'#27AE60':p3>=50?'#E67E22':'#C0392B';
+            html+='<tr style="background:'+bg+'">';
+            html+='<td style="padding:3px 6px"><b>'+r.nama_penyakit+'</b></td>';
+            html+='<td style="text-align:center">'+r.n+'</td>';
+            html+='<td style="text-align:center">'+r.n_t1+'</td>';
+            html+='<td style="text-align:center;color:'+c1+';font-weight:700">'+p1+'%</td>';
+            html+='<td style="text-align:center">'+r.n_t2+'</td>';
+            html+='<td style="text-align:center">'+r.n_t3+'</td>';
+            html+='<td style="text-align:center;color:'+c3+';font-weight:700">'+p3+'%</td>';
+            html+='</tr>';
+        });
+        html+='</table>';
         $('#tl-per-penyakit').html(html);
+        // Update catatan
+        if(d.note){
+            $('#tl-note').html('<i class="fa fa-info-circle"></i> <b>Catatan metodologi:</b> '+d.note.t1+' | '+d.note.t2+' | '+d.note.t3);
+        }
     },'json');
 }
 function loadAlertSummary(){

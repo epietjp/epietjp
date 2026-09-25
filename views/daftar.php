@@ -100,9 +100,9 @@
           <input type="text" id="f_cari" class="form-control input-sm" placeholder="Cari nama pasien / No PE / NIK...">
         </div>
         <div class="col-sm-8" style="padding-top:4px">
+          <a href="<?=site_url('zoonosis/ocr')?>" class="btn btn-warning btn-sm" style="margin-right:5px"><i class="fa fa-camera"></i> OCR Scan Form</a>
           <?php foreach($penyakit as $id_p => $info): ?>
-          <a href="<?=site_url('zoonosis/zoonosis_ocr')?>" class="btn btn-warning btn-sm" style="margin-right:5px"><i class="fa fa-camera"></i> OCR Scan Form</a>
-        <a href="<?=site_url('zoonosis/form/'.$id_p)?>" class="btn btn-xs btn-<?=$info['warna']?>" style="margin-right:4px">
+          <a href="<?=site_url('zoonosis/form/'.$id_p)?>" class="btn btn-xs btn-<?=$info['warna']?>" style="margin-right:4px">
             <i class="fa fa-plus"></i> <?=htmlspecialchars($info['singkat'])?>
           </a>
           <?php endforeach; ?>

@@ -1486,43 +1486,165 @@ class Zoonosis extends BackendController {
         elseif ($id_prop) $wil = " AND id_prop=".intval($id_prop);
         $pwil = $id_penyakit ? " AND id_penyakit=".intval($id_penyakit) : "";
 
-        $base = " FROM ewarn_ghs_zoonosis_pe
-            WHERE tgl_laporan BETWEEN '{$dari}' AND '{$sampai}'
-            AND tgl_laporan > '2000-01-01'
-            AND tgl_pe > '2000-01-01'
-            AND tgl_pe >= tgl_laporan
-            {$wil}{$pwil}";
-
-        // T3: Respon = tgl_pe - tgl_laporan
+        // T1+T3: Query cepat tanpa JOIN
         $q = "SELECT
             COUNT(*) as total,
-            SUM(CASE WHEN DATEDIFF(tgl_pe, tgl_laporan) <= 7 THEN 1 ELSE 0 END) as respon_le7,
-            SUM(CASE WHEN DATEDIFF(tgl_pe, tgl_laporan) BETWEEN 8 AND 14 THEN 1 ELSE 0 END) as respon_8_14,
-            SUM(CASE WHEN DATEDIFF(tgl_pe, tgl_laporan) > 14 THEN 1 ELSE 0 END) as respon_gt14,
-            ROUND(AVG(DATEDIFF(tgl_pe, tgl_laporan)),1) as avg_hari
-            {$base}";
+            SUM(CASE WHEN tgl_bergejala > '2000-01-01' THEN 1 ELSE 0 END) as t1_valid,
+            SUM(CASE WHEN tgl_bergejala > '2000-01-01' AND DATEDIFF(tgl_laporan, tgl_bergejala) <= 7 THEN 1 ELSE 0 END) as t1_ok,
+            SUM(CASE WHEN tgl_bergejala > '2000-01-01' AND DATEDIFF(tgl_laporan, tgl_bergejala) > 7 THEN 1 ELSE 0 END) as t1_late,
+            ROUND(AVG(CASE WHEN tgl_bergejala > '2000-01-01' THEN DATEDIFF(tgl_laporan, tgl_bergejala) END),1) as t1_avg,
+            SUM(CASE WHEN tgl_pe > '2000-01-01' AND tgl_pe >= tgl_laporan THEN 1 ELSE 0 END) as t3_valid,
+            SUM(CASE WHEN tgl_pe > '2000-01-01' AND tgl_pe >= tgl_laporan AND DATEDIFF(tgl_pe, tgl_laporan) <= 7 THEN 1 ELSE 0 END) as t3_ok,
+            SUM(CASE WHEN tgl_pe > '2000-01-01' AND tgl_pe >= tgl_laporan AND DATEDIFF(tgl_pe, tgl_laporan) BETWEEN 8 AND 14 THEN 1 ELSE 0 END) as t3_8_14,
+            SUM(CASE WHEN tgl_pe > '2000-01-01' AND tgl_pe >= tgl_laporan AND DATEDIFF(tgl_pe, tgl_laporan) > 14 THEN 1 ELSE 0 END) as t3_gt14,
+            ROUND(AVG(CASE WHEN tgl_pe > '2000-01-01' AND tgl_pe >= tgl_laporan THEN DATEDIFF(tgl_pe, tgl_laporan) END),1) as t3_avg
+            FROM ewarn_ghs_zoonosis_pe
+            WHERE tgl_laporan BETWEEN '{$dari}' AND '{$sampai}'
+            AND tgl_laporan > '2000-01-01'
+            {$wil}{$pwil}";
 
         $total = $this->db->query($q)->row_array();
 
-        // Per penyakit
+        // Per penyakit — T1, T2 (via subquery), T3
         $per_p = $this->db->query("SELECT p.nama_penyakit, COUNT(*) as n,
-            SUM(CASE WHEN DATEDIFF(tgl_pe, tgl_laporan) <= 7 THEN 1 ELSE 0 END) as tepat,
-            ROUND(AVG(DATEDIFF(tgl_pe, tgl_laporan)),1) as avg_hari
+            SUM(CASE WHEN z.tgl_bergejala > '2000-01-01' THEN 1 ELSE 0 END) as n_t1,
+            SUM(CASE WHEN z.tgl_bergejala > '2000-01-01' AND DATEDIFF(z.tgl_laporan, z.tgl_bergejala) <= 7 THEN 1 ELSE 0 END) as t1_ok,
+            SUM(CASE WHEN z.no_ebs IS NOT NULL AND z.no_ebs != '' THEN 1 ELSE 0 END) as n_t2,
+            SUM(CASE WHEN z.tgl_pe > '2000-01-01' AND z.tgl_pe >= z.tgl_laporan THEN 1 ELSE 0 END) as n_t3,
+            SUM(CASE WHEN z.tgl_pe > '2000-01-01' AND z.tgl_pe >= z.tgl_laporan AND DATEDIFF(z.tgl_pe, z.tgl_laporan) <= 7 THEN 1 ELSE 0 END) as t3_ok
             FROM ewarn_ghs_zoonosis_pe z
             LEFT JOIN ewarn_penyakit p ON p.id=z.id_penyakit
-            WHERE tgl_laporan BETWEEN '{$dari}' AND '{$sampai}'
-            AND tgl_laporan > '2000-01-01'
-            AND tgl_pe > '2000-01-01'
-            AND tgl_pe >= tgl_laporan
+            WHERE z.tgl_laporan BETWEEN '{$dari}' AND '{$sampai}'
+            AND z.tgl_laporan > '2000-01-01'
             {$wil}
             GROUP BY z.id_penyakit ORDER BY n DESC")->result_array();
+
+        // T2: Query terpisah dengan JOIN - hanya ambil data dengan no_ebs
+        $t2 = $this->db->query("SELECT
+            COUNT(*) as t2_valid,
+            SUM(CASE WHEN ABS(DATEDIFF(e.create_date, z.tgl_laporan)) <= 1 THEN 1 ELSE 0 END) as t2_ok,
+            SUM(CASE WHEN ABS(DATEDIFF(e.create_date, z.tgl_laporan)) > 1 THEN 1 ELSE 0 END) as t2_late,
+            ROUND(AVG(ABS(DATEDIFF(e.create_date, z.tgl_laporan))),1) as t2_avg
+            FROM ewarn_ghs_zoonosis_pe z
+            INNER JOIN ewarn_form_ebs_new e ON e.no_ebs=z.no_ebs
+            WHERE z.tgl_laporan BETWEEN '{$dari}' AND '{$sampai}'
+            AND z.tgl_laporan > '2000-01-01'
+            AND z.no_ebs IS NOT NULL AND z.no_ebs != ''
+            {$wil}{$pwil}")->row_array();
+        $total = array_merge($total, $t2 ? $t2 : array('t2_valid'=>0,'t2_ok'=>0,'t2_late'=>0,'t2_avg'=>0));
 
         echo json_encode(array(
             'total'   => $total,
             'per_p'   => $per_p,
             'dari'    => $dari,
             'sampai'  => $sampai,
+            'note'    => array(
+                't1' => 'Onset ke Deteksi: tgl_bergejala -> tgl_laporan. Data valid: '.$total['t1_valid'].' dari '.$total['total'].' PE (tgl_bergejala harus terisi)',
+                't2' => 'Deteksi ke Notifikasi: tgl_laporan -> EBS create_date. Data valid: '.$total['t2_valid'].' dari '.$total['total'].' PE (harus ada no_ebs)',
+                't3' => 'Notifikasi ke Respon PE: tgl_laporan -> tgl_pe. Data valid: '.$total['t3_valid'].' dari '.$total['total'].' PE (tgl_pe harus terisi, backfill umumnya kosong)',
+            ),
         ));
+    }
+
+
+    public function ocr(){
+        $this->_auth();
+        $data = array(
+            'title'   => 'OCR Form PE - Scan & Upload',
+            'user'    => $this->_user(),
+            'level'   => $this->_level(),
+        );
+        $this->template->build('ocr/upload', $data);
+    }
+
+    public function ocr_proses(){
+        @ini_set('display_errors',1); @error_reporting(E_ALL);
+        header('Content-Type: application/json');
+        if(!isset($_FILES['foto_pe']) || $_FILES['foto_pe']['error'] !== 0){
+            echo json_encode(array('status'=>'error','msg'=>'File tidak valid')); die();
+        }
+        $file = $_FILES['foto_pe'];
+        $ext  = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        if(!in_array($ext, array('jpg','jpeg','png','pdf'))){
+            echo json_encode(array('status'=>'error','msg'=>'Format tidak didukung')); die();
+        }
+        $tmp_dir = '/tmp/ocr_pe/';
+        if(!is_dir($tmp_dir)) mkdir($tmp_dir, 0755, true);
+        $tmp_file = $tmp_dir . uniqid('pe_') . '.' . $ext;
+        move_uploaded_file($file['tmp_name'], $tmp_file);
+
+        $img_file = $tmp_file;
+        if($ext === 'pdf'){
+            $img_file = str_replace('.pdf', '.png', $tmp_file);
+            exec("convert -density 200 {$tmp_file}[0] -quality 90 {$img_file} 2>&1", $out, $ret);
+            if($ret !== 0 || !file_exists($img_file)){
+                echo json_encode(array('status'=>'error','msg'=>'Gagal konversi PDF')); die();
+            }
+        }
+
+        // Pre-process image
+        $img_info = @getimagesize($img_file);
+        if($img_info){
+            $img_src = null;
+            if($img_info[2]==IMAGETYPE_JPEG) $img_src=imagecreatefromjpeg($img_file);
+            elseif($img_info[2]==IMAGETYPE_PNG) $img_src=imagecreatefrompng($img_file);
+            if($img_src){
+                imagefilter($img_src, IMG_FILTER_GRAYSCALE);
+                imagefilter($img_src, IMG_FILTER_CONTRAST, -30);
+                $processed = $tmp_dir . uniqid('proc_') . '.png';
+                imagepng($img_src, $processed);
+                imagedestroy($img_src);
+                $img_file = $processed;
+            }
+        }
+
+        $output_base = $tmp_dir . uniqid('ocr_');
+        exec("tesseract {$img_file} {$output_base} -l ind+eng 2>&1", $ocr_out, $ocr_ret);
+        $txt_file = $output_base . '.txt';
+        if(!file_exists($txt_file)){
+            echo json_encode(array('status'=>'error','msg'=>'OCR gagal: '.implode(' ',$ocr_out))); die();
+        }
+        $raw_text = file_get_contents($txt_file);
+        $parsed   = $this->_ocr_parse($raw_text);
+        $preview  = 'data:image/png;base64,' . base64_encode(file_get_contents($img_file));
+        @unlink($tmp_file); @unlink($img_file); @unlink($txt_file);
+        if(isset($processed)) @unlink($processed);
+        echo json_encode(array('status'=>'ok','raw_text'=>$raw_text,'parsed'=>$parsed,'preview'=>$preview));
+    }
+
+    private function _ocr_parse($text){
+        $result = array();
+        $lines  = explode("\n", $text);
+        $patterns = array(
+            'nama_pasien'   => array('/nama\s*[:\|]\s*(.+)/i'),
+            'nik'           => array('/nik\s*[:\|]\s*([0-9]{10,16})/i'),
+            'umur'          => array('/umur\s*[:\|]\s*([0-9]+)/i'),
+            'jenis_kelamin' => array('/jenis\s*kelamin\s*[:\|]\s*(laki|perempuan|l|p)/i'),
+            'alamat'        => array('/alamat\s*[:\|]\s*(.+)/i'),
+            'tgl_bergejala' => array('/tgl[\s\.]*mulai\s*sakit\s*[:\|]\s*([0-9\-\/]+)/i'),
+            'tgl_laporan'   => array('/tgl[\s\.]*laporan\s*[:\|]\s*([0-9\-\/]+)/i'),
+            'tgl_pe'        => array('/tgl[\s\.]*pe\s*[:\|]\s*([0-9\-\/]+)/i'),
+            'nama_petugas'  => array('/nama\s*petugas\s*[:\|]\s*(.+)/i'),
+            'dp_tanggal'    => array('/tgl[\s\.]*gigitan\s*[:\|]\s*([0-9\-\/]+)/i'),
+            'dp_lokasi'     => array('/lokasi\s*gigitan\s*[:\|]\s*(.+)/i'),
+        );
+        foreach($patterns as $field => $regexes){
+            foreach($regexes as $regex){
+                foreach($lines as $line){
+                    if(preg_match($regex, $line, $m)){
+                        $val = isset($m[1]) ? trim($m[1]) : '';
+                        if($val){
+                            if(strpos($field,'tgl')!==false){
+                                if(preg_match('/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/',$val,$dm))
+                                    $val=sprintf('%04d-%02d-%02d',$dm[3],$dm[2],$dm[1]);
+                            }
+                            $result[$field]=$val; break 2;
+                        }
+                    }
+                }
+            }
+        }
+        return $result;
     }
 
     public function get_alert_summary() {

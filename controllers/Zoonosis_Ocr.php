@@ -1,28 +1,35 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Zoonosis_Ocr extends MX_Controller {
+class Zoonosis_Ocr extends CI_Controller {
 
     public function __construct(){
         parent::__construct();
-        if(!$this->session->userdata('logged_in')) redirect('login');
+    }
+
+    private function _auth(){
+        if(!$this->authentication->is_loggedin()){
+            redirect(base_url('auth')); exit;
+        }
     }
 
     public function index(){
-        $data['title'] = 'OCR Form PE — Scan & Upload';
-        $this->load->view('templates/header', $data);
-        $this->load->view('ocr/upload');
-        $this->load->view('templates/footer');
+        $this->_auth();
+        $data = array('title' => 'OCR Form PE - Scan & Upload');
+        $this->load->view('templates/header_simple', $data);
+        $this->load->view('ocr/upload', $data);
+        $this->load->view('templates/footer_simple');
     }
 
     public function proses(){
+        $this->_auth();
+        header('Content-Type: application/json');
         if(!isset($_FILES['foto_pe']) || $_FILES['foto_pe']['error'] !== 0){
             echo json_encode(array('status'=>'error','msg'=>'File tidak valid')); die();
         }
         $file = $_FILES['foto_pe'];
         $ext  = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         if(!in_array($ext, array('jpg','jpeg','png','pdf'))){
-            echo json_encode(array('status'=>'error','msg'=>'Format tidak didukung. Gunakan JPG, PNG, atau PDF')); die();
+            echo json_encode(array('status'=>'error','msg'=>'Format tidak didukung')); die();
         }
         $tmp_dir = '/tmp/ocr_pe/';
         if(!is_dir($tmp_dir)) mkdir($tmp_dir, 0755, true);
@@ -38,7 +45,6 @@ class Zoonosis_Ocr extends MX_Controller {
             }
         }
 
-        // Pre-process: grayscale + sharpen
         $img_src = imagecreatefromstring(file_get_contents($img_file));
         if($img_src){
             imagefilter($img_src, IMG_FILTER_GRAYSCALE);
@@ -50,12 +56,11 @@ class Zoonosis_Ocr extends MX_Controller {
             $img_file = $processed;
         }
 
-        // OCR
         $output_base = $tmp_dir . uniqid('ocr_');
         exec("tesseract {$img_file} {$output_base} -l ind+eng 2>&1", $ocr_out, $ocr_ret);
         $txt_file = $output_base . '.txt';
         if(!file_exists($txt_file)){
-            echo json_encode(array('status'=>'error','msg'=>'OCR gagal: '.implode(' ',$ocr_out))); die();
+            echo json_encode(array('status'=>'error','msg'=>'OCR gagal')); die();
         }
         $raw_text = file_get_contents($txt_file);
         $parsed   = $this->_parse_ocr($raw_text);
@@ -72,8 +77,8 @@ class Zoonosis_Ocr extends MX_Controller {
         $lines  = explode("\n", $text);
         $patterns = array(
             'nama_pasien'   => array('/nama\s*[:\|]\s*(.+)/i'),
-            'nik'           => array('/nik\s*[:\|]\s*([0-9]{10,16})/i','/no[\.\s]*ktp\s*[:\|]\s*([0-9]{10,16})/i'),
-            'umur'          => array('/umur\s*[:\|]\s*([0-9]+)/i','/usia\s*[:\|]\s*([0-9]+)/i'),
+            'nik'           => array('/nik\s*[:\|]\s*([0-9]{10,16})/i'),
+            'umur'          => array('/umur\s*[:\|]\s*([0-9]+)/i'),
             'jenis_kelamin' => array('/jenis\s*kelamin\s*[:\|]\s*(laki|perempuan|l|p)/i'),
             'alamat'        => array('/alamat\s*[:\|]\s*(.+)/i'),
             'tgl_bergejala' => array('/tgl[\s\.]*mulai\s*sakit\s*[:\|]\s*([0-9\-\/]+)/i'),
@@ -84,8 +89,6 @@ class Zoonosis_Ocr extends MX_Controller {
             'dp_tanggal'    => array('/tgl[\s\.]*gigitan\s*[:\|]\s*([0-9\-\/]+)/i'),
             'dp_lokasi'     => array('/lokasi\s*gigitan\s*[:\|]\s*(.+)/i'),
             'dp_hpr'        => array('/jenis\s*hewan\s*[:\|]\s*(anjing|kucing|monyet)/i'),
-            'dp_sabun'      => array('/cuci\s*sabun\s*[:\|]\s*(ya|tidak)/i'),
-            'dp_sar'        => array('/var\s*[:\|]\s*(ya|tidak)/i'),
         );
         foreach($patterns as $field => $regexes){
             foreach($regexes as $regex){
@@ -111,7 +114,6 @@ class Zoonosis_Ocr extends MX_Controller {
         $str=trim($str);
         if(preg_match('/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/',$str,$m))
             return sprintf('%04d-%02d-%02d',$m[3],$m[2],$m[1]);
-        if(preg_match('/^\d{4}-\d{2}-\d{2}$/',$str)) return $str;
         return $str;
     }
 }
