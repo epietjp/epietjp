@@ -407,7 +407,7 @@ class Zoonosis extends BackendController {
             $v = $this->input->get($f);
             if($v !== FALSE && $v !== '') $ocr_data[$f] = $v;
         }
-        $from_ocr = !empty($ocr_data);
+        $from_ocr = isset($ocr_data['nama_pasien']) && !empty($ocr_data['nama_pasien']);
 
         $data = array(
             'title'       => 'Form PE - '.$this->PENYAKIT_ZOO[$id_penyakit]['nama'].($from_ocr?' [OCR]':''),
