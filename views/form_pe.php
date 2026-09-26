@@ -1219,14 +1219,12 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       <div class="form-section-title"><i class="fa fa-users"></i> <b>P. Tim Penyelidikan Epidemiologi</b></div>
       <small class="text-muted">Anggota tim PE yang terlibat dalam penyelidikan</small>
       <div id="tbl-tim-pe">
-        <?php for($ti=0;$ti<3;$ti++): ?>
         <div class="row tim-pe-row" style="margin-bottom:6px">
           <div class="col-sm-4"><input type="text" name="tpe_nama[]" class="form-control input-sm" placeholder="Nama"></div>
           <div class="col-sm-4"><input type="text" name="tpe_kantor[]" class="form-control input-sm" placeholder="Kantor/Instansi"></div>
           <div class="col-sm-3"><input type="text" name="tpe_telp[]" class="form-control input-sm" placeholder="Telp/HP"></div>
           <div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.tim-pe-row').remove()"><i class="fa fa-times"></i></button></div>
         </div>
-        <?php endfor; ?>
       </div>
       <button type="button" class="btn btn-xs btn-default" onclick="tambahTimPE()"><i class="fa fa-plus"></i> Tambah</button>
     </div>
