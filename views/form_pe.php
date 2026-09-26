@@ -1416,6 +1416,50 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       </div>
     </div>
 
+
+    </div>
+
+    <!-- LEPTO: Riwayat Kontak Faktor Risiko -->
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-exclamation-triangle"></i> <b>V. Riwayat Kontak Faktor Risiko (Leptospirosis)</b></div>
+      <div class="row">
+        <?php
+        $lepto_risiko = array(
+          'lp_rs_hutan_sawah'   => 'Pernah kunjungi hutan/sawah/kebun dalam 2 minggu terakhir',
+          'lp_rs_genangan_kerja'=> 'Ada genangan air di tempat kerja',
+          'lp_rs_tikus_kerja'   => 'Ada tikus di tempat kerja',
+          'lp_rs_kontak_air'    => 'Kontak dengan air/tanah yang mungkin tercemar urin hewan',
+        );
+        foreach($lepto_risiko as $rk=>$rl):
+          $rv=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']==$rk){$rv=$ed['var_value'];break;}}
+        ?>
+        <div class="col-sm-6" style="margin-bottom:8px">
+          <label style="font-size:12px"><?=$rl?></label>
+          <input type="hidden" name="dkey[]" value="<?=$rk?>">
+          <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($rl)?>">
+          <input type="hidden" name="dsub[]" value="Faktor Risiko Lepto">
+          <input type="hidden" name="dtype[]" value="select">
+          <select name="dval[]" class="form-control input-sm">
+            <option value="">-- Pilih --</option>
+            <option value="ya" <?=$rv=='ya'?'selected':''?>>Ya</option>
+            <option value="tidak" <?=$rv=='tidak'?'selected':''?>>Tidak</option>
+            <option value="tidak_tahu" <?=$rv=='tidak_tahu'?'selected':''?>>Tidak Tahu</option>
+          </select>
+        </div>
+        <?php endforeach; ?>
+      </div>
+      <div class="form-group">
+        <label style="font-size:12px">Hewan yang ditemui di tempat kerja/aktivitas</label>
+        <input type="hidden" name="dkey[]" value="lp_rs_hewan_kerja">
+        <input type="hidden" name="dlabel[]" value="Hewan yang ditemui di tempat kerja">
+        <input type="hidden" name="dsub[]" value="Faktor Risiko Lepto">
+        <input type="hidden" name="dtype[]" value="text">
+        <?php $lp_hw=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='lp_rs_hewan_kerja'){$lp_hw=$ed['var_value'];break;}} ?>
+        <input type="text" name="dval[]" class="form-control" placeholder="Contoh: tikus, sapi, babi" value="<?=htmlspecialchars($lp_hw)?>">
+      </div>
+    </div>
+    <?php endif; ?>
+
     <!-- DIAGNOSIS + RAWAT INAP ANTRAKS -->
     <?php if($id_penyakit==14): ?>
     <div class="form-section">
@@ -1507,48 +1551,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="date" name="d
           </div>
         </div>
-      </div>
-    </div>
-    <?php endif; ?>
-    </div>
-
-    <!-- LEPTO: Riwayat Kontak Faktor Risiko -->
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-exclamation-triangle"></i> <b>V. Riwayat Kontak Faktor Risiko (Leptospirosis)</b></div>
-      <div class="row">
-        <?php
-        $lepto_risiko = array(
-          'lp_rs_hutan_sawah'   => 'Pernah kunjungi hutan/sawah/kebun dalam 2 minggu terakhir',
-          'lp_rs_genangan_kerja'=> 'Ada genangan air di tempat kerja',
-          'lp_rs_tikus_kerja'   => 'Ada tikus di tempat kerja',
-          'lp_rs_kontak_air'    => 'Kontak dengan air/tanah yang mungkin tercemar urin hewan',
-        );
-        foreach($lepto_risiko as $rk=>$rl):
-          $rv=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']==$rk){$rv=$ed['var_value'];break;}}
-        ?>
-        <div class="col-sm-6" style="margin-bottom:8px">
-          <label style="font-size:12px"><?=$rl?></label>
-          <input type="hidden" name="dkey[]" value="<?=$rk?>">
-          <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($rl)?>">
-          <input type="hidden" name="dsub[]" value="Faktor Risiko Lepto">
-          <input type="hidden" name="dtype[]" value="select">
-          <select name="dval[]" class="form-control input-sm">
-            <option value="">-- Pilih --</option>
-            <option value="ya" <?=$rv=='ya'?'selected':''?>>Ya</option>
-            <option value="tidak" <?=$rv=='tidak'?'selected':''?>>Tidak</option>
-            <option value="tidak_tahu" <?=$rv=='tidak_tahu'?'selected':''?>>Tidak Tahu</option>
-          </select>
-        </div>
-        <?php endforeach; ?>
-      </div>
-      <div class="form-group">
-        <label style="font-size:12px">Hewan yang ditemui di tempat kerja/aktivitas</label>
-        <input type="hidden" name="dkey[]" value="lp_rs_hewan_kerja">
-        <input type="hidden" name="dlabel[]" value="Hewan yang ditemui di tempat kerja">
-        <input type="hidden" name="dsub[]" value="Faktor Risiko Lepto">
-        <input type="hidden" name="dtype[]" value="text">
-        <?php $lp_hw=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='lp_rs_hewan_kerja'){$lp_hw=$ed['var_value'];break;}} ?>
-        <input type="text" name="dval[]" class="form-control" placeholder="Contoh: tikus, sapi, babi" value="<?=htmlspecialchars($lp_hw)?>">
       </div>
     </div>
     <?php endif; ?>
