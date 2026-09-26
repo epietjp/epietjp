@@ -1415,11 +1415,10 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         </div>
       </div>
     </div>
-
-
-    </div>
+    <?php endif; ?>
 
     <!-- LEPTO: Riwayat Kontak Faktor Risiko -->
+    <?php if($id_penyakit==26): ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-exclamation-triangle"></i> <b>V. Riwayat Kontak Faktor Risiko (Leptospirosis)</b></div>
       <div class="row">
