@@ -709,6 +709,102 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 
 
     <!-- LABORATORIUM -->
+    <!-- DIAGNOSIS + RAWAT INAP ANTRAKS -->
+    <?php if($id_penyakit==14): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-stethoscope"></i> <b>Diagnosis & Perawatan Antraks</b></div>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Diagnosis Awal <span class="req">*</span></label>
+            <input type="hidden" name="dkey[]" value="atx_diagnosis_awal">
+            <input type="hidden" name="dlabel[]" value="Diagnosis Awal Antraks">
+            <input type="hidden" name="dsub[]" value="Klinis Anthraks">
+            <input type="hidden" name="dtype[]" value="select">
+            <?php $atx_da=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_diagnosis_awal'){$atx_da=$ed['var_value'];break;}} ?>
+            <select name="dval[]" class="form-control" required>
+              <option value="">-- Pilih Diagnosis Awal --</option>
+              <option value="Antraks Kulit" <?=$atx_da=='Antraks Kulit'?'selected':''?>>Antraks Kulit (Cutaneous Anthrax)</option>
+              <option value="Antraks Saluran Cerna" <?=$atx_da=='Antraks Saluran Cerna'?'selected':''?>>Antraks Saluran Cerna (GI Anthrax)</option>
+              <option value="Antraks Saluran Nafas" <?=$atx_da=='Antraks Saluran Nafas'?'selected':''?>>Antraks Saluran Nafas (Inhalational)</option>
+              <option value="Antraks Injeksi" <?=$atx_da=='Antraks Injeksi'?'selected':''?>>Antraks Injeksi (Injection Anthrax)</option>
+              <option value="Lainnya" <?=$atx_da=='Lainnya'?'selected':''?>>Lainnya</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Diagnosis Akhir <span class="req">*</span></label>
+            <input type="hidden" name="dkey[]" value="atx_diagnosis_akhir">
+            <input type="hidden" name="dlabel[]" value="Diagnosis Akhir Antraks">
+            <input type="hidden" name="dsub[]" value="Klinis Anthraks">
+            <input type="hidden" name="dtype[]" value="select">
+            <?php $atx_dk=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_diagnosis_akhir'){$atx_dk=$ed['var_value'];break;}} ?>
+            <select name="dval[]" class="form-control" required>
+              <option value="">-- Pilih Diagnosis Akhir --</option>
+              <option value="Antraks Kulit" <?=$atx_dk=='Antraks Kulit'?'selected':''?>>Antraks Kulit (Cutaneous Anthrax)</option>
+              <option value="Antraks Saluran Cerna" <?=$atx_dk=='Antraks Saluran Cerna'?'selected':''?>>Antraks Saluran Cerna (GI Anthrax)</option>
+              <option value="Antraks Saluran Nafas" <?=$atx_dk=='Antraks Saluran Nafas'?'selected':''?>>Antraks Saluran Nafas (Inhalational)</option>
+              <option value="Antraks Injeksi" <?=$atx_dk=='Antraks Injeksi'?'selected':''?>>Antraks Injeksi (Injection Anthrax)</option>
+              <option value="Lainnya" <?=$atx_dk=='Lainnya'?'selected':''?>>Lainnya</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Apakah Dirawat Inap?</label>
+            <input type="hidden" name="dkey[]" value="atx_rawat_inap">
+            <input type="hidden" name="dlabel[]" value="Dirawat Inap">
+            <input type="hidden" name="dsub[]" value="Klinis Anthraks">
+            <input type="hidden" name="dtype[]" value="select">
+            <?php $atx_ri=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_rawat_inap'){$atx_ri=$ed['var_value'];break;}} ?>
+            <select name="dval[]" class="form-control" onchange="toggleAtxRI(this.value)">
+              <option value="">-- Pilih --</option>
+              <option value="Ya" <?=$atx_ri=='Ya'?'selected':''?>>Ya</option>
+              <option value="Tidak" <?=$atx_ri=='Tidak'?'selected':''?>>Tidak</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="row" id="wrap_atx_ri" style="display:<?=$atx_ri=='Ya'?'block':'none'?>">
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Nama RS/Puskesmas/Klinik</label>
+            <input type="hidden" name="dkey[]" value="atx_nama_rs">
+            <input type="hidden" name="dlabel[]" value="Nama RS Perawatan">
+            <input type="hidden" name="dsub[]" value="Klinis Anthraks">
+            <input type="hidden" name="dtype[]" value="text">
+            <?php $atx_rs=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_nama_rs'){$atx_rs=$ed['var_value'];break;}} ?>
+            <input type="text" name="dval[]" class="form-control" value="<?=htmlspecialchars($atx_rs)?>" placeholder="Nama fasilitas kesehatan">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Tanggal Masuk Rawat Inap</label>
+            <input type="hidden" name="dkey[]" value="atx_tgl_masuk_rs">
+            <input type="hidden" name="dlabel[]" value="Tgl Masuk Rawat Inap">
+            <input type="hidden" name="dsub[]" value="Klinis Anthraks">
+            <input type="hidden" name="dtype[]" value="date">
+            <?php $atx_tm=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_tgl_masuk_rs'){$atx_tm=$ed['var_value'];break;}} ?>
+            <input type="date" name="dval[]" class="form-control" value="<?=htmlspecialchars($atx_tm)?>">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Tanggal Keluar Rawat Inap</label>
+            <input type="hidden" name="dkey[]" value="atx_tgl_keluar_rs">
+            <input type="hidden" name="dlabel[]" value="Tgl Keluar Rawat Inap">
+            <input type="hidden" name="dsub[]" value="Klinis Anthraks">
+            <input type="hidden" name="dtype[]" value="date">
+            <?php $atx_tk=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_tgl_keluar_rs'){$atx_tk=$ed['var_value'];break;}} ?>
+            <input type="date" name="dval[]" class="form-control" value="<?=htmlspecialchars($atx_tk)?>">
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php endif; ?>
+
+
     <!-- TATA LAKSANA ANTRAKS -->
     <?php if($id_penyakit==14): ?>
     <div class="form-section">
@@ -1417,100 +1513,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; ?>
 
-    <!-- DIAGNOSIS + RAWAT INAP ANTRAKS -->
-    <?php if($id_penyakit==14): ?>
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-stethoscope"></i> <b>Diagnosis & Perawatan Antraks</b></div>
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Diagnosis Awal <span class="req">*</span></label>
-            <input type="hidden" name="dkey[]" value="atx_diagnosis_awal">
-            <input type="hidden" name="dlabel[]" value="Diagnosis Awal Antraks">
-            <input type="hidden" name="dsub[]" value="Klinis Anthraks">
-            <input type="hidden" name="dtype[]" value="select">
-            <?php $atx_da=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_diagnosis_awal'){$atx_da=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control" required>
-              <option value="">-- Pilih Diagnosis Awal --</option>
-              <option value="Antraks Kulit" <?=$atx_da=='Antraks Kulit'?'selected':''?>>Antraks Kulit (Cutaneous Anthrax)</option>
-              <option value="Antraks Saluran Cerna" <?=$atx_da=='Antraks Saluran Cerna'?'selected':''?>>Antraks Saluran Cerna (GI Anthrax)</option>
-              <option value="Antraks Saluran Nafas" <?=$atx_da=='Antraks Saluran Nafas'?'selected':''?>>Antraks Saluran Nafas (Inhalational)</option>
-              <option value="Antraks Injeksi" <?=$atx_da=='Antraks Injeksi'?'selected':''?>>Antraks Injeksi (Injection Anthrax)</option>
-              <option value="Lainnya" <?=$atx_da=='Lainnya'?'selected':''?>>Lainnya</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Diagnosis Akhir <span class="req">*</span></label>
-            <input type="hidden" name="dkey[]" value="atx_diagnosis_akhir">
-            <input type="hidden" name="dlabel[]" value="Diagnosis Akhir Antraks">
-            <input type="hidden" name="dsub[]" value="Klinis Anthraks">
-            <input type="hidden" name="dtype[]" value="select">
-            <?php $atx_dk=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_diagnosis_akhir'){$atx_dk=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control" required>
-              <option value="">-- Pilih Diagnosis Akhir --</option>
-              <option value="Antraks Kulit" <?=$atx_dk=='Antraks Kulit'?'selected':''?>>Antraks Kulit (Cutaneous Anthrax)</option>
-              <option value="Antraks Saluran Cerna" <?=$atx_dk=='Antraks Saluran Cerna'?'selected':''?>>Antraks Saluran Cerna (GI Anthrax)</option>
-              <option value="Antraks Saluran Nafas" <?=$atx_dk=='Antraks Saluran Nafas'?'selected':''?>>Antraks Saluran Nafas (Inhalational)</option>
-              <option value="Antraks Injeksi" <?=$atx_dk=='Antraks Injeksi'?'selected':''?>>Antraks Injeksi (Injection Anthrax)</option>
-              <option value="Lainnya" <?=$atx_dk=='Lainnya'?'selected':''?>>Lainnya</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Apakah Dirawat Inap?</label>
-            <input type="hidden" name="dkey[]" value="atx_rawat_inap">
-            <input type="hidden" name="dlabel[]" value="Dirawat Inap">
-            <input type="hidden" name="dsub[]" value="Klinis Anthraks">
-            <input type="hidden" name="dtype[]" value="select">
-            <?php $atx_ri=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_rawat_inap'){$atx_ri=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control" onchange="toggleAtxRI(this.value)">
-              <option value="">-- Pilih --</option>
-              <option value="Ya" <?=$atx_ri=='Ya'?'selected':''?>>Ya</option>
-              <option value="Tidak" <?=$atx_ri=='Tidak'?'selected':''?>>Tidak</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="row" id="wrap_atx_ri" style="display:<?=$atx_ri=='Ya'?'block':'none'?>">
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Nama RS/Puskesmas/Klinik</label>
-            <input type="hidden" name="dkey[]" value="atx_nama_rs">
-            <input type="hidden" name="dlabel[]" value="Nama RS Perawatan">
-            <input type="hidden" name="dsub[]" value="Klinis Anthraks">
-            <input type="hidden" name="dtype[]" value="text">
-            <?php $atx_rs=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_nama_rs'){$atx_rs=$ed['var_value'];break;}} ?>
-            <input type="text" name="dval[]" class="form-control" value="<?=htmlspecialchars($atx_rs)?>" placeholder="Nama fasilitas kesehatan">
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Tanggal Masuk Rawat Inap</label>
-            <input type="hidden" name="dkey[]" value="atx_tgl_masuk_rs">
-            <input type="hidden" name="dlabel[]" value="Tgl Masuk Rawat Inap">
-            <input type="hidden" name="dsub[]" value="Klinis Anthraks">
-            <input type="hidden" name="dtype[]" value="date">
-            <?php $atx_tm=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_tgl_masuk_rs'){$atx_tm=$ed['var_value'];break;}} ?>
-            <input type="date" name="dval[]" class="form-control" value="<?=htmlspecialchars($atx_tm)?>">
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Tanggal Keluar Rawat Inap</label>
-            <input type="hidden" name="dkey[]" value="atx_tgl_keluar_rs">
-            <input type="hidden" name="dlabel[]" value="Tgl Keluar Rawat Inap">
-            <input type="hidden" name="dsub[]" value="Klinis Anthraks">
-            <input type="hidden" name="dtype[]" value="date">
-            <?php $atx_tk=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_tgl_keluar_rs'){$atx_tk=$ed['var_value'];break;}} ?>
-            <input type="date" name="dval[]" class="form-control" value="<?=htmlspecialchars($atx_tk)?>">
-          </div>
-        </div>
-      </div>
-    </div>
-    <?php endif; ?>
+
 
     <!-- LEPTO: Riwayat Kontak Faktor Risiko -->
     <?php if($id_penyakit==26): ?>
@@ -1553,6 +1556,9 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       </div>
     </div>
     <?php endif; ?>
+
+
+
 
     <!-- GHPR: Riwayat Pengobatan -->
     <?php if($id_penyakit==8): ?>
