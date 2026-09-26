@@ -855,6 +855,20 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       </div>
       <div id="wrap_detail_lab" style="display:<?=fv($v,'diperiksa_lab')=='1'?'block':'none'?>">
       <div class="row">
+        <div class="col-sm-2">
+          <div class="form-group">
+            <label>Jenis Pemeriksaan Lab</label>
+            <select name="jenis_pemeriksaan_lab" class="form-control">
+              <option value="">-- Pilih --</option>
+              <option value="Kultur" <?=fv($v,'jenis_pemeriksaan_lab')=='Kultur'?'selected':''?>>Kultur</option>
+              <option value="PCR" <?=fv($v,'jenis_pemeriksaan_lab')=='PCR'?'selected':''?>>PCR</option>
+              <option value="Serologi" <?=fv($v,'jenis_pemeriksaan_lab')=='Serologi'?'selected':''?>>Serologi</option>
+              <option value="Mikroskopis" <?=fv($v,'jenis_pemeriksaan_lab')=='Mikroskopis'?'selected':''?>>Mikroskopis</option>
+              <option value="Imunohistokimia" <?=fv($v,'jenis_pemeriksaan_lab')=='Imunohistokimia'?'selected':''?>>Imunohistokimia</option>
+              <option value="Lainnya" <?=fv($v,'jenis_pemeriksaan_lab')=='Lainnya'?'selected':''?>>Lainnya</option>
+            </select>
+          </div>
+        </div>
         <div class="col-sm-3">
           <div class="form-group">
             <label>Jenis Spesimen</label>
@@ -877,19 +891,19 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             </select>
           </div>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
           <div class="form-group">
             <label>Tanggal Ambil Spesimen</label>
             <input type="date" name="tgl_ambil_sample" class="form-control" value="<?=fv($v,'tgl_ambil_sample')?>">
           </div>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
           <div class="form-group">
             <label>Tanggal Kirim Spesimen</label>
             <input type="date" name="tgl_kirim_sample" class="form-control" value="<?=fv($v,'tgl_kirim_sample')?>">
           </div>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
           <div class="form-group">
             <label>Tanggal Hasil Lab</label>
             <input type="date" name="tgl_hasil_lab" class="form-control" value="<?=fv($v,'tgl_hasil_lab')?>">
