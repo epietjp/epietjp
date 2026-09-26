@@ -1418,7 +1418,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- DIAGNOSIS + RAWAT INAP ANTRAKS -->
     <?php if($id_penyakit==14): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-stethoscope"></i> <b>U. Diagnosis & Perawatan Antraks</b></div>
+      <div class="form-section-title"><i class="fa fa-stethoscope"></i> <b>Diagnosis &amp; Perawatan Antraks</b></div>
       <div class="row">
         <div class="col-sm-4">
           <div class="form-group">
