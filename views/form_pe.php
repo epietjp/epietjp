@@ -476,7 +476,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
                   'belum_bekerja'=>'Belum/Tidak Bekerja','lainnya'=>'Lainnya',
                 ),
                 14 => array( // Anthraks
-                  'peternak_sapi'=>'Peternak Sapi/Kambing/Domba',
+                  'peternak_sapi'=>'Peternak Sapi/Kambing/Domba/Kuda/Babi',
                   'pekerja_rph'=>'Pekerja RPH/Pemotongan Hewan',
                   'pekerja_kulit'=>'Pekerja Pengolah Kulit/Wool/Tulang',
                   'veterinarian'=>'Veterinarian',
