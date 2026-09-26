@@ -335,8 +335,9 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       <div class="row">
         <div class="col-sm-2">
           <div class="form-group">
-            <label>Jenis Kelamin</label>
+            <label>Jenis Kelamin <span class="req">*</span></label>
             <select name="kelamin" class="form-control" required>
+              <option value="">-- Pilih --</option>
               <option value="L" <?=fv($v,'kelamin')=='L'?'selected':''?>>Laki-laki</option>
               <option value="P" <?=fv($v,'kelamin')=='P'?'selected':''?>>Perempuan</option>
             </select>
