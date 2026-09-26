@@ -1845,6 +1845,12 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <?php $rows = array_filter($rows, function($d){ return !in_array($d['var_key'], array('lokasi_gigitan','dp_satuan_hpr')); }); if(empty($rows)) continue; ?>
     <?php if($submodule=='Gejala Lepto' && $id_penyakit==26) continue; ?>
     <?php if($submodule === 'Gejala GHPR') continue; // Sudah dirender inline di section F ?>
+    <?php if($id_penyakit==14 && in_array($submodule, array(
+        'Status Laporan','Klinis Anthraks','Riwayat Anthraks',
+        'Gejala Anthraks Kulit','Gejala Anthraks Gastrointestinal',
+        'Tata Laksana Anthraks','Kontak Anthraks','Timeline Inkubasi Anthraks',
+        'Lab Anthraks','Spesimen Anthraks','Lingkungan Anthraks'
+    ))) continue; // Sudah dirender di section A,E,F,S,T,X ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-list-alt"></i> <?=htmlspecialchars($submodule)?></div>
       <?php if(strpos($submodule,'Gejala')===0): ?>
