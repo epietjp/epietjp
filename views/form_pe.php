@@ -1414,6 +1414,8 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
           </div>
         </div>
       </div>
+    </div>
+    <?php endif; ?>
 
     <!-- DIAGNOSIS + RAWAT INAP ANTRAKS -->
     <?php if($id_penyakit==14): ?>
@@ -1503,15 +1505,15 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="hidden" name="dsub[]" value="Klinis Anthraks">
             <input type="hidden" name="dtype[]" value="date">
             <?php $atx_tk=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_tgl_keluar_rs'){$atx_tk=$ed['var_value'];break;}} ?>
-            <input type="date" name="d
+            <input type="date" name="dval[]" class="form-control" value="<?=htmlspecialchars($atx_tk)?>">
           </div>
         </div>
       </div>
     </div>
     <?php endif; ?>
-    </div>
 
     <!-- LEPTO: Riwayat Kontak Faktor Risiko -->
+    <?php if($id_penyakit==26): ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-exclamation-triangle"></i> <b>V. Riwayat Kontak Faktor Risiko (Leptospirosis)</b></div>
       <div class="row">
