@@ -713,7 +713,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="hidden" name="dsub[]" value="Klinis Anthraks">
             <input type="hidden" name="dtype[]" value="select">
             <?php $atx_da=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_diagnosis_awal'){$atx_da=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control" required>
+            <select name="dval[]" class="form-control" required onchange="toggleDiagLainnya(this,'atx_da_lainnya')">
               <option value="">-- Pilih Diagnosis Awal --</option>
               <option value="Antraks Kulit" <?=$atx_da=='Antraks Kulit'?'selected':''?>>Antraks Kulit (Cutaneous Anthrax)</option>
               <option value="Antraks Saluran Cerna" <?=$atx_da=='Antraks Saluran Cerna'?'selected':''?>>Antraks Saluran Cerna (GI Anthrax)</option>
@@ -721,6 +721,10 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="Antraks Injeksi" <?=$atx_da=='Antraks Injeksi'?'selected':''?>>Antraks Injeksi (Injection Anthrax)</option>
               <option value="Lainnya" <?=$atx_da=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
+            <input type="text" id="atx_da_lainnya" class="form-control" placeholder="Tulis diagnosis awal lainnya"
+              style="margin-top:5px;display:<?=$atx_da=='Lainnya'?'block':'none'?>"
+              value="<?=$atx_da=='Lainnya'?'':''?>"
+              oninput="document.querySelector('select[name=dval[]]').value=this.value">
           </div>
         </div>
         <div class="col-sm-4">
@@ -731,7 +735,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="hidden" name="dsub[]" value="Klinis Anthraks">
             <input type="hidden" name="dtype[]" value="select">
             <?php $atx_dk=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_diagnosis_akhir'){$atx_dk=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control" required>
+            <select name="dval[]" class="form-control" required onchange="toggleDiagLainnya(this,'atx_dk_lainnya')">
               <option value="">-- Pilih Diagnosis Akhir --</option>
               <option value="Antraks Kulit" <?=$atx_dk=='Antraks Kulit'?'selected':''?>>Antraks Kulit (Cutaneous Anthrax)</option>
               <option value="Antraks Saluran Cerna" <?=$atx_dk=='Antraks Saluran Cerna'?'selected':''?>>Antraks Saluran Cerna (GI Anthrax)</option>
@@ -739,6 +743,8 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="Antraks Injeksi" <?=$atx_dk=='Antraks Injeksi'?'selected':''?>>Antraks Injeksi (Injection Anthrax)</option>
               <option value="Lainnya" <?=$atx_dk=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
+            <input type="text" id="atx_dk_lainnya" class="form-control" placeholder="Tulis diagnosis akhir lainnya"
+              style="margin-top:5px;display:<?=$atx_dk=='Lainnya'?'block':'none'?>">
           </div>
         </div>
         <div class="col-sm-4">
@@ -2497,6 +2503,9 @@ $(function(){
     };
 });
 
+function toggleDiagLainnya(sel, inputId){
+    $('#'+inputId).toggle($(sel).val()==='Lainnya');
+}
 function tambahRawatInap() {
     $('#tbl-rawat-inap').append('<div class="row rawat-row" style="margin-bottom:6px"><div class="col-sm-5"><input type="text" name="rs_nama[]" class="form-control input-sm" placeholder="Nama RS/Klinik"></div><div class="col-sm-3"><input type="date" name="rs_tgl[]" class="form-control input-sm"></div><div class="col-sm-3"><input type="text" name="rs_ket[]" class="form-control input-sm" placeholder="Keterangan"></div><div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest(\'.rawat-row\').remove()"><i class="fa fa-times"></i></button></div></div>');
 }
