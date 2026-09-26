@@ -709,6 +709,41 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 
 
     <!-- LABORATORIUM -->
+    <!-- TATA LAKSANA ANTRAKS -->
+    <?php if($id_penyakit==14): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-medkit"></i> <b>F. Tata Laksana Kasus (Anthraks)</b></div>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Apakah Diberikan Antibiotik?</label>
+            <input type="hidden" name="dkey[]" value="atx_antibiotik">
+            <input type="hidden" name="dlabel[]" value="Diberikan Antibiotik">
+            <input type="hidden" name="dsub[]" value="Tata Laksana Anthraks">
+            <input type="hidden" name="dtype[]" value="select">
+            <?php $atx_ab=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_antibiotik'){$atx_ab=$ed['var_value'];break;}} ?>
+            <select name="dval[]" class="form-control" onchange="$('#wrap_atx_ab').toggle(this.value==='Ya')">
+              <option value="">-- Pilih --</option>
+              <option value="Ya" <?=$atx_ab=='Ya'?'selected':''?>>Ya</option>
+              <option value="Tidak" <?=$atx_ab=='Tidak'?'selected':''?>>Tidak</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm-4" id="wrap_atx_ab" style="display:<?=$atx_ab=='Ya'?'block':'none'?>">
+          <div class="form-group">
+            <label>Jenis Antibiotik</label>
+            <input type="hidden" name="dkey[]" value="atx_jenis_antibiotik">
+            <input type="hidden" name="dlabel[]" value="Jenis Antibiotik">
+            <input type="hidden" name="dsub[]" value="Tata Laksana Anthraks">
+            <input type="hidden" name="dtype[]" value="text">
+            <?php $atx_jab=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_jenis_antibiotik'){$atx_jab=$ed['var_value'];break;}} ?>
+            <input type="text" name="dval[]" class="form-control" value="<?=htmlspecialchars($atx_jab)?>" placeholder="Contoh: Ciprofloxacin, Doxycycline, Amoxicillin">
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php endif; ?>
+
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-flask"></i> <b>G. Pemeriksaan Laboratorium</b></div>
       <div class="row">
@@ -1787,42 +1822,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         </div>
       </div>
       <?php endif; ?>
-
-    <!-- TATA LAKSANA ANTRAKS -->
-    <?php if($id_penyakit==14): ?>
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-medkit"></i> <b>F. Tata Laksana Kasus (Anthraks)</b></div>
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Apakah Diberikan Antibiotik?</label>
-            <input type="hidden" name="dkey[]" value="atx_antibiotik">
-            <input type="hidden" name="dlabel[]" value="Diberikan Antibiotik">
-            <input type="hidden" name="dsub[]" value="Tata Laksana Anthraks">
-            <input type="hidden" name="dtype[]" value="select">
-            <?php $atx_ab=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_antibiotik'){$atx_ab=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control" onchange="$('#wrap_atx_ab').toggle(this.value==='Ya')">
-              <option value="">-- Pilih --</option>
-              <option value="Ya" <?=$atx_ab=='Ya'?'selected':''?>>Ya</option>
-              <option value="Tidak" <?=$atx_ab=='Tidak'?'selected':''?>>Tidak</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-sm-4" id="wrap_atx_ab" style="display:<?=$atx_ab=='Ya'?'block':'none'?>">
-          <div class="form-group">
-            <label>Jenis Antibiotik</label>
-            <input type="hidden" name="dkey[]" value="atx_jenis_antibiotik">
-            <input type="hidden" name="dlabel[]" value="Jenis Antibiotik">
-            <input type="hidden" name="dsub[]" value="Tata Laksana Anthraks">
-            <input type="hidden" name="dtype[]" value="text">
-            <?php $atx_jab=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_jenis_antibiotik'){$atx_jab=$ed['var_value'];break;}} ?>
-            <input type="text" name="dval[]" class="form-control" value="<?=htmlspecialchars($atx_jab)?>" placeholder="Contoh: Ciprofloxacin, Doxycycline, Amoxicillin">
-          </div>
-        </div>
-      </div>
-    </div>
-    <?php endif; ?>
-    </div>
 
     <!-- VARIABEL TAMBAHAN PER PENYAKIT -->
     <?php if(!empty($detail)): ?>
