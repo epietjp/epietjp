@@ -927,6 +927,14 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
           </div>
         </div>
       </div>
+      <div id="tbl-lab-tambahan" style="margin-top:8px"></div>
+      <div class="row" style="margin-top:4px">
+        <div class="col-sm-12">
+          <button type="button" class="btn btn-xs btn-default" id="btn-tambah-lab">
+            <i class="fa fa-plus"></i> Tambah Set Pemeriksaan Lab
+          </button>
+        </div>
+      </div>
       </div><!-- /wrap_detail_lab -->
       <script>
       function toggleLab(val) {
@@ -2508,6 +2516,38 @@ function toggleDiagLainnya(sel, inputId){
 }
 function tambahRawatInap() {
     $('#tbl-rawat-inap').append('<div class="row rawat-row" style="margin-bottom:6px"><div class="col-sm-5"><input type="text" name="rs_nama[]" class="form-control input-sm" placeholder="Nama RS/Klinik"></div><div class="col-sm-3"><input type="date" name="rs_tgl[]" class="form-control input-sm"></div><div class="col-sm-3"><input type="text" name="rs_ket[]" class="form-control input-sm" placeholder="Keterangan"></div><div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest(\'.rawat-row\').remove()"><i class="fa fa-times"></i></button></div></div>');
+}
+$(document).on('click', '#btn-tambah-lab', function(){
+    tambahLabSet();
+});
+function tambahLabSet() {
+    var idx = $('#tbl-lab-tambahan .lab-set-row').length + 2;
+    var jenisOpts = '<option value="">-- Pilih --</option><option>Kultur</option><option>PCR</option><option>Serologi</option><option>Mikroskopis</option><option>Imunohistokimia</option><option>Lainnya</option>';
+    var spesOpts = '<option value="">-- Pilih Jenis Spesimen --</option><option>Serum Darah</option><option>Whole Blood</option><option>Urine</option><option>Usap Nasofaring</option><option>Usap Tenggorok</option><option>Swab Rektal</option><option>Kulit/Lesi</option><option>Jaringan/Eksudat</option><option>Otak Hewan (GHPR)</option><option>Eksudat/Keropeng Lesi (Antraks)</option><option>Darah Vena</option><option>Cairan Pleura</option><option>Feses</option><option>Lainnya</option>';
+    var row = '<div class="lab-set-row" style="border:1px solid #ddd;padding:8px;margin-bottom:6px;border-radius:4px">'
+        + '<div class="row">'
+        + '<div class="col-sm-2"><div class="form-group"><label>Set '+idx+' Jenis Pemeriksaan</label>'
+        + '<select name="lab_jenis_pemeriksaan[]" class="form-control">'+jenisOpts+'</select></div></div>'
+        + '<div class="col-sm-3"><div class="form-group"><label>Jenis Spesimen</label>'
+        + '<select name="lab_jenis_spesimen[]" class="form-control">'+spesOpts+'</select></div></div>'
+        + '<div class="col-sm-2"><div class="form-group"><label>Tanggal Ambil Spesimen</label>'
+        + '<input type="date" name="lab_tgl_ambil[]" class="form-control"></div></div>'
+        + '<div class="col-sm-2"><div class="form-group"><label>Tanggal Kirim Spesimen</label>'
+        + '<input type="date" name="lab_tgl_kirim[]" class="form-control"></div></div>'
+        + '<div class="col-sm-2"><div class="form-group"><label>Tanggal Hasil Lab</label>'
+        + '<input type="date" name="lab_tgl_hasil[]" class="form-control"></div></div>'
+        + '<div class="col-sm-1"><div class="form-group"><label>&nbsp;</label>'
+        + '<button type="button" class="btn btn-xs btn-danger form-control" onclick="$(this).closest(\'.lab-set-row\').remove()"><i class="fa fa-times"></i></button></div></div>'
+        + '</div>'
+        + '<div class="row">'
+        + '<div class="col-sm-4"><div class="form-group"><label>Nama Laboratorium</label>'
+        + '<input type="text" name="lab_nama[]" class="form-control" placeholder="Nama laboratorium"></div></div>'
+        + '<div class="col-sm-4"><div class="form-group"><label>Hasil Lab</label>'
+        + '<input type="text" name="lab_hasil[]" class="form-control" placeholder="Positif/Negatif/Nilai hasil"></div></div>'
+        + '<div class="col-sm-4"><div class="form-group"><label>Keterangan Lab</label>'
+        + '<input type="text" name="lab_ket[]" class="form-control" placeholder="Keterangan"></div></div>'
+        + '</div></div>';
+    $('#tbl-lab-tambahan').append(row);
 }
 function tambahSpesimen() {
     var idx = $('#tbl-spesimen .spesimen-row').length;
