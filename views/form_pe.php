@@ -452,7 +452,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
           </div>
         </div>
       </div>
-    </div>
       <div class="row">
         <div class="col-sm-3">
           <div class="form-group">
