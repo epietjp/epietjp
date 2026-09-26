@@ -683,7 +683,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- GEJALA INLINE setelah onset (khusus GHPR dan Lepto) -->
     <?php if(in_array($id_penyakit, array(8,26))): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-stethoscope"></i> <b>F. Gejala &amp; Tanda Sakit</b></div>
+      <div class="form-section-title"><i class="fa fa-stethoscope"></i> <b>Gejala &amp; Tanda Sakit</b></div>
       <div class="row">
       <?php
       $gejala_inline = array();
@@ -1791,7 +1791,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- TATA LAKSANA ANTRAKS -->
     <?php if($id_penyakit==14): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-medkit"></i> <b>U. Tata Laksana Kasus (Anthraks)</b></div>
+      <div class="form-section-title"><i class="fa fa-medkit"></i> <b>F. Tata Laksana Kasus (Anthraks)</b></div>
       <div class="row">
         <div class="col-sm-4">
           <div class="form-group">
