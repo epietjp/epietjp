@@ -150,14 +150,14 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         </div>
         <div class="col-sm-3">
           <div class="form-group">
-            <label>Tanggal Laporan</label>
-            <input type="date" name="tgl_laporan" class="form-control" value="<?=fv($v,'tgl_laporan',date('Y-m-d'))?>">
+            <label>Tanggal Laporan <span class="req">*</span></label>
+            <input type="date" name="tgl_laporan" class="form-control" required value="<?=fv($v,'tgl_laporan',date('Y-m-d'))?>">
           </div>
         </div>
         <div class="col-sm-3">
           <div class="form-group">
-            <label>Tanggal PE</label>
-            <input type="date" name="tgl_pe" class="form-control" value="<?=fv($v,'tgl_pe')?>">
+            <label>Tanggal PE <span class="req">*</span></label>
+            <input type="date" name="tgl_pe" class="form-control" required value="<?=fv($v,'tgl_pe')?>">
           </div>
         </div>
         <div class="col-sm-3">
@@ -191,7 +191,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       <div class="row">
         <div class="col-sm-4">
           <div class="form-group">
-            <label>Nama Petugas PE</label>
+            <label>Nama Petugas PE <span class="req">*</span></label>
             <input type="text" name="nama_petugas" class="form-control" value="<?=fv($v,'nama_petugas')?>" required>
           </div>
         </div>
@@ -320,16 +320,11 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         </div>
         <div class="col-sm-4">
           <div class="form-group">
-            <label>Nama Orang Tua / KK</label>
-            <input type="text" name="nama_ortu" class="form-control" value="<?=fv($v,'nama_ortu')?>" placeholder="Nama orang tua atau kepala keluarga">
+            <label>Nama Orang Tua / KK <span class="req">*</span></label>
+            <input type="text" name="nama_ortu" class="form-control" required value="<?=fv($v,'nama_ortu')?>" placeholder="Nama orang tua atau kepala keluarga">
           </div>
         </div>
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Nama Orang Tua / KK</label>
-            <input type="text" name="nama_kk" class="form-control" value="<?=fv($v,'nama_kk')?>">
-          </div>
-        </div>
+
         <div class="col-sm-4">
           <div class="form-group">
             <label>NIK</label>
@@ -349,7 +344,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         </div>
         <div class="col-sm-2">
           <div class="form-group">
-            <label>Tanggal Lahir</label>
+            <label>Tanggal Lahir <span class="req">*</span></label>
             <input type="date" name="tgl_lahir" class="form-control" value="<?=fv($v,'tgl_lahir')?>" required>
           </div>
         </div>
@@ -368,21 +363,16 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-2">
           <div class="form-group">
             <label>Umur (Hari)</label>
-            <input type="number" name="umur_hari" class="form-control" value="<?=fv($v,'umur_hari')?>" min="0" max="30" placeholder="0-30">
+            <input type="number" name="umur_hari" class="form-control" value="<?=fv($v,'umur_hari')?>" min="0" max="30" required placeholder="0-30">
           </div>
         </div>
-        <div class="col-sm-2">
-          <div class="form-group">
-            <label>Umur (Hari)</label>
-            <input type="number" name="umur_hari" class="form-control" min="0" max="30" placeholder="0-30" value="<?=fv($v,'umur_hari',0)?>">
-          </div>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-6">
           <div class="form-group">
-            <label>Alamat</label>
-            <input type="text" name="alamat" class="form-control" value="<?=fv($v,'alamat')?>">
+            <label>Alamat <span class="req">*</span></label>
+            <input type="text" name="alamat" class="form-control" required value="<?=fv($v,'alamat')?>">
           </div>
         </div>
       </div>
@@ -567,8 +557,8 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       <div class="row">
         <div class="col-sm-3">
           <div class="form-group">
-            <label>Tanggal Mulai Sakit/Bergejala</label>
-            <input type="date" name="tgl_bergejala" class="form-control" value="<?=fv($v,'tgl_bergejala')?>">
+            <label>Tanggal Mulai Sakit/Bergejala <span class="req">*</span></label>
+            <input type="date" name="tgl_bergejala" class="form-control" required value="<?=fv($v,'tgl_bergejala')?>">
           </div>
         </div>
       </div>
@@ -610,8 +600,8 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         </div>
         <div class="col-sm-3">
           <div class="form-group">
-            <label>Tanggal Sakit (Berobat)</label>
-            <input type="date" name="tgl_sakit" class="form-control" value="<?=fv($v,'tgl_sakit')?>">
+            <label>Tanggal Sakit (Berobat) <span class="req">*</span></label>
+            <input type="date" name="tgl_sakit" class="form-control" required value="<?=fv($v,'tgl_sakit')?>">
           </div>
         </div>
         <?php if(in_array($id_penyakit, array(14,26))): // Anthrax dan Lepto ?>
@@ -818,7 +808,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="hidden" name="dsub[]" value="Tata Laksana Anthraks">
             <input type="hidden" name="dtype[]" value="select">
             <?php $atx_ab=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_antibiotik'){$atx_ab=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control" onchange="$('#wrap_atx_ab').toggle(this.value==='Ya')">
+            <select name="dval[]" class="form-control" required onchange="$('#wrap_atx_ab').toggle(this.value==='Ya')">
               <option value="">-- Pilih --</option>
               <option value="Ya" <?=$atx_ab=='Ya'?'selected':''?>>Ya</option>
               <option value="Tidak" <?=$atx_ab=='Tidak'?'selected':''?>>Tidak</option>
@@ -845,7 +835,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       <div class="row">
         <div class="col-sm-3">
           <div class="form-group">
-            <label>Diperiksa Lab?</label>
+            <label>Diperiksa Lab? <span class="req">*</span></label>
             <select name="diperiksa_lab" class="form-control" onchange="toggleLab(this.value)" required>
               <option value="0" <?=fv($v,'diperiksa_lab','0')=='0'?'selected':''?>>Tidak</option>
               <option value="1" <?=fv($v,'diperiksa_lab')=='1'?'selected':''?>>Ya</option>
@@ -2402,6 +2392,22 @@ function cekUrutan() {
 }
 
 // Pasang event blur ke semua field tanggal
+// Auto-calc umur dari tgl_lahir
+$('input[name=tgl_lahir]').on('change', function(){
+    var tgl = $(this).val();
+    if(!tgl) return;
+    var lahir = new Date(tgl);
+    var today = new Date();
+    var thn = today.getFullYear() - lahir.getFullYear();
+    var bln = today.getMonth() - lahir.getMonth();
+    var hari = today.getDate() - lahir.getDate();
+    if(hari < 0) { bln--; hari += new Date(today.getFullYear(), today.getMonth(), 0).getDate(); }
+    if(bln < 0) { thn--; bln += 12; }
+    $('input[name=umur_thn]').val(thn >= 0 ? thn : 0);
+    $('input[name=umur_bln]').val(bln >= 0 ? bln : 0);
+    $('input[name=umur_hari]').val(hari >= 0 ? hari : 0);
+});
+
 $(document).on('change', 'input[name="tgl_bergejala"], input[name="tgl_sakit"], input[name="tgl_laporan"], input[name="tgl_pe"], input[name="tgl_masuk_rs"], input[name="tgl_meninggal"], input[name="tgl_ambil_sample"], input[name="tgl_kirim_sample"], input[name="tgl_hasil_lab"]', function(){
     cekUrutan();
 });
