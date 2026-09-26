@@ -1791,7 +1791,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- TATA LAKSANA ANTRAKS -->
     <?php if($id_penyakit==14): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-medkit"></i> <b>Tata Laksana Kasus (Anthraks)</b></div>
+      <div class="form-section-title"><i class="fa fa-medkit"></i> <b>U. Tata Laksana Kasus (Anthraks)</b></div>
       <div class="row">
         <div class="col-sm-4">
           <div class="form-group">
