@@ -829,7 +829,13 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="hidden" name="dsub[]" value="Tata Laksana Anthraks">
             <input type="hidden" name="dtype[]" value="text">
             <?php $atx_jab=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_jenis_antibiotik'){$atx_jab=$ed['var_value'];break;}} ?>
-            <input type="text" name="dval[]" class="form-control" value="<?=htmlspecialchars($atx_jab)?>" placeholder="Contoh: Ciprofloxacin, Doxycycline, Amoxicillin">
+            <select name="dval[]" class="form-control">
+              <option value="">-- Pilih --</option>
+              <?php $ab_opts=array('Ciprofloxacin','Doxycycline','Amoxicillin','Penicillin G','Levofloxacin','Lainnya');
+              foreach($ab_opts as $ao): ?>
+              <option value="<?=$ao?>" <?=$atx_jab==$ao?'selected':''?>><?=$ao?></option>
+              <?php endforeach; ?>
+            </select>
           </div>
         </div>
       </div>
@@ -854,7 +860,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-2">
           <div class="form-group">
             <label>Jenis Pemeriksaan Lab</label>
-            <select name="jenis_pemeriksaan_lab" class="form-control">
+            <select name="jenis_pemeriksaan_lab" class="form-control" onchange="updateHasilLab(this.value)">
               <option value="">-- Pilih --</option>
               <option value="Kultur" <?=fv($v,'jenis_pemeriksaan_lab')=='Kultur'?'selected':''?>>Kultur</option>
               <option value="PCR" <?=fv($v,'jenis_pemeriksaan_lab')=='PCR'?'selected':''?>>PCR</option>
@@ -916,7 +922,20 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-4">
           <div class="form-group">
             <label>Hasil Lab</label>
-            <input type="text" name="hasil_lab" class="form-control" value="<?=fv($v,'hasil_lab')?>">
+            <select name="hasil_lab" id="sel_hasil_lab" class="form-control">
+              <option value="">-- Pilih Hasil --</option>
+              <?php
+              $hasil_val = fv($v,'hasil_lab');
+              $jenis_val = fv($v,'jenis_pemeriksaan_lab');
+              $hasil_opts = array();
+              if($jenis_val=='PCR') $hasil_opts = array('Terdeteksi','Tidak Terdeteksi');
+              elseif($jenis_val=='Kultur') $hasil_opts = array('Ditemukan Bakteri','Tidak Ditemukan Bakteri');
+              elseif($jenis_val=='Serologi' || $jenis_val=='ELISA') $hasil_opts = array('Reaktif','Non-Reaktif');
+              else $hasil_opts = array('Positif','Negatif','Pending','Tidak Valid');
+              foreach($hasil_opts as $ho):
+              ?><option value="<?=$ho?>" <?=$hasil_val==$ho?'selected':''?>><?=$ho?></option><?php endforeach; ?>
+            </select>
+            <small class="text-muted">Pilihan berubah sesuai jenis pemeriksaan</small>
           </div>
         </div>
         <div class="col-sm-4">
@@ -2509,6 +2528,16 @@ $(function(){
     };
 });
 
+function updateHasilLab(jenis) {
+    var opts = {'PCR':['Terdeteksi','Tidak Terdeteksi'],
+                'Kultur':['Ditemukan Bakteri','Tidak Ditemukan Bakteri'],
+                'Serologi':['Reaktif','Non-Reaktif'],
+                'ELISA':['Reaktif','Non-Reaktif']};
+    var sel = $('#sel_hasil_lab');
+    sel.empty().append('<option value="">-- Pilih Hasil --</option>');
+    var list = opts[jenis] || ['Positif','Negatif','Pending','Tidak Valid'];
+    $.each(list, function(i,v){ sel.append('<option value="'+v+'">'+v+'</option>'); });
+}
 function toggleDiagLainnya(sel, inputId){
     $('#'+inputId).toggle($(sel).val()==='Lainnya');
 }
