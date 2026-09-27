@@ -1083,13 +1083,13 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       <div class="row" style="margin-bottom:8px">
         <div class="col-sm-3">
           <div class="form-group">
-            <label style="font-size:12px">Jumlah Anggota Serumah (orang)</label>
+            <label>Jumlah Anggota Serumah (orang)</label>
             <input type="number" name="jumlah_anggota_serumah" class="form-control input-sm" min="0" max="30" value="<?=fv($v,'jumlah_anggota_serumah')?>">
           </div>
         </div>
         <?php if(in_array($id_penyakit, array(11,14))): ?>
         <div class="col-sm-9">
-          <label style="font-size:12px">Tempat Kerja Anggota Serumah yang Berisiko</label>
+          <label>Tempat Kerja Anggota Serumah yang Berisiko</label>
           <div class="row">
             <?php
             $tempat_kerja_risiko = array(
@@ -1103,7 +1103,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             ?>
             <div class="col-sm-4" style="margin-bottom:4px">
               <div class="checkbox" style="margin:0">
-                <label style="font-size:11px">
+                <label>
                   <input type="checkbox" name="as_tempat_risiko[]" value="<?=$tk?>" <?=in_array($tk,$saved_tk)?'checked':''?>>
                   <?=$tl?>
                 </label>
@@ -1416,7 +1416,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         ?>
         <div class="col-sm-4">
           <div class="form-group">
-            <label style="font-size:12px"><?=$ll?></label>
+            <label><?=$ll?></label>
             <input type="hidden" name="dkey[]" value="<?=$lk?>">
             <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($ll)?>">
             <input type="hidden" name="dsub[]" value="Lingkungan Avian">
@@ -1432,7 +1432,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <?php endforeach; ?>
       </div>
       <div class="form-group">
-        <label style="font-size:12px">Keterangan sumber penularan potensial</label>
+        <label>Keterangan sumber penularan potensial</label>
         <input type="hidden" name="dkey[]" value="av_lingk_ket">
         <input type="hidden" name="dlabel[]" value="Keterangan lingkungan sumber penularan">
         <input type="hidden" name="dsub[]" value="Lingkungan Avian">
@@ -1481,7 +1481,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
           if(!empty($eav_data)) foreach($eav_data as $ed) { if($ed['var_key']==$gk) { $gv=$ed['var_value']; break; } }
         ?>
           <div class="col-sm-4" style="margin-bottom:6px">
-            <label style="font-size:11px;font-weight:normal"><?=$gl?></label>
+            <label style="font-weight:normal"><?=$gl?></label>
             <input type="hidden" name="dkey[]" value="<?=$gk?>">
             <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($gl)?>">
             <input type="hidden" name="dsub[]" value="Gejala Anthraks <?=$tipe?>">
@@ -1553,7 +1553,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
           $lv=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']==$lk){$lv=$ed['var_value'];break;}}
         ?>
         <div class="col-sm-4" style="margin-bottom:8px">
-          <label style="font-size:12px"><?=$ll?></label>
+          <label><?=$ll?></label>
           <input type="hidden" name="dkey[]" value="<?=$lk?>">
           <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($ll)?>">
           <input type="hidden" name="dsub[]" value="Kondisi Lingkungan Lepto">
@@ -1570,7 +1570,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       <div class="row">
         <div class="col-sm-6">
           <div class="form-group">
-            <label style="font-size:12px">Durasi banjir (hari)</label>
+            <label>Durasi banjir (hari)</label>
             <input type="hidden" name="dkey[]" value="lp_durasi_banjir">
             <input type="hidden" name="dlabel[]" value="Durasi banjir (hari)">
             <input type="hidden" name="dsub[]" value="Kondisi Lingkungan Lepto">
@@ -1601,7 +1601,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
           $rv=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']==$rk){$rv=$ed['var_value'];break;}}
         ?>
         <div class="col-sm-6" style="margin-bottom:8px">
-          <label style="font-size:12px"><?=$rl?></label>
+          <label><?=$rl?></label>
           <input type="hidden" name="dkey[]" value="<?=$rk?>">
           <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($rl)?>">
           <input type="hidden" name="dsub[]" value="Faktor Risiko Lepto">
@@ -1616,7 +1616,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <?php endforeach; ?>
       </div>
       <div class="form-group">
-        <label style="font-size:12px">Hewan yang ditemui di tempat kerja/aktivitas</label>
+        <label>Hewan yang ditemui di tempat kerja/aktivitas</label>
         <input type="hidden" name="dkey[]" value="lp_rs_hewan_kerja">
         <input type="hidden" name="dlabel[]" value="Hewan yang ditemui di tempat kerja">
         <input type="hidden" name="dsub[]" value="Faktor Risiko Lepto">
@@ -1741,7 +1741,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
           $lv=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']==$lk){$lv=$ed['var_value'];break;}}
         ?>
         <div class="col-sm-4" style="margin-bottom:8px">
-          <label style="font-size:12px"><?=$ll?></label>
+          <label><?=$ll?></label>
           <input type="hidden" name="dkey[]" value="<?=$lk?>">
           <input type="hidden" name="dlabel[]" value="<?=htmlspecialchars($ll)?>">
           <input type="hidden" name="dsub[]" value="Lingkungan Anthraks">
@@ -1756,7 +1756,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <?php endforeach; ?>
       </div>
       <div class="form-group">
-        <label style="font-size:12px">Keterangan sumber penularan potensial</label>
+        <label>Keterangan sumber penularan potensial</label>
         <input type="hidden" name="dkey[]" value="atx_lingk_ket">
         <input type="hidden" name="dlabel[]" value="Keterangan lingkungan sumber penularan Anthraks">
         <input type="hidden" name="dsub[]" value="Lingkungan Anthraks">
@@ -1917,11 +1917,14 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <?php if($submodule === 'Gejala GHPR') continue; // Sudah dirender inline di section F ?>
     <?php if(in_array($submodule, array('Kontak Penyelidikan','Tim Penyelidikan','Tim PE','Kontak PE'))) continue; // Sudah dirender di section O+P ?>
     <?php if($id_penyakit==14 && in_array($submodule, array(
-        'Status Laporan','Klinis Anthraks','Riwayat Anthraks',
-        'Gejala Anthraks Kulit','Gejala Anthraks Gastrointestinal',
-        'Tata Laksana Anthraks','Kontak Anthraks','Timeline Inkubasi Anthraks',
-        'Lab Anthraks','Spesimen Anthraks','Lingkungan Anthraks'
-    ))) continue; // Sudah dirender di section A,E,F,S,T,X ?>
+        'Status Laporan',
+        'Klinis Anthraks','Klinis Anthrax','Riwayat Anthraks',
+        'Gejala Anthraks','Gejala Anthraks Kulit','Gejala Anthraks Gastrointestinal',
+        'Gejala Klinis Anthraks',
+        'Tata Laksana Anthraks','Kontak Anthraks','Matriks Kontak Anthraks',
+        'Timeline Inkubasi Anthraks','Lab Anthraks','Spesimen Anthraks',
+        'Lingkungan Anthraks'
+    ))) continue; // Sudah dirender di section dedicated, Data Pendukung tetap tampil ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-list-alt"></i> <?=htmlspecialchars($submodule)?></div>
       <?php if(strpos($submodule,'Gejala')===0): ?>
