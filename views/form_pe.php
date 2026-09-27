@@ -860,7 +860,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-2">
           <div class="form-group">
             <label>Jenis Pemeriksaan Lab</label>
-            <select name="jenis_pemeriksaan_lab" class="form-control" onchange="updateHasilLab(this.value)">
+            <select name="jenis_pemeriksaan_lab" class="form-control" onchange="updateHasilLab(this.value);$('#jenis_periksa_lainnya').toggle(this.value==='Lainnya')">
               <option value="">-- Pilih --</option>
               <option value="Kultur" <?=fv($v,'jenis_pemeriksaan_lab')=='Kultur'?'selected':''?>>Kultur</option>
               <option value="PCR" <?=fv($v,'jenis_pemeriksaan_lab')=='PCR'?'selected':''?>>PCR</option>
@@ -869,12 +869,16 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="Imunohistokimia" <?=fv($v,'jenis_pemeriksaan_lab')=='Imunohistokimia'?'selected':''?>>Imunohistokimia</option>
               <option value="Lainnya" <?=fv($v,'jenis_pemeriksaan_lab')=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
+            <input type="text" id="jenis_periksa_lainnya" class="form-control" 
+              placeholder="Tulis jenis pemeriksaan" 
+              style="margin-top:5px;display:<?=fv($v,'jenis_pemeriksaan_lab')=='Lainnya'?'block':'none'?>"
+              name="jenis_pemeriksaan_lab_lainnya" value="<?=fv($v,'jenis_pemeriksaan_lab_lainnya')?>">
           </div>
         </div>
         <div class="col-sm-3">
           <div class="form-group">
             <label>Jenis Spesimen</label>
-            <select name="jenis_sample" class="form-control">
+            <select name="jenis_sample" class="form-control" onchange="$('#jenis_sample_lainnya').toggle(this.value==='Lainnya')">
               <option value="">-- Pilih Jenis Spesimen --</option>
               <option value="Serum Darah" <?=fv($v,'jenis_sample')=='Serum Darah'?'selected':''?>>Serum Darah</option>
               <option value="Whole Blood" <?=fv($v,'jenis_sample')=='Whole Blood'?'selected':''?>>Whole Blood</option>
@@ -891,6 +895,10 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="Feses" <?=fv($v,'jenis_sample')=='Feses'?'selected':''?>>Feses</option>
               <option value="Lainnya" <?=fv($v,'jenis_sample')=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
+            <input type="text" id="jenis_sample_lainnya" class="form-control" 
+              placeholder="Tulis jenis spesimen" 
+              style="margin-top:5px;display:<?=fv($v,'jenis_sample')=='Lainnya'?'block':'none'?>"
+              name="jenis_sample_lainnya" value="<?=fv($v,'jenis_sample_lainnya')?>">
           </div>
         </div>
         <div class="col-sm-2">
@@ -993,7 +1001,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="hidden" name="dlabel[]" value="Jenis Spesimen 1">
             <input type="hidden" name="dsub[]" value="Spesimen Lab">
             <input type="hidden" name="dtype[]" value="text">
-            <select name="dval[]" class="form-control input-sm">
+            <select name="dval[]" class="form-control input-sm" onchange="$(this).next('input[type=text]').toggle(this.value==='lainnya')">
               <option value="">-- Jenis --</option>
               <option value="serum_darah">Serum Darah</option>
               <option value="urine">Urine</option>
@@ -1004,6 +1012,12 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="otak_hewan">Otak Hewan (GHPR)</option>
               <option value="lainnya">Lainnya</option>
             </select>
+            <input type="text" class="form-control input-sm" 
+              placeholder="Tulis jenis spesimen" 
+              style="margin-top:3px;display:none"
+              name="dval[]"
+              onkeyup="$(this).prev('select').val($(this).val())"
+              onfocus="$(this).prev('select').val($(this).val())">
           </div>
           <div class="col-sm-2">
             <input type="hidden" name="dkey[]" value="sp0_nomor">
