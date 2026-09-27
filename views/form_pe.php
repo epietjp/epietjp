@@ -2571,6 +2571,9 @@ $(function(){
     };
 });
 
+function toggleAtxRumor(val) {
+    $('#wrap_atx_rumor, #wrap_atx_lokasi_rumor').toggle(val === 'Ya');
+}
 function updateHasilLab(jenis) {
     var opts = {'PCR':['Terdeteksi','Tidak Terdeteksi'],
                 'Kultur':['Ditemukan Bakteri','Tidak Ditemukan Bakteri'],
