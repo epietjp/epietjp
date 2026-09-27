@@ -2367,6 +2367,14 @@ $('#formPE').submit(function(e) {
     if (tgl_pe && tgl_laporan && tgl_pe > tgl_laporan) {
         errors.push('Tanggal PE tidak boleh lebih dari Tanggal Laporan');
     }
+    var tgl_bergejala_v = $('input[name=tgl_bergejala]').val();
+    var tgl_sakit_v     = $('input[name=tgl_sakit]').val();
+    if (tgl_pe && tgl_bergejala_v && tgl_pe < tgl_bergejala_v) {
+        errors.push('Tanggal PE tidak boleh lebih awal dari Tanggal Mulai Sakit');
+    }
+    if (tgl_pe && tgl_sakit_v && tgl_pe < tgl_sakit_v) {
+        errors.push('Tanggal PE tidak boleh lebih awal dari Tanggal Berobat');
+    }
     // Validasi No Epid (wajib untuk non-GHPR)
     var no_epid = $('#f_no_epid').val();
     if($('#f_no_epid').length && (!no_epid || no_epid.length !== 11 || !/^[0-9]+$/.test(no_epid))) {
