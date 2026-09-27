@@ -916,7 +916,28 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-4">
           <div class="form-group">
             <label>Nama Laboratorium</label>
-            <input type="text" name="nama_lab" class="form-control" value="<?=fv($v,'nama_lab')?>">
+            <select name="nama_lab" class="form-control" onchange="$('#nama_lab_lainnya').toggle(this.value==='Lainnya')">
+              <option value="">-- Pilih Lab --</option>
+              <?php $lab_opts=array(
+                'BBLK Jakarta'=>'BBLK Jakarta',
+                'BBLK Surabaya'=>'BBLK Surabaya',
+                'BBLK Makassar'=>'BBLK Makassar',
+                'BBLK Palembang'=>'BBLK Palembang',
+                'BBLK Banjarmasin'=>'BBLK Banjarmasin',
+                'Litbangkes'=>'Litbangkes/BRIN',
+                'Lab RS Rujukan'=>'Lab RS Rujukan',
+                'Lab Puskesmas'=>'Lab Puskesmas',
+                'Lab Swasta'=>'Lab Swasta',
+                'Lainnya'=>'Lainnya',
+              );
+              foreach($lab_opts as $lv=>$ll): ?>
+              <option value="<?=$lv?>" <?=fv($v,'nama_lab')==$lv?'selected':''?>><?=$ll?></option>
+              <?php endforeach; ?>
+            </select>
+            <input type="text" id="nama_lab_lainnya" class="form-control" 
+              placeholder="Tulis nama laboratorium" 
+              style="margin-top:5px;display:<?=fv($v,'nama_lab')=='Lainnya'?'block':'none'?>"
+              name="nama_lab_lainnya" value="<?=fv($v,'nama_lab_lainnya')?>">
           </div>
         </div>
         <div class="col-sm-4">
