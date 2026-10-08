@@ -76,23 +76,19 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <?php endif; ?>
 
     <!-- IDENTITAS PELAPOR -->
-    <!-- GHPR PAGINATION WIZARD -->
-    <?php if($id_penyakit==8): ?>
-    <div id="ghpr-wizard" style="margin-bottom:12px">
-      <div style="background:#1F4E79;color:#fff;padding:6px 14px;border-radius:4px 4px 0 0">
-        <small style="opacity:.8">Formulir PE Rabies — SKDR</small>
-      </div>
-      <div style="background:#EBF5FB;padding:8px 14px;border:1px solid #AED6F1;border-top:0;border-radius:0 0 4px 4px;margin-bottom:10px">
-        <div class="progress" style="height:5px;margin-bottom:5px;background:#D6EAF8">
-          <div id="ghpr-progress" class="progress-bar" style="width:16.6%;background:#1F4E79;transition:width .3s"></div>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <span id="ghpr-step-label" style="font-weight:700;color:#1F4E79;font-size:12px">Halaman 1 dari 6</span>
-          <span><?php for($pg=1;$pg<=6;$pg++): ?><span class="ghpr-dot label" id="ghpr-dot-<?=$pg?>" style="margin:0 2px;cursor:pointer;background:<?=$pg==1?'#1F4E79':'#BDC3C7'?>"><?=$pg?></span><?php endfor; ?></span>
-        </div>
-      </div>
+<?php if($id_penyakit==8): ?>
+<div id="ghpr-wizard" style="margin-bottom:12px">
+  <div style="background:#1F4E79;color:#fff;padding:6px 14px;border-radius:4px 4px 0 0"><small style="opacity:.8">Formulir PE Rabies — SKDR</small></div>
+  <div style="background:#EBF5FB;padding:8px 14px;border:1px solid #AED6F1;border-top:0;border-radius:0 0 4px 4px;margin-bottom:10px">
+    <div class="progress" style="height:5px;margin-bottom:5px;background:#D6EAF8"><div id="ghpr-progress" class="progress-bar" style="width:16.6%;background:#1F4E79;transition:width .3s"></div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span id="ghpr-step-label" style="font-weight:700;color:#1F4E79;font-size:12px">Halaman 1 dari 6: Identitas Laporan &amp; Pasien</span>
+      <span><?php for($pg=1;$pg<=6;$pg++): ?><span class="ghpr-dot label" id="ghpr-dot-<?=$pg?>" style="margin:0 2px;cursor:pointer;background:<?=$pg==1?'#1F4E79':'#BDC3C7'?>"><?=$pg?></span><?php endfor; ?></span>
     </div>
-    <?php endif; ?>
+  </div>
+</div>
+<?php endif; ?>
+<?php if($id_penyakit==8): ?><div id="ghpr-page-1" class="ghpr-page" style="display:block"><?php endif; ?>
     <!-- STATUS LAPORAN ANTRAKS -->
     <?php if($id_penyakit==14): ?>
     <div class="form-section">
@@ -842,14 +838,14 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; // end Section E Klinis - hide GHPR ?>
 
-    <?php if($id_penyakit==8): ?><div id="ghpr-page-1" class="ghpr-page" style="display:block"><?php endif; ?>
-    <?php if($id_penyakit==8): ?>
-    <div class="ghpr-nav-1" style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
-      <small style="color:#888">Hal. 1/6: Identitas Laporan &amp; Pasien</small>
-      <div><button type="button" class="btn btn-primary ghpr-next" data-page="1" data-next="2">Selanjutnya <i class="fa fa-chevron-right"></i></button><button type="button" class="btn btn-success ghpr-save" style="margin-left:8px"><i class="fa fa-save"></i> Simpan</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
-    </div>
-    </div><!-- /ghpr-page-1 -->
-    <?php endif; ?>
+<?php if($id_penyakit==8): ?>
+<div style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+  <small style="color:#888">Hal. 1/6: Identitas Laporan &amp; Pasien</small>
+  <div><button type="button" class="btn btn-primary ghpr-next" data-page="1" data-next="2">Selanjutnya <i class="fa fa-chevron-right"></i></button><button type="button" class="btn btn-success ghpr-save" style="margin-left:8px"><i class="fa fa-save"></i> Simpan</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
+</div>
+</div><!-- /ghpr-page-1 -->
+<?php endif; ?>
+<?php if($id_penyakit==8): ?><div id="ghpr-page-2" class="ghpr-page" style="display:none"><?php endif; ?>
     <!-- GEJALA INLINE setelah onset (khusus Lepto) -->
     <?php if($id_penyakit==26): ?>
     <div class="form-section">
@@ -933,14 +929,14 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <?php endif; ?>
 
 
-    <?php if($id_penyakit==8): ?><div id="ghpr-page-2" class="ghpr-page" style="display:none"><?php endif; ?>
-    <?php if($id_penyakit==8): ?>
-    <div class="ghpr-nav-2" style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
-      <small style="color:#888">Hal. 2/6: Skrining Gigitan/Luka HPR</small>
-      <div><button type="button" class="btn btn-default ghpr-prev" data-page="2" style="margin-right:5px"><i class="fa fa-chevron-left"></i> Sebelumnya</button><button type="button" class="btn btn-primary ghpr-next" data-page="2" data-next="3">Selanjutnya <i class="fa fa-chevron-right"></i></button><button type="button" class="btn btn-success ghpr-save" style="margin-left:8px"><i class="fa fa-save"></i> Simpan</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
-    </div>
-    </div><!-- /ghpr-page-2 -->
-    <?php endif; ?>
+<?php if($id_penyakit==8): ?>
+<div style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+  <small style="color:#888">Hal. 2/6: Skrining Gigitan/Luka HPR</small>
+  <div><button type="button" class="btn btn-default ghpr-prev" data-page="2" style="margin-right:5px"><i class="fa fa-chevron-left"></i> Sebelumnya</button><button type="button" class="btn btn-primary ghpr-next" data-page="2" data-next="3">Selanjutnya <i class="fa fa-chevron-right"></i></button><button type="button" class="btn btn-success ghpr-save" style="margin-left:8px"><i class="fa fa-save"></i> Simpan</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
+</div>
+</div><!-- /ghpr-page-2 -->
+<?php endif; ?>
+<?php if($id_penyakit==8): ?><div id="ghpr-page-3" class="ghpr-page" style="display:none"><?php endif; ?>
     <!-- GHPR: Section F - Informasi Klinis Pasien -->
     <?php if($id_penyakit==8): ?>
     <div class="form-section">
@@ -1324,14 +1320,14 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; // end section F GHPR ?>
 
-    <?php if($id_penyakit==8): ?><div id="ghpr-page-3" class="ghpr-page" style="display:none"><?php endif; ?>
-    <?php if($id_penyakit==8): ?>
-    <div class="ghpr-nav-3" style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
-      <small style="color:#888">Hal. 3/6: Klinis Pasien</small>
-      <div><button type="button" class="btn btn-default ghpr-prev" data-page="3" style="margin-right:5px"><i class="fa fa-chevron-left"></i> Sebelumnya</button><button type="button" class="btn btn-primary ghpr-next" data-page="3" data-next="4">Selanjutnya <i class="fa fa-chevron-right"></i></button><button type="button" class="btn btn-success ghpr-save" style="margin-left:8px"><i class="fa fa-save"></i> Simpan</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
-    </div>
-    </div><!-- /ghpr-page-3 -->
-    <?php endif; ?>
+<?php if($id_penyakit==8): ?>
+<div style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+  <small style="color:#888">Hal. 3/6: Klinis Pasien</small>
+  <div><button type="button" class="btn btn-default ghpr-prev" data-page="3" style="margin-right:5px"><i class="fa fa-chevron-left"></i> Sebelumnya</button><button type="button" class="btn btn-primary ghpr-next" data-page="3" data-next="4">Selanjutnya <i class="fa fa-chevron-right"></i></button><button type="button" class="btn btn-success ghpr-save" style="margin-left:8px"><i class="fa fa-save"></i> Simpan</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
+</div>
+</div><!-- /ghpr-page-3 -->
+<?php endif; ?>
+<?php if($id_penyakit==8): ?><div id="ghpr-page-4" class="ghpr-page" style="display:none"><?php endif; ?>
     <!-- GHPR: Section G - Informasi HPR -->
     <?php if($id_penyakit==8): ?>
     <div class="form-section">
@@ -1530,14 +1526,14 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; // end Section G HPR GHPR ?>
 
-    <?php if($id_penyakit==8): ?><div id="ghpr-page-4" class="ghpr-page" style="display:none"><?php endif; ?>
-    <?php if($id_penyakit==8): ?>
-    <div class="ghpr-nav-4" style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
-      <small style="color:#888">Hal. 4/6: Informasi HPR &amp; Riwayat Kontak</small>
-      <div><button type="button" class="btn btn-default ghpr-prev" data-page="4" style="margin-right:5px"><i class="fa fa-chevron-left"></i> Sebelumnya</button><button type="button" class="btn btn-primary ghpr-next" data-page="4" data-next="5">Selanjutnya <i class="fa fa-chevron-right"></i></button><button type="button" class="btn btn-success ghpr-save" style="margin-left:8px"><i class="fa fa-save"></i> Simpan</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
-    </div>
-    </div><!-- /ghpr-page-4 -->
-    <?php endif; ?>
+<?php if($id_penyakit==8): ?>
+<div style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+  <small style="color:#888">Hal. 4/6: Informasi HPR &amp; Riwayat Kontak</small>
+  <div><button type="button" class="btn btn-default ghpr-prev" data-page="4" style="margin-right:5px"><i class="fa fa-chevron-left"></i> Sebelumnya</button><button type="button" class="btn btn-primary ghpr-next" data-page="4" data-next="5">Selanjutnya <i class="fa fa-chevron-right"></i></button><button type="button" class="btn btn-success ghpr-save" style="margin-left:8px"><i class="fa fa-save"></i> Simpan</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
+</div>
+</div><!-- /ghpr-page-4 -->
+<?php endif; ?>
+<?php if($id_penyakit==8): ?><div id="ghpr-page-5" class="ghpr-page" style="display:none"><?php endif; ?>
     <!-- GHPR: Section F Riwayat Kontak -->
     <?php if($id_penyakit==8): ?>
     <div class="form-section">
@@ -2218,7 +2214,14 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; // end bukan GHPR/Rabies - section O ?>
 
-    <?php if($id_penyakit==8): ?><div id="ghpr-page-6" class="ghpr-page" style="display:none"><?php endif; ?>
+<?php if($id_penyakit==8): ?>
+<div style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+  <small style="color:#888">Hal. 5/6: Kondisi Akhir &amp; Keterangan Lainnya</small>
+  <div><button type="button" class="btn btn-default ghpr-prev" data-page="5" style="margin-right:5px"><i class="fa fa-chevron-left"></i> Sebelumnya</button><button type="button" class="btn btn-primary ghpr-next" data-page="5" data-next="6">Selanjutnya <i class="fa fa-chevron-right"></i></button><button type="button" class="btn btn-success ghpr-save" style="margin-left:8px"><i class="fa fa-save"></i> Simpan</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
+</div>
+</div><!-- /ghpr-page-5 -->
+<?php endif; ?>
+<?php if($id_penyakit==8): ?><div id="ghpr-page-6" class="ghpr-page" style="display:none"><?php endif; ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-users"></i> <b><?=$id_penyakit==8?"G. Tim Penyelidikan Epidemiologi":"P. Tim Penyelidikan Epidemiologi"?></b></div>
       <small class="text-muted">Anggota tim PE yang terlibat dalam penyelidikan</small>
@@ -2232,6 +2235,13 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       </div>
       <button type="button" class="btn btn-xs btn-default" onclick="tambahTimPE()"><i class="fa fa-plus"></i> Tambah</button>
     </div>
+<?php if($id_penyakit==8): ?>
+<div style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+  <small style="color:#888">Hal. 6/6: Tim Penyelidikan Epidemiologi</small>
+  <div><button type="button" class="btn btn-default ghpr-prev" data-page="6" style="margin-right:5px"><i class="fa fa-chevron-left"></i> Sebelumnya</button><button type="button" class="btn btn-success ghpr-save"><i class="fa fa-check-circle"></i> Simpan Laporan PE</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
+</div>
+</div><!-- /ghpr-page-6 -->
+<?php endif; ?>
 
     <!-- AVIAN: Kunjungan Wabah + Matriks Kontak Unggas -->
     <?php if($id_penyakit==11): ?>
@@ -2717,14 +2727,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; ?>
 
-    <?php if($id_penyakit==8): ?><div id="ghpr-page-5" class="ghpr-page" style="display:none"><?php endif; ?>
-    <?php if($id_penyakit==8): ?>
-    <div class="ghpr-nav-5" style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
-      <small style="color:#888">Hal. 5/6: Kondisi Akhir &amp; Keterangan Lainnya</small>
-      <div><button type="button" class="btn btn-default ghpr-prev" data-page="5" style="margin-right:5px"><i class="fa fa-chevron-left"></i> Sebelumnya</button><button type="button" class="btn btn-primary ghpr-next" data-page="5" data-next="6">Selanjutnya <i class="fa fa-chevron-right"></i></button><button type="button" class="btn btn-success ghpr-save" style="margin-left:8px"><i class="fa fa-save"></i> Simpan</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
-    </div>
-    </div><!-- /ghpr-page-5 -->
-    <?php endif; ?>
     <!-- KONTAK KASUS LAIN (Lepto + Anthraks) -->
     <?php if(in_array($id_penyakit, array(26,14))): ?>
     <div class="form-section">
@@ -2770,58 +2772,20 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
                 $('#detail-kontak-hewan').toggle(val === '1');
             }
             $(function(){ toggleKontakHewan('<?=fv($v,"riwayat_kontak_hewan")?>'); });
-
-// ── GHPR WIZARD JS ────────────────────────────────────────────────────────
+            
+// ── GHPR WIZARD ──
 <?php if($id_penyakit==8): ?>
-var GHPR = {
-  cur: 1, tot: 6,
-  labels: ["","Identitas Laporan & Pasien","Skrining Gigitan/Luka HPR","Klinis Pasien","Informasi HPR & Riwayat Kontak","Kondisi Akhir & Keterangan","Tim PE"],
-  go: function(n) {
-    // Validasi required di page aktif
-    var errs = [];
-    $('#ghpr-page-'+GHPR.cur).find('[required]').each(function(){
-      if (!$(this).val()) {
-        errs.push($(this).closest('.form-group').find('label').first().text().replace('*','').trim());
-        $(this).closest('.form-group').addClass('has-error');
-      } else {
-        $(this).closest('.form-group').removeClass('has-error');
-      }
-    });
-    if (errs.length) { alert('Harap lengkapi:\n• '+errs.join('\n• ')); return; }
-    $('.ghpr-page').hide();
-    GHPR.cur = n;
-    $('#ghpr-page-'+n).show();
-    var pct = (n/GHPR.tot*100).toFixed(1);
-    $('#ghpr-progress').css('width', pct+'%');
-    $('#ghpr-step-label').text('Halaman '+n+' dari '+GHPR.tot+': '+GHPR.labels[n]);
-    for(var i=1;i<=GHPR.tot;i++) $('#ghpr-dot-'+i).css('background',i<=n?'#1F4E79':'#BDC3C7');
-    $('html,body').animate({scrollTop:$('#ghpr-wizard').offset().top-60},300);
-  },
-  back: function(n) {
-    $('.ghpr-page').hide();
-    GHPR.cur = n;
-    $('#ghpr-page-'+n).show();
-    var pct = (n/GHPR.tot*100).toFixed(1);
-    $('#ghpr-progress').css('width', pct+'%');
-    $('#ghpr-step-label').text('Halaman '+n+' dari '+GHPR.tot+': '+GHPR.labels[n]);
-    for(var i=1;i<=GHPR.tot;i++) $('#ghpr-dot-'+i).css('background',i<=n?'#1F4E79':'#BDC3C7');
-    $('html,body').animate({scrollTop:$('#ghpr-wizard').offset().top-60},300);
-  }
-};
-$(document).on('click','.ghpr-next',function(){ GHPR.go(parseInt($(this).data('next'))); });
-$(document).on('click','.ghpr-prev',function(){ GHPR.back(parseInt($(this).data('page'))-1); });
-$(document).on('click','.ghpr-save',function(){
-  if(confirm('Simpan laporan PE GHPR/Rabies?')) $('#formPE').submit();
-});
-$(document).on('click','.ghpr-keluar',function(){
-  if(confirm('Keluar? Data yang belum disimpan akan hilang.')) location.href='<?=base_url("zoonosis")?>';
-});
-$(document).on('click','.ghpr-dot',function(){
-  var t=parseInt($(this).text());
-  if(t<GHPR.cur) GHPR.back(t);
-});
+var GHPR={cur:1,tot:6,labels:["","Identitas Laporan & Pasien","Skrining Gigitan/Luka HPR","Klinis Pasien","Informasi HPR & Riwayat Kontak","Kondisi Akhir & Keterangan","Tim PE"],
+go:function(n){var e=[];$('#ghpr-page-'+GHPR.cur).find('[required]').each(function(){if(!$(this).val()){e.push($(this).closest('.form-group').find('label').first().text().replace('*','').trim());$(this).closest('.form-group').addClass('has-error');}else $(this).closest('.form-group').removeClass('has-error');});if(e.length){alert('Harap lengkapi:\n• '+e.join('\n• '));return;}$('.ghpr-page').hide();GHPR.cur=n;$('#ghpr-page-'+n).show();$('#ghpr-progress').css('width',(n/6*100).toFixed(1)+'%');$('#ghpr-step-label').text('Halaman '+n+' dari 6: '+GHPR.labels[n]);for(var i=1;i<=6;i++)$('#ghpr-dot-'+i).css('background',i<=n?'#1F4E79':'#BDC3C7');$('html,body').animate({scrollTop:$('#ghpr-wizard').offset().top-60},300);},
+back:function(n){$('.ghpr-page').hide();GHPR.cur=n;$('#ghpr-page-'+n).show();$('#ghpr-progress').css('width',(n/6*100).toFixed(1)+'%');$('#ghpr-step-label').text('Halaman '+n+' dari 6: '+GHPR.labels[n]);for(var i=1;i<=6;i++)$('#ghpr-dot-'+i).css('background',i<=n?'#1F4E79':'#BDC3C7');$('html,body').animate({scrollTop:$('#ghpr-wizard').offset().top-60},300);}};
+$(document).on('click','.ghpr-next',function(){GHPR.go(parseInt($(this).data('next')));});
+$(document).on('click','.ghpr-prev',function(){GHPR.back(parseInt($(this).data('page'))-1);});
+$(document).on('click','.ghpr-save',function(){if(confirm('Simpan laporan PE?'))$('#formPE').submit();});
+$(document).on('click','.ghpr-keluar',function(){if(confirm('Keluar? Data belum tersimpan akan hilang.'))location.href='<?=base_url("zoonosis")?>';});
+$(document).on('click','.ghpr-dot',function(){var t=parseInt($(this).text());if(t<GHPR.cur)GHPR.back(t);});
 <?php endif; ?>
-            </script>
+
+</script>
           </div>
         </div>
 <!-- jenis_hewan dihapus, gunakan dp_hpr di variabel tambahan -->
@@ -3241,13 +3205,6 @@ $(document).on('click','.ghpr-dot',function(){
       <a href="<?=site_url('zoonosis/daftar')?>" class="btn btn-default">
         <i class="fa fa-arrow-left"></i> Kembali
       </a>
-    <?php if($id_penyakit==8): ?>
-    <div class="ghpr-nav-6" style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
-      <small style="color:#888">Hal. 6/6: Tim Penyelidikan Epidemiologi</small>
-      <div><button type="button" class="btn btn-default ghpr-prev" data-page="6" style="margin-right:5px"><i class="fa fa-chevron-left"></i> Sebelumnya</button><button type="button" class="btn btn-success ghpr-save"><i class="fa fa-check-circle"></i> Simpan Laporan PE</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
-    </div>
-    </div><!-- /ghpr-page-6 -->
-    <?php endif; ?>
     </div>
     </form>
 
