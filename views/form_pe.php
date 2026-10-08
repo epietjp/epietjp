@@ -964,6 +964,17 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="date" name="dval[]" class="form-control" value="<?=htmlspecialchars($rab_tm)?>">
           </div>
         </div>
+        <div class="col-sm-3" id="wrap_rab_tgl_keluar" style="display:<?=$rab_ri=='Ya'?'block':'none'?>">
+          <div class="form-group">
+            <label>Tanggal Keluar Rawat Inap</label>
+            <input type="hidden" name="dkey[]" value="rab_tgl_keluar_rs">
+            <input type="hidden" name="dlabel[]" value="Tgl Keluar RS GHPR">
+            <input type="hidden" name="dsub[]" value="Klinis GHPR">
+            <input type="hidden" name="dtype[]" value="date">
+            <?php $rab_tk=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_tgl_keluar_rs'){$rab_tk=$ed['var_value'];break;}} ?>
+            <input type="date" name="dval[]" class="form-control" value="<?=htmlspecialchars($rab_tk)?>">
+          </div>
+        </div>
       </div>
 
       <!-- Diagnosis Awal + Akhir -->
