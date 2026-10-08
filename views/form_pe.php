@@ -976,12 +976,14 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="hidden" name="dsub[]" value="Klinis GHPR">
             <input type="hidden" name="dtype[]" value="select">
             <?php $rab_da=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_diagnosis_awal'){$rab_da=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control">
+            <select name="dval[]" class="form-control" onchange="$('#rab_da_lainnya').toggle(this.value==='Lainnya')">
               <option value="">-- Pilih --</option>
               <option value="Rabies Klinis" <?=$rab_da=='Rabies Klinis'?'selected':''?>>Rabies Klinis</option>
               <option value="Rabies Konfirmasi" <?=$rab_da=='Rabies Konfirmasi'?'selected':''?>>Rabies Konfirmasi</option>
               <option value="Lainnya" <?=$rab_da=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
+            <input type="text" id="rab_da_lainnya" name="rab_da_lainnya" class="form-control" placeholder="Tulis diagnosis awal lainnya"
+              style="margin-top:5px;display:<?=$rab_da=='Lainnya'?'block':'none'?>" value="">
           </div>
         </div>
         <div class="col-sm-3">
@@ -992,12 +994,14 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="hidden" name="dsub[]" value="Klinis GHPR">
             <input type="hidden" name="dtype[]" value="select">
             <?php $rab_dk=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_diagnosis_akhir'){$rab_dk=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control">
+            <select name="dval[]" class="form-control" onchange="$('#rab_dk_lainnya').toggle(this.value==='Lainnya')">
               <option value="">-- Pilih --</option>
               <option value="Rabies Klinis" <?=$rab_dk=='Rabies Klinis'?'selected':''?>>Rabies Klinis</option>
               <option value="Rabies Konfirmasi" <?=$rab_dk=='Rabies Konfirmasi'?'selected':''?>>Rabies Konfirmasi</option>
               <option value="Lainnya" <?=$rab_dk=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
+            <input type="text" id="rab_dk_lainnya" name="rab_dk_lainnya" class="form-control" placeholder="Tulis diagnosis akhir lainnya"
+              style="margin-top:5px;display:<?=$rab_dk=='Lainnya'?'block':'none'?>" value="">
           </div>
         </div>
         <div class="col-sm-3">
@@ -1313,6 +1317,8 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="Musang" <?=$rab_jhpr=='Musang'?'selected':''?>>Musang</option>
               <option value="Lainnya" <?=$rab_jhpr=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
+            <input type="text" id="rab_jhpr_lainnya" class="form-control" placeholder="Tulis jenis HPR lainnya"
+              style="margin-top:5px;display:<?=$rab_jhpr=='Lainnya'?'block':'none'?>" name="rab_jenis_hpr_lainnya" value="">
           </div>
         </div>
         <div class="col-sm-3">
@@ -1409,6 +1415,8 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="Mati sakit" <?=$rab_khpr2=='Mati sakit'?'selected':''?>>Mati sakit sendiri</option>
               <option value="Lainnya" <?=$rab_khpr2=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
+            <input type="text" id="rab_khpr2_lainnya" class="form-control" placeholder="Tulis kondisi HPR lainnya"
+              style="margin-top:5px;display:<?=$rab_khpr2=='Lainnya'?'block':'none'?>" name="rab_kondisi_hpr_lainnya" value="">
           </div>
         </div>
       </div>
@@ -1454,6 +1462,8 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
                   <option value="Otak hewan tersangka" <?=$rab_shpr=='Otak hewan tersangka'?'selected':''?>>Otak hewan tersangka</option>
                   <option value="Lainnya" <?=$rab_shpr=='Lainnya'?'selected':''?>>Lainnya</option>
                 </select>
+                <input type="text" id="rab_shpr_lainnya" class="form-control" placeholder="Tulis sediaan lainnya"
+                  style="margin-top:5px;display:<?=$rab_shpr=='Lainnya'?'block':'none'?>" name="rab_sediaan_hpr_lainnya" value="">
               </div>
             </div>
             <div class="col-sm-4">
@@ -1481,6 +1491,8 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
                   <option value="Negatif Rabies" <?=$rab_hlhpr=='Negatif Rabies'?'selected':''?>>Negatif Rabies</option>
                   <option value="Lainnya" <?=$rab_hlhpr=='Lainnya'?'selected':''?>>Lainnya</option>
                 </select>
+                <input type="text" id="rab_hlhpr_lainnya" class="form-control" placeholder="Tulis hasil lainnya"
+                  style="margin-top:5px;display:<?=$rab_hlhpr=='Lainnya'?'block':'none'?>" name="rab_hasil_lab_hpr_lainnya" value="">
               </div>
             </div>
           </div>
