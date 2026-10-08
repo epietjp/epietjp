@@ -2773,44 +2773,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             }
             $(function(){ toggleKontakHewan('<?=fv($v,"riwayat_kontak_hewan")?>'); });
             
-// ── GHPR WIZARD ──
-<?php if($id_penyakit==8): ?>
-var GHPR={cur:1,tot:6,labels:["","Identitas Laporan & Pasien","Skrining Gigitan/Luka HPR","Klinis Pasien","Informasi HPR & Riwayat Kontak","Kondisi Akhir & Keterangan","Tim PE"],
-go:function(n){
-    var e=[];
-    // Cek semua field required di page aktif — skip disabled dan hidden
-    $('#ghpr-page-'+GHPR.cur).find('input[required],select[required],textarea[required]').each(function(){
-      if($(this).is(':disabled')||$(this).closest('.form-group').is(':hidden')||$(this).is('[type=hidden]')) return;
-      if(!$(this).val()||$(this).val()===''){
-        e.push($(this).closest('.form-group').find('label').first().text().replace('*','').replace('(wajib)','').trim()||$(this).attr('name')||'Field wajib');
-        $(this).closest('.form-group').addClass('has-error');
-        $(this).css('border-color','#a94442');
-      } else {
-        $(this).closest('.form-group').removeClass('has-error');
-        $(this).css('border-color','');
-      }
-    });
-    if(e.length){
-      // Scroll ke field error pertama
-      var firstErr=$('#ghpr-page-'+GHPR.cur).find('.has-error').first();
-      if(firstErr.length) $('html,body').animate({scrollTop:firstErr.offset().top-80},300);
-      alert('Harap lengkapi field berikut (ditandai merah):\n• '+e.slice(0,5).join('\n• ')+(e.length>5?'\n• ...dan '+(e.length-5)+' lainnya':''));
-      return;
-    }
-    $('.ghpr-page').hide();GHPR.cur=n;$('#ghpr-page-'+n).show();
-    $('#ghpr-progress').css('width',(n/6*100).toFixed(1)+'%');
-    $('#ghpr-step-label').text('Halaman '+n+' dari 6: '+GHPR.labels[n]);
-    for(var i=1;i<=6;i++)$('#ghpr-dot-'+i).css('background',i<=n?'#1F4E79':'#BDC3C7');
-    $('html,body').animate({scrollTop:$('#ghpr-wizard').offset().top-60},300);},
-back:function(n){$('.ghpr-page').hide();GHPR.cur=n;$('#ghpr-page-'+n).show();$('#ghpr-progress').css('width',(n/6*100).toFixed(1)+'%');$('#ghpr-step-label').text('Halaman '+n+' dari 6: '+GHPR.labels[n]);for(var i=1;i<=6;i++)$('#ghpr-dot-'+i).css('background',i<=n?'#1F4E79':'#BDC3C7');$('html,body').animate({scrollTop:$('#ghpr-wizard').offset().top-60},300);}};
-$(document).on('click','.ghpr-next',function(){GHPR.go(parseInt($(this).data('next')));});
-$(document).on('click','.ghpr-prev',function(){GHPR.back(parseInt($(this).data('page'))-1);});
-$(document).on('click','.ghpr-save',function(){if(confirm('Simpan laporan PE?'))$('#formPE').submit();});
-$(document).on('click','.ghpr-keluar',function(){if(confirm('Keluar? Data belum tersimpan akan hilang.'))location.href='<?=base_url("zoonosis")?>';});
-$(document).on('click','.ghpr-dot',function(){var t=parseInt($(this).text());if(t<GHPR.cur)GHPR.back(t);});
-<?php endif; ?>
-
-</script>
           </div>
         </div>
 <!-- jenis_hewan dihapus, gunakan dp_hpr di variabel tambahan -->
@@ -3665,4 +3627,42 @@ function tambahTimPE() {
 function tambahKontakPN() {
     $("#tbl-kontak-pn").append('<div class="row kontak-pn-row" style="margin-bottom:6px"><div class="col-sm-2"><input type="text" name="kp_nama[]" class="form-control input-sm" placeholder="Nama"></div><div class="col-sm-1"><input type="number" name="kp_umur[]" class="form-control input-sm" placeholder="Umur"></div><div class="col-sm-2"><input type="text" name="kp_hub[]" class="form-control input-sm" placeholder="Hub."></div><div class="col-sm-2"><input type="date" name="kp_tgl_awal[]" class="form-control input-sm"></div><div class="col-sm-2"><input type="date" name="kp_tgl_akhir[]" class="form-control input-sm"></div><div class="col-sm-2"><input type="text" name="kp_status[]" class="form-control input-sm" placeholder="Status"></div><div class="col-sm-1"><button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest(\".kontak-pn-row\").remove()"><i class="fa fa-times"></i></button></div></div>');
 }
+
+
+// ── GHPR WIZARD ──
+<?php if($id_penyakit==8): ?>
+var GHPR={cur:1,tot:6,labels:["","Identitas Laporan & Pasien","Skrining Gigitan/Luka HPR","Klinis Pasien","Informasi HPR & Riwayat Kontak","Kondisi Akhir & Keterangan","Tim PE"],
+go:function(n){
+    var e=[];
+    // Cek semua field required di page aktif — skip disabled dan hidden
+    $('#ghpr-page-'+GHPR.cur).find('input[required],select[required],textarea[required]').each(function(){
+      if($(this).is(':disabled')||$(this).closest('.form-group').is(':hidden')||$(this).is('[type=hidden]')) return;
+      if(!$(this).val()||$(this).val()===''){
+        e.push($(this).closest('.form-group').find('label').first().text().replace('*','').replace('(wajib)','').trim()||$(this).attr('name')||'Field wajib');
+        $(this).closest('.form-group').addClass('has-error');
+        $(this).css('border-color','#a94442');
+      } else {
+        $(this).closest('.form-group').removeClass('has-error');
+        $(this).css('border-color','');
+      }
+    });
+    if(e.length){
+      // Scroll ke field error pertama
+      var firstErr=$('#ghpr-page-'+GHPR.cur).find('.has-error').first();
+      if(firstErr.length) $('html,body').animate({scrollTop:firstErr.offset().top-80},300);
+      alert('Harap lengkapi field berikut (ditandai merah):\n• '+e.slice(0,5).join('\n• ')+(e.length>5?'\n• ...dan '+(e.length-5)+' lainnya':''));
+      return;
+    }
+    $('.ghpr-page').hide();GHPR.cur=n;$('#ghpr-page-'+n).show();
+    $('#ghpr-progress').css('width',(n/6*100).toFixed(1)+'%');
+    $('#ghpr-step-label').text('Halaman '+n+' dari 6: '+GHPR.labels[n]);
+    for(var i=1;i<=6;i++)$('#ghpr-dot-'+i).css('background',i<=n?'#1F4E79':'#BDC3C7');
+    $('html,body').animate({scrollTop:$('#ghpr-wizard').offset().top-60},300);},
+back:function(n){$('.ghpr-page').hide();GHPR.cur=n;$('#ghpr-page-'+n).show();$('#ghpr-progress').css('width',(n/6*100).toFixed(1)+'%');$('#ghpr-step-label').text('Halaman '+n+' dari 6: '+GHPR.labels[n]);for(var i=1;i<=6;i++)$('#ghpr-dot-'+i).css('background',i<=n?'#1F4E79':'#BDC3C7');$('html,body').animate({scrollTop:$('#ghpr-wizard').offset().top-60},300);}};
+$(document).on('click','.ghpr-next',function(){GHPR.go(parseInt($(this).data('next')));});
+$(document).on('click','.ghpr-prev',function(){GHPR.back(parseInt($(this).data('page'))-1);});
+$(document).on('click','.ghpr-save',function(){if(confirm('Simpan laporan PE?'))$('#formPE').submit();});
+$(document).on('click','.ghpr-keluar',function(){if(confirm('Keluar? Data belum tersimpan akan hilang.'))location.href='<?=base_url("zoonosis")?>';});
+$(document).on('click','.ghpr-dot',function(){var t=parseInt($(this).text());if(t<GHPR.cur)GHPR.back(t);});
+<?php endif; ?>
 </script>
