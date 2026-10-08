@@ -1291,6 +1291,39 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
           </div>
         </div>
       </div>
+      <!-- R76 Alasan tidak SAR + R77 Keterangan klinis lainnya -->
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Alasan Tidak Diberikan SAR</label>
+            <input type="hidden" name="dkey[]" value="rab_alasan_tidak_sar">
+            <input type="hidden" name="dlabel[]" value="Alasan Tidak SAR GHPR">
+            <input type="hidden" name="dsub[]" value="Klinis GHPR">
+            <input type="hidden" name="dtype[]" value="select">
+            <?php $rab_atas=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_alasan_tidak_sar'){$rab_atas=$ed['var_value'];break;}} ?>
+            <select name="dval[]" class="form-control" onchange="$('#rab_atas_lainnya').toggle(this.value==='Lainnya')">
+              <option value="">-- Pilih (jika SAR tidak diberikan) --</option>
+              <option value="SAR tidak tersedia" <?=$rab_atas=='SAR tidak tersedia'?'selected':''?>>SAR tidak tersedia</option>
+              <option value="Pasien menolak" <?=$rab_atas=='Pasien menolak'?'selected':''?>>Pasien menolak</option>
+              <option value="Tidak ada indikasi" <?=$rab_atas=='Tidak ada indikasi'?'selected':''?>>Tidak ada indikasi</option>
+              <option value="Lainnya" <?=$rab_atas=='Lainnya'?'selected':''?>>Lainnya</option>
+            </select>
+            <input type="text" id="rab_atas_lainnya" class="form-control" placeholder="Tulis alasan lainnya"
+              style="margin-top:5px;display:<?=$rab_atas=='Lainnya'?'block':'none'?>" name="rab_alasan_tidak_sar_lainnya" value="">
+          </div>
+        </div>
+        <div class="col-sm-8">
+          <div class="form-group">
+            <label>Keterangan Klinis Lainnya</label>
+            <input type="hidden" name="dkey[]" value="rab_ket_klinis">
+            <input type="hidden" name="dlabel[]" value="Keterangan Klinis Lainnya GHPR">
+            <input type="hidden" name="dsub[]" value="Klinis GHPR">
+            <input type="hidden" name="dtype[]" value="text">
+            <?php $rab_kk=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_ket_klinis'){$rab_kk=$ed['var_value'];break;}} ?>
+            <textarea name="dval[]" class="form-control" rows="2" placeholder="Keterangan tambahan mengenai klinis pasien"><?=htmlspecialchars($rab_kk)?></textarea>
+          </div>
+        </div>
+      </div>
 
     </div>
     <?php endif; // end section F GHPR ?>
@@ -1380,12 +1413,16 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="hidden" name="dsub[]" value="Informasi HPR">
             <input type="hidden" name="dtype[]" value="select">
             <?php $rab_vhpr=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_vaksinasi_hpr'){$rab_vhpr=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control" onchange="$('#wrap_rab_tgl_vhpr').toggle(this.value==='Ya')">
+            <select name="dval[]" class="form-control" onchange="$('#wrap_rab_tgl_vhpr').toggle(this.value=='Pernah vaksin'||this.value=='Rutin vaksin');$('#rab_vhpr_lainnya').toggle(this.value==='Lainnya')">
               <option value="">-- Pilih --</option>
-              <option value="Ya" <?=$rab_vhpr=='Ya'?'selected':''?>>Ya</option>
-              <option value="Tidak" <?=$rab_vhpr=='Tidak'?'selected':''?>>Tidak</option>
+              <option value="Pernah vaksin" <?=$rab_vhpr=='Pernah vaksin'?'selected':''?>>Pernah vaksin (minimal 1x)</option>
+              <option value="Rutin vaksin" <?=$rab_vhpr=='Rutin vaksin'?'selected':''?>>Rutin vaksin</option>
+              <option value="Tidak pernah" <?=$rab_vhpr=='Tidak pernah'?'selected':''?>>Tidak pernah</option>
               <option value="Tidak Diketahui" <?=$rab_vhpr=='Tidak Diketahui'?'selected':''?>>Tidak Diketahui</option>
+              <option value="Lainnya" <?=$rab_vhpr=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
+            <input type="text" id="rab_vhpr_lainnya" class="form-control" placeholder="Tulis keterangan vaksinasi lainnya"
+              style="margin-top:5px;display:<?=$rab_vhpr=='Lainnya'?'block':'none'?>" name="rab_vaksinasi_hpr_lainnya" value="">
           </div>
         </div>
         <div class="col-sm-3" id="wrap_rab_tgl_vhpr" style="display:<?=$rab_vhpr=='Ya'?'block':'none'?>">
