@@ -76,6 +76,23 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <?php endif; ?>
 
     <!-- IDENTITAS PELAPOR -->
+    <!-- GHPR PAGINATION WIZARD -->
+    <?php if($id_penyakit==8): ?>
+    <div id="ghpr-wizard" style="margin-bottom:12px">
+      <div style="background:#1F4E79;color:#fff;padding:6px 14px;border-radius:4px 4px 0 0">
+        <small style="opacity:.8">Formulir PE Rabies — SKDR</small>
+      </div>
+      <div style="background:#EBF5FB;padding:8px 14px;border:1px solid #AED6F1;border-top:0;border-radius:0 0 4px 4px;margin-bottom:10px">
+        <div class="progress" style="height:5px;margin-bottom:5px;background:#D6EAF8">
+          <div id="ghpr-progress" class="progress-bar" style="width:16.6%;background:#1F4E79;transition:width .3s"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span id="ghpr-step-label" style="font-weight:700;color:#1F4E79;font-size:12px">Halaman 1 dari 6</span>
+          <span><?php for($pg=1;$pg<=6;$pg++): ?><span class="ghpr-dot label" id="ghpr-dot-<?=$pg?>" style="margin:0 2px;cursor:pointer;background:<?=$pg==1?'#1F4E79':'#BDC3C7'?>"><?=$pg?></span><?php endfor; ?></span>
+        </div>
+      </div>
+    </div>
+    <?php endif; ?>
     <!-- STATUS LAPORAN ANTRAKS -->
     <?php if($id_penyakit==14): ?>
     <div class="form-section">
@@ -825,6 +842,14 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; // end Section E Klinis - hide GHPR ?>
 
+    <?php if($id_penyakit==8): ?><div id="ghpr-page-1" class="ghpr-page" style="display:block"><?php endif; ?>
+    <?php if($id_penyakit==8): ?>
+    <div class="ghpr-nav-1" style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+      <small style="color:#888">Hal. 1/6: Identitas Laporan &amp; Pasien</small>
+      <div><button type="button" class="btn btn-primary ghpr-next" data-page="1" data-next="2">Selanjutnya <i class="fa fa-chevron-right"></i></button><button type="button" class="btn btn-success ghpr-save" style="margin-left:8px"><i class="fa fa-save"></i> Simpan</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
+    </div>
+    </div><!-- /ghpr-page-1 -->
+    <?php endif; ?>
     <!-- GEJALA INLINE setelah onset (khusus Lepto) -->
     <?php if($id_penyakit==26): ?>
     <div class="form-section">
@@ -908,6 +933,14 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <?php endif; ?>
 
 
+    <?php if($id_penyakit==8): ?><div id="ghpr-page-2" class="ghpr-page" style="display:none"><?php endif; ?>
+    <?php if($id_penyakit==8): ?>
+    <div class="ghpr-nav-2" style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+      <small style="color:#888">Hal. 2/6: Skrining Gigitan/Luka HPR</small>
+      <div><button type="button" class="btn btn-default ghpr-prev" data-page="2" style="margin-right:5px"><i class="fa fa-chevron-left"></i> Sebelumnya</button><button type="button" class="btn btn-primary ghpr-next" data-page="2" data-next="3">Selanjutnya <i class="fa fa-chevron-right"></i></button><button type="button" class="btn btn-success ghpr-save" style="margin-left:8px"><i class="fa fa-save"></i> Simpan</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
+    </div>
+    </div><!-- /ghpr-page-2 -->
+    <?php endif; ?>
     <!-- GHPR: Section F - Informasi Klinis Pasien -->
     <?php if($id_penyakit==8): ?>
     <div class="form-section">
@@ -964,17 +997,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="date" name="dval[]" class="form-control" value="<?=htmlspecialchars($rab_tm)?>">
           </div>
         </div>
-        <div class="col-sm-3" id="wrap_rab_tgl_keluar" style="display:<?=$rab_ri=='Ya'?'block':'none'?>">
-          <div class="form-group">
-            <label>Tanggal Keluar Rawat Inap</label>
-            <input type="hidden" name="dkey[]" value="rab_tgl_keluar_rs">
-            <input type="hidden" name="dlabel[]" value="Tgl Keluar RS GHPR">
-            <input type="hidden" name="dsub[]" value="Klinis GHPR">
-            <input type="hidden" name="dtype[]" value="date">
-            <?php $rab_tk=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_tgl_keluar_rs'){$rab_tk=$ed['var_value'];break;}} ?>
-            <input type="date" name="dval[]" class="form-control" value="<?=htmlspecialchars($rab_tk)?>">
-          </div>
-        </div>
       </div>
 
       <!-- Diagnosis Awal + Akhir -->
@@ -987,14 +1009,12 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="hidden" name="dsub[]" value="Klinis GHPR">
             <input type="hidden" name="dtype[]" value="select">
             <?php $rab_da=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_diagnosis_awal'){$rab_da=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control" onchange="$('#rab_da_lainnya').toggle(this.value==='Lainnya')">
+            <select name="dval[]" class="form-control">
               <option value="">-- Pilih --</option>
               <option value="Rabies Klinis" <?=$rab_da=='Rabies Klinis'?'selected':''?>>Rabies Klinis</option>
               <option value="Rabies Konfirmasi" <?=$rab_da=='Rabies Konfirmasi'?'selected':''?>>Rabies Konfirmasi</option>
               <option value="Lainnya" <?=$rab_da=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
-            <input type="text" id="rab_da_lainnya" name="rab_da_lainnya" class="form-control" placeholder="Tulis diagnosis awal lainnya"
-              style="margin-top:5px;display:<?=$rab_da=='Lainnya'?'block':'none'?>" value="">
           </div>
         </div>
         <div class="col-sm-3">
@@ -1005,14 +1025,12 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="hidden" name="dsub[]" value="Klinis GHPR">
             <input type="hidden" name="dtype[]" value="select">
             <?php $rab_dk=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_diagnosis_akhir'){$rab_dk=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control" onchange="$('#rab_dk_lainnya').toggle(this.value==='Lainnya')">
+            <select name="dval[]" class="form-control">
               <option value="">-- Pilih --</option>
               <option value="Rabies Klinis" <?=$rab_dk=='Rabies Klinis'?'selected':''?>>Rabies Klinis</option>
               <option value="Rabies Konfirmasi" <?=$rab_dk=='Rabies Konfirmasi'?'selected':''?>>Rabies Konfirmasi</option>
               <option value="Lainnya" <?=$rab_dk=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
-            <input type="text" id="rab_dk_lainnya" name="rab_dk_lainnya" class="form-control" placeholder="Tulis diagnosis akhir lainnya"
-              style="margin-top:5px;display:<?=$rab_dk=='Lainnya'?'block':'none'?>" value="">
           </div>
         </div>
         <div class="col-sm-3">
@@ -1055,27 +1073,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       </div>
       <div id="wrap_rab_lab" style="display:<?=$rab_lab=='Ya'?'block':'none'?>">
         <div class="row">
-          <div class="col-sm-3">
-            <div class="form-group">
-              <label>Nama Laboratorium</label>
-              <input type="hidden" name="dkey[]" value="rab_nama_lab">
-              <input type="hidden" name="dlabel[]" value="Nama Lab GHPR">
-              <input type="hidden" name="dsub[]" value="Klinis GHPR">
-              <input type="hidden" name="dtype[]" value="select">
-              <?php $rab_nlab=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_nama_lab'){$rab_nlab=$ed['var_value'];break;}} ?>
-              <select name="dval[]" class="form-control" onchange="$('#rab_nlab_lainnya').toggle(this.value==='Lainnya')">
-                <option value="">-- Pilih Lab --</option>
-                <option value="BBLK Jakarta" <?=$rab_nlab=='BBLK Jakarta'?'selected':''?>>BBLK Jakarta</option>
-                <option value="BBLK Surabaya" <?=$rab_nlab=='BBLK Surabaya'?'selected':''?>>BBLK Surabaya</option>
-                <option value="BBLK Makassar" <?=$rab_nlab=='BBLK Makassar'?'selected':''?>>BBLK Makassar</option>
-                <option value="Litbangkes/BRIN" <?=$rab_nlab=='Litbangkes/BRIN'?'selected':''?>>Litbangkes/BRIN</option>
-                <option value="Lab RS Rujukan" <?=$rab_nlab=='Lab RS Rujukan'?'selected':''?>>Lab RS Rujukan</option>
-                <option value="Lainnya" <?=$rab_nlab=='Lainnya'?'selected':''?>>Lainnya</option>
-              </select>
-              <input type="text" id="rab_nlab_lainnya" class="form-control" placeholder="Tulis nama laboratorium"
-                style="margin-top:5px;display:<?=$rab_nlab=='Lainnya'?'block':'none'?>" name="rab_nama_lab_lainnya" value="">
-            </div>
-          </div>
           <div class="col-sm-3">
             <div class="form-group">
               <label>Jenis Pemeriksaan Lab</label>
@@ -1323,66 +1320,18 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
           </div>
         </div>
       </div>
-      <!-- R73 Alasan tidak VAR -->
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Alasan Tidak Diberikan VAR</label>
-            <input type="hidden" name="dkey[]" value="rab_alasan_tidak_var">
-            <input type="hidden" name="dlabel[]" value="Alasan Tidak VAR GHPR">
-            <input type="hidden" name="dsub[]" value="Klinis GHPR">
-            <input type="hidden" name="dtype[]" value="select">
-            <?php $rab_atav=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_alasan_tidak_var'){$rab_atav=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control" onchange="$('#rab_atav_lainnya').toggle(this.value==='Lainnya')">
-              <option value="">-- Pilih (jika VAR tidak diberikan) --</option>
-              <option value="VAR tidak tersedia" <?=$rab_atav=='VAR tidak tersedia'?'selected':''?>>VAR tidak tersedia</option>
-              <option value="Pasien menolak" <?=$rab_atav=='Pasien menolak'?'selected':''?>>Pasien menolak</option>
-              <option value="Tidak ada indikasi" <?=$rab_atav=='Tidak ada indikasi'?'selected':''?>>Tidak ada indikasi</option>
-              <option value="Pasien meninggal sebelum VAR" <?=$rab_atav=='Pasien meninggal sebelum VAR'?'selected':''?>>Pasien meninggal sebelum VAR</option>
-              <option value="Lainnya" <?=$rab_atav=='Lainnya'?'selected':''?>>Lainnya</option>
-            </select>
-            <input type="text" id="rab_atav_lainnya" class="form-control" placeholder="Tulis alasan lainnya"
-              style="margin-top:5px;display:<?=$rab_atav=='Lainnya'?'block':'none'?>" name="rab_alasan_tidak_var_lainnya" value="">
-          </div>
-        </div>
-      </div>
-      <!-- R76 Alasan tidak SAR + R77 Keterangan klinis lainnya -->
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Alasan Tidak Diberikan SAR</label>
-            <input type="hidden" name="dkey[]" value="rab_alasan_tidak_sar">
-            <input type="hidden" name="dlabel[]" value="Alasan Tidak SAR GHPR">
-            <input type="hidden" name="dsub[]" value="Klinis GHPR">
-            <input type="hidden" name="dtype[]" value="select">
-            <?php $rab_atas=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_alasan_tidak_sar'){$rab_atas=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control" onchange="$('#rab_atas_lainnya').toggle(this.value==='Lainnya')">
-              <option value="">-- Pilih (jika SAR tidak diberikan) --</option>
-              <option value="SAR tidak tersedia" <?=$rab_atas=='SAR tidak tersedia'?'selected':''?>>SAR tidak tersedia</option>
-              <option value="Pasien menolak" <?=$rab_atas=='Pasien menolak'?'selected':''?>>Pasien menolak</option>
-              <option value="Tidak ada indikasi" <?=$rab_atas=='Tidak ada indikasi'?'selected':''?>>Tidak ada indikasi</option>
-              <option value="Lainnya" <?=$rab_atas=='Lainnya'?'selected':''?>>Lainnya</option>
-            </select>
-            <input type="text" id="rab_atas_lainnya" class="form-control" placeholder="Tulis alasan lainnya"
-              style="margin-top:5px;display:<?=$rab_atas=='Lainnya'?'block':'none'?>" name="rab_alasan_tidak_sar_lainnya" value="">
-          </div>
-        </div>
-        <div class="col-sm-8">
-          <div class="form-group">
-            <label>Keterangan Klinis Lainnya</label>
-            <input type="hidden" name="dkey[]" value="rab_ket_klinis">
-            <input type="hidden" name="dlabel[]" value="Keterangan Klinis Lainnya GHPR">
-            <input type="hidden" name="dsub[]" value="Klinis GHPR">
-            <input type="hidden" name="dtype[]" value="text">
-            <?php $rab_kk=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_ket_klinis'){$rab_kk=$ed['var_value'];break;}} ?>
-            <textarea name="dval[]" class="form-control" rows="2" placeholder="Keterangan tambahan mengenai klinis pasien"><?=htmlspecialchars($rab_kk)?></textarea>
-          </div>
-        </div>
-      </div>
 
     </div>
     <?php endif; // end section F GHPR ?>
 
+    <?php if($id_penyakit==8): ?><div id="ghpr-page-3" class="ghpr-page" style="display:none"><?php endif; ?>
+    <?php if($id_penyakit==8): ?>
+    <div class="ghpr-nav-3" style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+      <small style="color:#888">Hal. 3/6: Klinis Pasien</small>
+      <div><button type="button" class="btn btn-default ghpr-prev" data-page="3" style="margin-right:5px"><i class="fa fa-chevron-left"></i> Sebelumnya</button><button type="button" class="btn btn-primary ghpr-next" data-page="3" data-next="4">Selanjutnya <i class="fa fa-chevron-right"></i></button><button type="button" class="btn btn-success ghpr-save" style="margin-left:8px"><i class="fa fa-save"></i> Simpan</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
+    </div>
+    </div><!-- /ghpr-page-3 -->
+    <?php endif; ?>
     <!-- GHPR: Section G - Informasi HPR -->
     <?php if($id_penyakit==8): ?>
     <div class="form-section">
@@ -1405,8 +1354,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="Musang" <?=$rab_jhpr=='Musang'?'selected':''?>>Musang</option>
               <option value="Lainnya" <?=$rab_jhpr=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
-            <input type="text" id="rab_jhpr_lainnya" class="form-control" placeholder="Tulis jenis HPR lainnya"
-              style="margin-top:5px;display:<?=$rab_jhpr=='Lainnya'?'block':'none'?>" name="rab_jenis_hpr_lainnya" value="">
           </div>
         </div>
         <div class="col-sm-3">
@@ -1468,16 +1415,12 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="hidden" name="dsub[]" value="Informasi HPR">
             <input type="hidden" name="dtype[]" value="select">
             <?php $rab_vhpr=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_vaksinasi_hpr'){$rab_vhpr=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control" onchange="$('#wrap_rab_tgl_vhpr').toggle(this.value=='Pernah vaksin'||this.value=='Rutin vaksin');$('#rab_vhpr_lainnya').toggle(this.value==='Lainnya')">
+            <select name="dval[]" class="form-control" onchange="$('#wrap_rab_tgl_vhpr').toggle(this.value==='Ya')">
               <option value="">-- Pilih --</option>
-              <option value="Pernah vaksin" <?=$rab_vhpr=='Pernah vaksin'?'selected':''?>>Pernah vaksin (minimal 1x)</option>
-              <option value="Rutin vaksin" <?=$rab_vhpr=='Rutin vaksin'?'selected':''?>>Rutin vaksin</option>
-              <option value="Tidak pernah" <?=$rab_vhpr=='Tidak pernah'?'selected':''?>>Tidak pernah</option>
+              <option value="Ya" <?=$rab_vhpr=='Ya'?'selected':''?>>Ya</option>
+              <option value="Tidak" <?=$rab_vhpr=='Tidak'?'selected':''?>>Tidak</option>
               <option value="Tidak Diketahui" <?=$rab_vhpr=='Tidak Diketahui'?'selected':''?>>Tidak Diketahui</option>
-              <option value="Lainnya" <?=$rab_vhpr=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
-            <input type="text" id="rab_vhpr_lainnya" class="form-control" placeholder="Tulis keterangan vaksinasi lainnya"
-              style="margin-top:5px;display:<?=$rab_vhpr=='Lainnya'?'block':'none'?>" name="rab_vaksinasi_hpr_lainnya" value="">
           </div>
         </div>
         <div class="col-sm-3" id="wrap_rab_tgl_vhpr" style="display:<?=$rab_vhpr=='Ya'?'block':'none'?>">
@@ -1507,8 +1450,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="Mati sakit" <?=$rab_khpr2=='Mati sakit'?'selected':''?>>Mati sakit sendiri</option>
               <option value="Lainnya" <?=$rab_khpr2=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
-            <input type="text" id="rab_khpr2_lainnya" class="form-control" placeholder="Tulis kondisi HPR lainnya"
-              style="margin-top:5px;display:<?=$rab_khpr2=='Lainnya'?'block':'none'?>" name="rab_kondisi_hpr_lainnya" value="">
           </div>
         </div>
       </div>
@@ -1554,8 +1495,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
                   <option value="Otak hewan tersangka" <?=$rab_shpr=='Otak hewan tersangka'?'selected':''?>>Otak hewan tersangka</option>
                   <option value="Lainnya" <?=$rab_shpr=='Lainnya'?'selected':''?>>Lainnya</option>
                 </select>
-                <input type="text" id="rab_shpr_lainnya" class="form-control" placeholder="Tulis sediaan lainnya"
-                  style="margin-top:5px;display:<?=$rab_shpr=='Lainnya'?'block':'none'?>" name="rab_sediaan_hpr_lainnya" value="">
               </div>
             </div>
             <div class="col-sm-4">
@@ -1583,8 +1522,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
                   <option value="Negatif Rabies" <?=$rab_hlhpr=='Negatif Rabies'?'selected':''?>>Negatif Rabies</option>
                   <option value="Lainnya" <?=$rab_hlhpr=='Lainnya'?'selected':''?>>Lainnya</option>
                 </select>
-                <input type="text" id="rab_hlhpr_lainnya" class="form-control" placeholder="Tulis hasil lainnya"
-                  style="margin-top:5px;display:<?=$rab_hlhpr=='Lainnya'?'block':'none'?>" name="rab_hasil_lab_hpr_lainnya" value="">
               </div>
             </div>
           </div>
@@ -1593,6 +1530,14 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; // end Section G HPR GHPR ?>
 
+    <?php if($id_penyakit==8): ?><div id="ghpr-page-4" class="ghpr-page" style="display:none"><?php endif; ?>
+    <?php if($id_penyakit==8): ?>
+    <div class="ghpr-nav-4" style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+      <small style="color:#888">Hal. 4/6: Informasi HPR &amp; Riwayat Kontak</small>
+      <div><button type="button" class="btn btn-default ghpr-prev" data-page="4" style="margin-right:5px"><i class="fa fa-chevron-left"></i> Sebelumnya</button><button type="button" class="btn btn-primary ghpr-next" data-page="4" data-next="5">Selanjutnya <i class="fa fa-chevron-right"></i></button><button type="button" class="btn btn-success ghpr-save" style="margin-left:8px"><i class="fa fa-save"></i> Simpan</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
+    </div>
+    </div><!-- /ghpr-page-4 -->
+    <?php endif; ?>
     <!-- GHPR: Section F Riwayat Kontak -->
     <?php if($id_penyakit==8): ?>
     <div class="form-section">
@@ -1668,8 +1613,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="5" <?=$rab_thg=='5'?'selected':''?>>5</option>
               <option value="Lainnya" <?=$rab_thg=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
-            <input type="text" id="rab_thg_lainnya" class="form-control" placeholder="Tulis jumlah hewan"
-              style="margin-top:5px;display:<?=$rab_thg=='Lainnya'?'block':'none'?>" name="rab_total_hewan_lainnya" value="">
           </div>
         </div>
         <div class="col-sm-4">
@@ -2275,6 +2218,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; // end bukan GHPR/Rabies - section O ?>
 
+    <?php if($id_penyakit==8): ?><div id="ghpr-page-6" class="ghpr-page" style="display:none"><?php endif; ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-users"></i> <b><?=$id_penyakit==8?"G. Tim Penyelidikan Epidemiologi":"P. Tim Penyelidikan Epidemiologi"?></b></div>
       <small class="text-muted">Anggota tim PE yang terlibat dalam penyelidikan</small>
@@ -2773,6 +2717,14 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; ?>
 
+    <?php if($id_penyakit==8): ?><div id="ghpr-page-5" class="ghpr-page" style="display:none"><?php endif; ?>
+    <?php if($id_penyakit==8): ?>
+    <div class="ghpr-nav-5" style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+      <small style="color:#888">Hal. 5/6: Kondisi Akhir &amp; Keterangan Lainnya</small>
+      <div><button type="button" class="btn btn-default ghpr-prev" data-page="5" style="margin-right:5px"><i class="fa fa-chevron-left"></i> Sebelumnya</button><button type="button" class="btn btn-primary ghpr-next" data-page="5" data-next="6">Selanjutnya <i class="fa fa-chevron-right"></i></button><button type="button" class="btn btn-success ghpr-save" style="margin-left:8px"><i class="fa fa-save"></i> Simpan</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
+    </div>
+    </div><!-- /ghpr-page-5 -->
+    <?php endif; ?>
     <!-- KONTAK KASUS LAIN (Lepto + Anthraks) -->
     <?php if(in_array($id_penyakit, array(26,14))): ?>
     <div class="form-section">
@@ -2818,6 +2770,57 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
                 $('#detail-kontak-hewan').toggle(val === '1');
             }
             $(function(){ toggleKontakHewan('<?=fv($v,"riwayat_kontak_hewan")?>'); });
+
+// ── GHPR WIZARD JS ────────────────────────────────────────────────────────
+<?php if($id_penyakit==8): ?>
+var GHPR = {
+  cur: 1, tot: 6,
+  labels: ["","Identitas Laporan & Pasien","Skrining Gigitan/Luka HPR","Klinis Pasien","Informasi HPR & Riwayat Kontak","Kondisi Akhir & Keterangan","Tim PE"],
+  go: function(n) {
+    // Validasi required di page aktif
+    var errs = [];
+    $('#ghpr-page-'+GHPR.cur).find('[required]').each(function(){
+      if (!$(this).val()) {
+        errs.push($(this).closest('.form-group').find('label').first().text().replace('*','').trim());
+        $(this).closest('.form-group').addClass('has-error');
+      } else {
+        $(this).closest('.form-group').removeClass('has-error');
+      }
+    });
+    if (errs.length) { alert('Harap lengkapi:\n• '+errs.join('\n• ')); return; }
+    $('.ghpr-page').hide();
+    GHPR.cur = n;
+    $('#ghpr-page-'+n).show();
+    var pct = (n/GHPR.tot*100).toFixed(1);
+    $('#ghpr-progress').css('width', pct+'%');
+    $('#ghpr-step-label').text('Halaman '+n+' dari '+GHPR.tot+': '+GHPR.labels[n]);
+    for(var i=1;i<=GHPR.tot;i++) $('#ghpr-dot-'+i).css('background',i<=n?'#1F4E79':'#BDC3C7');
+    $('html,body').animate({scrollTop:$('#ghpr-wizard').offset().top-60},300);
+  },
+  back: function(n) {
+    $('.ghpr-page').hide();
+    GHPR.cur = n;
+    $('#ghpr-page-'+n).show();
+    var pct = (n/GHPR.tot*100).toFixed(1);
+    $('#ghpr-progress').css('width', pct+'%');
+    $('#ghpr-step-label').text('Halaman '+n+' dari '+GHPR.tot+': '+GHPR.labels[n]);
+    for(var i=1;i<=GHPR.tot;i++) $('#ghpr-dot-'+i).css('background',i<=n?'#1F4E79':'#BDC3C7');
+    $('html,body').animate({scrollTop:$('#ghpr-wizard').offset().top-60},300);
+  }
+};
+$(document).on('click','.ghpr-next',function(){ GHPR.go(parseInt($(this).data('next'))); });
+$(document).on('click','.ghpr-prev',function(){ GHPR.back(parseInt($(this).data('page'))-1); });
+$(document).on('click','.ghpr-save',function(){
+  if(confirm('Simpan laporan PE GHPR/Rabies?')) $('#formPE').submit();
+});
+$(document).on('click','.ghpr-keluar',function(){
+  if(confirm('Keluar? Data yang belum disimpan akan hilang.')) location.href='<?=base_url("zoonosis")?>';
+});
+$(document).on('click','.ghpr-dot',function(){
+  var t=parseInt($(this).text());
+  if(t<GHPR.cur) GHPR.back(t);
+});
+<?php endif; ?>
             </script>
           </div>
         </div>
@@ -3238,6 +3241,13 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       <a href="<?=site_url('zoonosis/daftar')?>" class="btn btn-default">
         <i class="fa fa-arrow-left"></i> Kembali
       </a>
+    <?php if($id_penyakit==8): ?>
+    <div class="ghpr-nav-6" style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+      <small style="color:#888">Hal. 6/6: Tim Penyelidikan Epidemiologi</small>
+      <div><button type="button" class="btn btn-default ghpr-prev" data-page="6" style="margin-right:5px"><i class="fa fa-chevron-left"></i> Sebelumnya</button><button type="button" class="btn btn-success ghpr-save"><i class="fa fa-check-circle"></i> Simpan Laporan PE</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
+    </div>
+    </div><!-- /ghpr-page-6 -->
+    <?php endif; ?>
     </div>
     </form>
 
