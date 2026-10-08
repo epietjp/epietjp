@@ -1291,6 +1291,29 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
           </div>
         </div>
       </div>
+      <!-- R73 Alasan tidak VAR -->
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Alasan Tidak Diberikan VAR</label>
+            <input type="hidden" name="dkey[]" value="rab_alasan_tidak_var">
+            <input type="hidden" name="dlabel[]" value="Alasan Tidak VAR GHPR">
+            <input type="hidden" name="dsub[]" value="Klinis GHPR">
+            <input type="hidden" name="dtype[]" value="select">
+            <?php $rab_atav=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_alasan_tidak_var'){$rab_atav=$ed['var_value'];break;}} ?>
+            <select name="dval[]" class="form-control" onchange="$('#rab_atav_lainnya').toggle(this.value==='Lainnya')">
+              <option value="">-- Pilih (jika VAR tidak diberikan) --</option>
+              <option value="VAR tidak tersedia" <?=$rab_atav=='VAR tidak tersedia'?'selected':''?>>VAR tidak tersedia</option>
+              <option value="Pasien menolak" <?=$rab_atav=='Pasien menolak'?'selected':''?>>Pasien menolak</option>
+              <option value="Tidak ada indikasi" <?=$rab_atav=='Tidak ada indikasi'?'selected':''?>>Tidak ada indikasi</option>
+              <option value="Pasien meninggal sebelum VAR" <?=$rab_atav=='Pasien meninggal sebelum VAR'?'selected':''?>>Pasien meninggal sebelum VAR</option>
+              <option value="Lainnya" <?=$rab_atav=='Lainnya'?'selected':''?>>Lainnya</option>
+            </select>
+            <input type="text" id="rab_atav_lainnya" class="form-control" placeholder="Tulis alasan lainnya"
+              style="margin-top:5px;display:<?=$rab_atav=='Lainnya'?'block':'none'?>" name="rab_alasan_tidak_var_lainnya" value="">
+          </div>
+        </div>
+      </div>
       <!-- R76 Alasan tidak SAR + R77 Keterangan klinis lainnya -->
       <div class="row">
         <div class="col-sm-4">
@@ -1613,6 +1636,8 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="5" <?=$rab_thg=='5'?'selected':''?>>5</option>
               <option value="Lainnya" <?=$rab_thg=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
+            <input type="text" id="rab_thg_lainnya" class="form-control" placeholder="Tulis jumlah hewan"
+              style="margin-top:5px;display:<?=$rab_thg=='Lainnya'?'block':'none'?>" name="rab_total_hewan_lainnya" value="">
           </div>
         </div>
         <div class="col-sm-4">
