@@ -625,6 +625,14 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         </div>
       </div>
 
+<?php if($id_penyakit==8): ?>
+<div style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+  <small style="color:#888">Hal. 1/6: Identitas Laporan &amp; Pasien</small>
+  <div><button type="button" class="btn btn-primary ghpr-next" data-page="1" data-next="2">Selanjutnya <i class="fa fa-chevron-right"></i></button><button type="button" class="btn btn-success ghpr-save" style="margin-left:8px"><i class="fa fa-save"></i> Simpan</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
+</div>
+</div><!-- /ghpr-page-1 -->
+<?php endif; ?>
+<?php if($id_penyakit==8): ?><div id="ghpr-page-2" class="ghpr-page" style="display:none"><?php endif; ?>
     <!-- GHPR: Section E - Informasi Gigitan/Luka HPR -->
     <?php if($id_penyakit==8): ?>
     <div class="form-section">
@@ -838,14 +846,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; // end Section E Klinis - hide GHPR ?>
 
-<?php if($id_penyakit==8): ?>
-<div style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
-  <small style="color:#888">Hal. 1/6: Identitas Laporan &amp; Pasien</small>
-  <div><button type="button" class="btn btn-primary ghpr-next" data-page="1" data-next="2">Selanjutnya <i class="fa fa-chevron-right"></i></button><button type="button" class="btn btn-success ghpr-save" style="margin-left:8px"><i class="fa fa-save"></i> Simpan</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
-</div>
-</div><!-- /ghpr-page-1 -->
-<?php endif; ?>
-<?php if($id_penyakit==8): ?><div id="ghpr-page-2" class="ghpr-page" style="display:none"><?php endif; ?>
     <!-- GEJALA INLINE setelah onset (khusus Lepto) -->
     <?php if($id_penyakit==26): ?>
     <div class="form-section">
