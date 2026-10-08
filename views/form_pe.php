@@ -1057,6 +1057,27 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="row">
           <div class="col-sm-3">
             <div class="form-group">
+              <label>Nama Laboratorium</label>
+              <input type="hidden" name="dkey[]" value="rab_nama_lab">
+              <input type="hidden" name="dlabel[]" value="Nama Lab GHPR">
+              <input type="hidden" name="dsub[]" value="Klinis GHPR">
+              <input type="hidden" name="dtype[]" value="select">
+              <?php $rab_nlab=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_nama_lab'){$rab_nlab=$ed['var_value'];break;}} ?>
+              <select name="dval[]" class="form-control" onchange="$('#rab_nlab_lainnya').toggle(this.value==='Lainnya')">
+                <option value="">-- Pilih Lab --</option>
+                <option value="BBLK Jakarta" <?=$rab_nlab=='BBLK Jakarta'?'selected':''?>>BBLK Jakarta</option>
+                <option value="BBLK Surabaya" <?=$rab_nlab=='BBLK Surabaya'?'selected':''?>>BBLK Surabaya</option>
+                <option value="BBLK Makassar" <?=$rab_nlab=='BBLK Makassar'?'selected':''?>>BBLK Makassar</option>
+                <option value="Litbangkes/BRIN" <?=$rab_nlab=='Litbangkes/BRIN'?'selected':''?>>Litbangkes/BRIN</option>
+                <option value="Lab RS Rujukan" <?=$rab_nlab=='Lab RS Rujukan'?'selected':''?>>Lab RS Rujukan</option>
+                <option value="Lainnya" <?=$rab_nlab=='Lainnya'?'selected':''?>>Lainnya</option>
+              </select>
+              <input type="text" id="rab_nlab_lainnya" class="form-control" placeholder="Tulis nama laboratorium"
+                style="margin-top:5px;display:<?=$rab_nlab=='Lainnya'?'block':'none'?>" name="rab_nama_lab_lainnya" value="">
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
               <label>Jenis Pemeriksaan Lab</label>
               <input type="hidden" name="dkey[]" value="rab_jenis_pemeriksaan_lab">
               <input type="hidden" name="dlabel[]" value="Jenis Pemeriksaan Lab GHPR">
