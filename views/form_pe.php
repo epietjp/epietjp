@@ -54,6 +54,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <input type="hidden" name="id" value="<?=$is_edit ? $pe['id'] : ''?>">
     <input type="hidden" name="id_penyakit" value="<?=$id_penyakit?>">
 
+<?php if($id_penyakit==8): ?><div id="ghpr-page-1" class="ghpr-page" style="display:block"><?php endif; ?>
     <?php if(!empty($list_diagnosa)): ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-stethoscope"></i> <b>Diagnosa</b></div>
@@ -88,7 +89,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
   </div>
 </div>
 <?php endif; ?>
-<?php if($id_penyakit==8): ?><div id="ghpr-page-1" class="ghpr-page" style="display:block"><?php endif; ?>
     <!-- STATUS LAPORAN ANTRAKS -->
     <?php if($id_penyakit==14): ?>
     <div class="form-section">
