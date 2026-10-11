@@ -1531,9 +1531,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
   <small style="color:#888">Hal. 4/6: Informasi HPR &amp; Riwayat Kontak</small>
   <div><button type="button" class="btn btn-default ghpr-prev" data-page="4" style="margin-right:5px"><i class="fa fa-chevron-left"></i> Sebelumnya</button><button type="button" class="btn btn-primary ghpr-next" data-page="4" data-next="5">Selanjutnya <i class="fa fa-chevron-right"></i></button><button type="button" class="btn btn-success ghpr-save" style="margin-left:8px"><i class="fa fa-save"></i> Simpan</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
 </div>
-</div><!-- /ghpr-page-4 -->
-<?php endif; ?>
-<?php if($id_penyakit==8): ?><div id="ghpr-page-5" class="ghpr-page" style="display:none"><?php endif; ?>
     <!-- GHPR: Section F Riwayat Kontak -->
     <?php if($id_penyakit==8): ?>
     <div class="form-section">
@@ -2192,6 +2189,9 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- KONTAK PENYELIDIKAN & TIM PE -->
 
     <!-- KETERANGAN -->
+</div><!-- /ghpr-page-4 -->
+<?php endif; ?>
+<?php if($id_penyakit==8): ?><div id="ghpr-page-5" class="ghpr-page" style="display:none"><?php endif; ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-sticky-note"></i> <b><?=$id_penyakit==8?"H. Keterangan Lainnya":"N. Keterangan Lain"?></b></div>
       <div class="form-group">
