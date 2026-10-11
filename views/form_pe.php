@@ -1318,6 +1318,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       </div>
 
     </div>
+    </div><!-- /form-section F Klinis -->
     <?php endif; // end section F GHPR ?>
 
 <?php if($id_penyakit==8): ?>
@@ -1526,11 +1527,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; // end Section G HPR GHPR ?>
 
-<?php if($id_penyakit==8): ?>
-<div style="background:#F8F9FA;border:1px solid #DEE2E6;border-radius:4px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
-  <small style="color:#888">Hal. 4/6: Informasi HPR &amp; Riwayat Kontak</small>
-  <div><button type="button" class="btn btn-default ghpr-prev" data-page="4" style="margin-right:5px"><i class="fa fa-chevron-left"></i> Sebelumnya</button><button type="button" class="btn btn-primary ghpr-next" data-page="4" data-next="5">Selanjutnya <i class="fa fa-chevron-right"></i></button><button type="button" class="btn btn-success ghpr-save" style="margin-left:8px"><i class="fa fa-save"></i> Simpan</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
-</div>
     <!-- GHPR: Section F Riwayat Kontak -->
     <?php if($id_penyakit==8): ?>
     <div class="form-section">
@@ -2193,7 +2189,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       <small style="color:#888">Hal. 4/6: Informasi HPR &amp; Riwayat Kontak</small>
       <div><button type="button" class="btn btn-default ghpr-prev" data-page="4" style="margin-right:5px"><i class="fa fa-chevron-left"></i> Sebelumnya</button><button type="button" class="btn btn-primary ghpr-next" data-page="4" data-next="5">Selanjutnya <i class="fa fa-chevron-right"></i></button><button type="button" class="btn btn-success ghpr-save" style="margin-left:8px"><i class="fa fa-save"></i> Simpan</button><button type="button" class="btn btn-default ghpr-keluar" style="margin-left:5px"><i class="fa fa-times"></i> Keluar</button></div>
     </div>
-    <?php endif; ?>
     <!-- KETERANGAN -->
 </div><!-- /ghpr-page-4 -->
 <?php endif; ?>
