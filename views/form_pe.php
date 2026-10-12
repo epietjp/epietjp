@@ -2544,9 +2544,9 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       </div>
     </div>
     <?php endif; ?>
-    <?php if(!in_array($id_penyakit, array(8,14))): ?>
+    <?php if($id_penyakit != 8): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-phone"></i> <b>O. Kontak Penyelidikan</b></div>
+      <div class="form-section-title"><i class="fa fa-phone"></i> <b><?=$id_penyakit==14?'O. Kontak Penyelidikan':'O. Kontak Penyelidikan'?></b></div>
       <small class="text-muted">Narasumber (pejabat/petugas/dokter) yang dihubungi saat penyelidikan</small>
       <div id="tbl-kontak-pe">
         <div class="row kontak-pe-row" style="margin-bottom:6px">
