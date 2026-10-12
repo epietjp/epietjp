@@ -2566,14 +2566,12 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       </div></div></div>
     <?php endif; ?>
     </div>
-    <?php if($id_penyakit != 14): ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-sticky-note"></i> <b><?=$id_penyakit==8?"I. Keterangan Lainnya":($id_penyakit==14?"K. Keterangan Lainnya":"N. Keterangan Lain")?></b></div>
       <div class="form-group">
         <textarea name="ket_lain" class="form-control" rows="3" placeholder="Keterangan tambahan..."><?=fv($v,'ket_lain')?></textarea>
       </div>
     </div>
-    <?php endif; ?>
     <?php if($id_penyakit != 8): ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-phone"></i> <b><?=$id_penyakit==14?"L. Kontak Penyelidikan":"O. Kontak Penyelidikan"?></b></div>
