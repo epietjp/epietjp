@@ -1974,7 +1974,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; // end Section H Spesimen - hide GHPR ?>
 
-    <?php if(!in_array($id_penyakit, array(8))): // section I - hide GHPR/Rabies ?>
+    <?php if(!in_array($id_penyakit, array(8,14))): // section I - hide GHPR/Rabies dan Antraks (rawat inap di section E) ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-hospital-o"></i> <b>I. Rawat Inap / RS</b></div>
       <small class="text-muted">Nama RS/Klinik | Tanggal Masuk | Keterangan</small>
@@ -2207,7 +2207,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <textarea name="ket_lain" class="form-control" rows="3" placeholder="Keterangan tambahan..."><?=fv($v,'ket_lain')?></textarea>
       </div>
     </div>
-    <?php if(!in_array($id_penyakit, array(8))): ?>
+    <?php if(!in_array($id_penyakit, array(8,14))): ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-phone"></i> <b>O. Kontak Penyelidikan</b></div>
       <small class="text-muted">Narasumber (pejabat/petugas/dokter) yang dihubungi saat penyelidikan</small>
