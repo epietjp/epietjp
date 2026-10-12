@@ -517,6 +517,7 @@ class Zoonosis extends BackendController {
             'tgl_pe'               => $p['tgl_pe']            ?: NULL,
             'nama_petugas'         => $p['nama_petugas'],
             'jabatan_petugas'      => isset($p['jabatan_petugas']) ? $p['jabatan_petugas'] : NULL,
+            'nama_kantor_petugas'  => isset($p['nama_kantor_petugas']) ? $p['nama_kantor_petugas'] : NULL,
             'telp_petugas'         => $p['telp_petugas'],
             'status_kasus'         => (int)$p['status_kasus'],
             'definisi_kasus'       => isset($p['definisi_kasus']) && $p['definisi_kasus']!=='' ? (int)$p['definisi_kasus'] : NULL,

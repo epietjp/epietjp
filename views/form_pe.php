@@ -315,6 +315,12 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             </script>
           </div>
         </div>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Nama Kantor/Instansi</label>
+            <input type="text" name="nama_kantor_petugas" class="form-control" value="<?=fv($v,'nama_kantor_petugas')?>" placeholder="Nama puskesmas/dinas/RS">
+          </div>
+        </div>
       </div>
     </div>
 
@@ -899,6 +905,26 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         </div>
       </div>
       <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+    <!-- ANTHRAKS: Perjalanan Penyakit -->
+    <?php if($id_penyakit==14): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-clock-o"></i> <b>E3. Perjalanan Penyakit (Anthraks)</b></div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="form-group">
+            <label>Perjalanan Penyakit <small class="text-muted">(waktu timbulnya gejala dan tanda sakit, pemeriksaan pendukung dan pengobatan ke RS/Klinik)</small></label>
+            <input type="hidden" name="dkey[]" value="perjalanan_penyakit">
+            <input type="hidden" name="dlabel[]" value="Perjalanan Penyakit">
+            <input type="hidden" name="dsub[]" value="Perjalanan Penyakit Anthraks">
+            <input type="hidden" name="dtype[]" value="text">
+            <?php $pp_val=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='perjalanan_penyakit'){$pp_val=$ed['var_value'];break;}} ?>
+            <textarea name="dval[]" class="form-control" rows="4" placeholder="Tuliskan kronologi perjalanan penyakit..."><?=htmlspecialchars($pp_val)?></textarea>
+          </div>
+        </div>
+      </div>
     </div>
     <?php endif; ?>
 
