@@ -2184,7 +2184,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="">-- Belum Diketahui --</option>
               <option value="1" <?=fv($v,'akhir_no')=='1'?'selected':''?>>Sembuh</option>
               <option value="2" <?=fv($v,'akhir_no')=='2'?'selected':''?>>Meninggal</option>
-              <option value="3" <?=fv($v,'akhir_no')=='3'?'selected':''?>>Masih Dirawat</option>
               <option value="9" <?=fv($v,'akhir_no')=='9'?'selected':''?>>Tidak Diketahui</option>
             </select>
           </div>
