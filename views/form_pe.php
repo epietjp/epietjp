@@ -1511,7 +1511,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- GHPR: Section F Riwayat Kontak -->
     <?php if($id_penyakit==8): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-users"></i> <b>F. Riwayat Kontak</b></div>
+      <div class="form-section-title"><i class="fa fa-users"></i> <b>H. Riwayat Kontak</b></div>
       <div class="row">
         <div class="col-sm-4">
           <div class="form-group">
