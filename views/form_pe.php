@@ -2255,6 +2255,10 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="kulit_lesi">Kulit/Lesi</option>
               <option value="jaringan">Jaringan/Eksudat</option>
               <option value="otak_hewan">Otak Hewan (GHPR)</option>
+              <?php if($id_penyakit==14): ?>
+              <option value="eksudat_keropeng">Eksudat/Keropeng Lesi (Antraks)</option>
+              <option value="darah_vena">Darah Vena</option>
+              <?php endif; ?>
               <option value="lainnya">Lainnya</option>
             </select>
             <input type="text" class="form-control input-sm" 
