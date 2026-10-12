@@ -1801,7 +1801,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <?php endif; ?>
 
     <!-- LEPTO: Kondisi Lingkungan Rumah -->
-    <?php if($id_penyakit==26): ?>
+    <?php if($id_penyakit==14): ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-home"></i> <b>F2. Pemeriksaan Lingkungan Rumah (Anthraks)</b></div>
       <div class="row">
@@ -2573,7 +2573,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <?php endif; ?>
 
     <!-- ANTHRAKS: Gejala per Tipe Manifestasi -->
-    <?php if($id_penyakit==14): ?>
+    <?php if($id_penyakit==26): ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-home"></i> <b>U. Kondisi Lingkungan Rumah (Leptospirosis)</b></div>
       <div class="row">
