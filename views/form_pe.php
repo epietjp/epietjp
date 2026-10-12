@@ -1696,7 +1696,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- DIAGNOSIS + RAWAT INAP ANTRAKS -->
     <?php if($id_penyakit==14): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-stethoscope"></i> <b>E. Diagnosis &amp; Perawatan Antraks</b></div>
+      <div class="form-section-title"><i class="fa fa-stethoscope"></i> <b>E4. Diagnosis &amp; Perawatan Antraks</b></div>
       <div class="row">
         <div class="col-sm-4">
           <div class="form-group">
@@ -1799,7 +1799,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- TATA LAKSANA ANTRAKS -->
     <?php if($id_penyakit!=8): // Section Z - tidak ada di spek GHPR ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-medkit"></i> <b>E3. Tata Laksana Kasus (Anthraks)</b></div>
+      <div class="form-section-title"><i class="fa fa-medkit"></i> <b>E5. Tata Laksana Kasus (Anthraks)</b></div>
       <div class="row">
         <div class="col-sm-4">
           <div class="form-group">
@@ -2264,7 +2264,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- SPESIMEN TAMBAHAN -->
     <?php if($id_penyakit!=8): // Spesimen tambahan tidak diperlukan GHPR ?>
     <div class="form-section" id="wrap_spesimen_tambahan" style="display:<?=fv($v,'diperiksa_lab','0')=='1'?'block':'none'?>">
-      <div class="form-section-title"><i class="fa fa-flask"></i> <b>H. Spesimen Tambahan (Lab)</b></div>
+      <div class="form-section-title"><i class="fa fa-flask"></i> <b>G2. Spesimen Tambahan (Lab)</b></div>
       <div id="tbl-spesimen">
         <div class="row spesimen-row" style="margin-bottom:6px">
           <div class="col-sm-2">
@@ -2334,7 +2334,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 
     <?php if(!in_array($id_penyakit, array(8,14))): // section I - hide GHPR/Rabies dan Antraks (rawat inap di section E) ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-hospital-o"></i> <b>I. Rawat Inap / RS</b></div>
+      <div class="form-section-title"><i class="fa fa-hospital-o"></i> <b>H. Rawat Inap / RS</b></div>
       <small class="text-muted">Nama RS/Klinik | Tanggal Masuk | Keterangan</small>
       <div id="tbl-rawat-inap">
         <div class="row rawat-row" style="margin-bottom:6px">
@@ -2358,7 +2358,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- ANGGOTA SERUMAH -->
     <?php if($id_penyakit != 8): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-users"></i> <b>J. Anggota Serumah</b></div>
+      <div class="form-section-title"><i class="fa fa-users"></i> <b>I. Anggota Serumah</b></div>
       <div class="row" style="margin-bottom:8px">
         <div class="col-sm-3">
           <div class="form-group">
@@ -2538,7 +2538,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 <?php endif; ?>
 <?php if($id_penyakit==8): ?><div id="ghpr-page-5" class="ghpr-page" style="display:none"><?php endif; ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-heartbeat"></i> <b><?=$id_penyakit==14?"H. Kondisi Akhir &amp; Keterangan Lainnya":"H. Kondisi Akhir Pasien"?></b></div>
+      <div class="form-section-title"><i class="fa fa-heartbeat"></i> <b><?=$id_penyakit==14?"J. Kondisi Akhir &amp; Keterangan Lainnya":"H. Kondisi Akhir Pasien"?></b></div>
       <div class="row">
         <div class="col-sm-4">
           <div class="form-group">
@@ -2568,7 +2568,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php if($id_penyakit != 14): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-sticky-note"></i> <b><?=$id_penyakit==8?"I. Keterangan Lainnya":($id_penyakit==14?"I. Keterangan Lainnya":"N. Keterangan Lain")?></b></div>
+      <div class="form-section-title"><i class="fa fa-sticky-note"></i> <b><?=$id_penyakit==8?"I. Keterangan Lainnya":($id_penyakit==14?"K. Keterangan Lainnya":"N. Keterangan Lain")?></b></div>
       <div class="form-group">
         <textarea name="ket_lain" class="form-control" rows="3" placeholder="Keterangan tambahan..."><?=fv($v,'ket_lain')?></textarea>
       </div>
@@ -2576,7 +2576,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <?php endif; ?>
     <?php if($id_penyakit != 8): ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-phone"></i> <b><?=$id_penyakit==14?'O. Kontak Penyelidikan':'O. Kontak Penyelidikan'?></b></div>
+      <div class="form-section-title"><i class="fa fa-phone"></i> <b><?=$id_penyakit==14?"L. Kontak Penyelidikan":"O. Kontak Penyelidikan"?></b></div>
       <small class="text-muted">Narasumber (pejabat/petugas/dokter) yang dihubungi saat penyelidikan</small>
       <div id="tbl-kontak-pe">
         <div class="row kontak-pe-row" style="margin-bottom:6px">
@@ -2599,7 +2599,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 <?php endif; ?>
 <?php if($id_penyakit==8): ?><div id="ghpr-page-6" class="ghpr-page" style="display:none"><?php endif; ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-users"></i> <b><?=$id_penyakit==14?"I. Tim Penyelidikan Epidemiologi":($id_penyakit==8?"G. Tim Penyelidikan Epidemiologi":"P. Tim Penyelidikan Epidemiologi")?></b></div>
+      <div class="form-section-title"><i class="fa fa-users"></i> <b><?=$id_penyakit==14?"M. Tim Penyelidikan Epidemiologi":($id_penyakit==8?"G. Tim Penyelidikan Epidemiologi":"P. Tim Penyelidikan Epidemiologi")?></b></div>
       <small class="text-muted">Anggota tim PE yang terlibat dalam penyelidikan</small>
       <div id="tbl-tim-pe">
         <div class="row tim-pe-row" style="margin-bottom:6px">
