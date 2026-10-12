@@ -399,14 +399,14 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
           </div>
         </div>
 
-        <div class="col-sm-4">
+      </div>
+      <div class="row">
+        <div class="col-sm-3">
           <div class="form-group">
             <label>NIK</label>
             <input type="text" name="nik" class="form-control" maxlength="16" pattern="[0-9]{16}" inputmode="numeric" placeholder="16 digit angka (0000000000000000 jika tidak ada)" value="<?=fv($v,'nik')?>" required><small class="text-muted">Isi 0000000000000000 jika tidak ada NIK</small>
           </div>
         </div>
-      </div>
-      <div class="row">
         <div class="col-sm-2">
           <div class="form-group">
             <label>Jenis Kelamin <span class="req">*</span></label>
