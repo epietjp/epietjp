@@ -898,7 +898,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <?php endif; ?>
 
     <!-- ANTHRAKS: Kunjungan 7 hari -->
-    <?php if($id_penyakit==14): ?>
+    <?php if($id_penyakit==999): ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-stethoscope"></i> <b>Gejala &amp; Tanda Sakit</b></div>
       <div class="row">
