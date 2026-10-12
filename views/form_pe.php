@@ -820,6 +820,11 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="">-- Belum Diketahui --</option>
               <option value="1" <?=fv($v,'akhir_no')=='1'?'selected':''?>>Sembuh</option>
               <option value="2" <?=fv($v,'akhir_no')=='2'?'selected':''?>>Meninggal</option>
+              <option value="3" <?=fv($v,'akhir_no')=='3'?'selected':''?>><?php echo $id_penyakit==14?'Dirawat di RS':'Dalam Perawatan'; ?></option>
+              <?php if($id_penyakit==14): ?>
+              <option value="4" <?=fv($v,'akhir_no')=='4'?'selected':''?>>Dirawat di Klinik</option>
+              <option value="5" <?=fv($v,'akhir_no')=='5'?'selected':''?>>Dirawat di Rumah</option>
+              <?php endif; ?>
               <option value="9" <?=fv($v,'akhir_no')=='9'?'selected':''?>>Tidak Diketahui</option>
             </select>
           </div>
@@ -2511,6 +2516,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="">-- Belum Diketahui --</option>
               <option value="1" <?=fv($v,'akhir_no')=='1'?'selected':''?>>Sembuh</option>
               <option value="2" <?=fv($v,'akhir_no')=='2'?'selected':''?>>Meninggal</option>
+              <option value="3" <?=fv($v,'akhir_no')=='3'?'selected':''?>>Dalam Perawatan</option>
               <option value="9" <?=fv($v,'akhir_no')=='9'?'selected':''?>>Tidak Diketahui</option>
             </select>
           </div>
