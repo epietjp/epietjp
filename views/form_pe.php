@@ -1871,7 +1871,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <!-- KONTAK HEWAN -->
     <?php if($id_penyakit!=8): // Section Z - tidak ada di spek GHPR ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-medkit"></i> <b>F. Tata Laksana Kasus (Anthraks)</b></div>
+      <div class="form-section-title"><i class="fa fa-medkit"></i> <b>E3. Tata Laksana Kasus (Anthraks)</b></div>
       <div class="row">
         <div class="col-sm-4">
           <div class="form-group">
@@ -2337,7 +2337,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 <?php endif; ?>
 <?php if($id_penyakit==8): ?><div id="ghpr-page-5" class="ghpr-page" style="display:none"><?php endif; ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-heartbeat"></i> <b>H. Kondisi Akhir Pasien</b></div>
+      <div class="form-section-title"><i class="fa fa-heartbeat"></i> <b><?=$id_penyakit==14?"H. Kondisi Akhir &amp; Keterangan Lainnya":"H. Kondisi Akhir Pasien"?></b></div>
       <div class="row">
         <div class="col-sm-4">
           <div class="form-group">
@@ -2357,13 +2357,21 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
           </div>
         </div>
       </div>
+    <?php if($id_penyakit==14): ?>
+      <div class="row"><div class="col-sm-12"><div class="form-group">
+        <label>Keterangan Lainnya</label>
+        <textarea name="ket_lain" class="form-control" rows="3" placeholder="Keterangan tambahan..."><?=fv($v,'ket_lain')?></textarea>
+      </div></div></div>
+    <?php endif; ?>
     </div>
+    <?php if($id_penyakit != 14): ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-sticky-note"></i> <b><?=$id_penyakit==8?"I. Keterangan Lainnya":($id_penyakit==14?"I. Keterangan Lainnya":"N. Keterangan Lain")?></b></div>
       <div class="form-group">
         <textarea name="ket_lain" class="form-control" rows="3" placeholder="Keterangan tambahan..."><?=fv($v,'ket_lain')?></textarea>
       </div>
     </div>
+    <?php endif; ?>
     <?php if(!in_array($id_penyakit, array(8,14))): ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-phone"></i> <b>O. Kontak Penyelidikan</b></div>
@@ -2389,7 +2397,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 <?php endif; ?>
 <?php if($id_penyakit==8): ?><div id="ghpr-page-6" class="ghpr-page" style="display:none"><?php endif; ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-users"></i> <b><?=in_array($id_penyakit,array(8,14))?"G. Tim Penyelidikan Epidemiologi":"P. Tim Penyelidikan Epidemiologi"?></b></div>
+      <div class="form-section-title"><i class="fa fa-users"></i> <b><?=$id_penyakit==14?"I. Tim Penyelidikan Epidemiologi":($id_penyakit==8?"G. Tim Penyelidikan Epidemiologi":"P. Tim Penyelidikan Epidemiologi")?></b></div>
       <small class="text-muted">Anggota tim PE yang terlibat dalam penyelidikan</small>
       <div id="tbl-tim-pe">
         <div class="row tim-pe-row" style="margin-bottom:6px">
