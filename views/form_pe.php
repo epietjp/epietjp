@@ -1809,8 +1809,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; ?>
 
-    <?php if($id_penyakit!=8): // Lab sudah ada di Section F GHPR ?>
-    <div class="form-section">
     <!-- ANTHRAKS: Riwayat Kontak Hewan -->
     <?php if($id_penyakit==14): ?>
     <div class="form-section">
@@ -1829,6 +1827,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
                 $('#detail-kontak-hewan').toggle(val === '1');
             }
             $(function(){ toggleKontakHewan('<?=fv($v,"riwayat_kontak_hewan")?>'); });
+            </script>
             
           </div>
         </div>
@@ -1921,6 +1920,8 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; // end Section Z - hide GHPR ?>
 
+    <?php if($id_penyakit!=8): // Lab sudah ada di Section F GHPR ?>
+    <div class="form-section">
     <?php if($id_penyakit==14): ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-map-marker"></i> <b>F1. Riwayat Kunjungan Daerah Wabah (Anthraks)</b></div>
@@ -2905,8 +2906,9 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         'Gejala Klinis Anthraks',
         'Tata Laksana Anthraks','Kontak Anthraks','Matriks Kontak Anthraks',
         'Timeline Inkubasi Anthraks','Lab Anthraks','Spesimen Anthraks',
-        'Lingkungan Anthraks'
-    ))) continue; // Sudah dirender di section dedicated, Data Pendukung tetap tampil ?>
+        'Lingkungan Anthraks',
+        'Data Pendukung Anthrax'
+    ))) continue; // Sudah dirender di section dedicated ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-list-alt"></i> <?=htmlspecialchars($submodule)?></div>
       <?php if(strpos($submodule,'Gejala')===0): ?>
