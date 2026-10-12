@@ -1029,6 +1029,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             </select>
           </div>
         </div>
+      </div>
       <!-- Lab GHPR -->
       <div class="row">
         <div class="col-sm-3">
