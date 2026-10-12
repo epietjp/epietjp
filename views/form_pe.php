@@ -1857,6 +1857,60 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
           </div>
         </div>
       </div>
+      <?php if($id_penyakit==14): ?>
+      <div class="row" style="margin-top:10px">
+        <div class="col-sm-12">
+          <label><b>Matriks Kontak Hewan (7 hari terakhir)</b></label>
+          <small class="text-muted"> &mdash; Jenis Hewan | Kondisi | Jenis Kontak | Keterangan</small>
+          <div id="tbl-matriks-hewan">
+            <?php $mh_list = !empty($matriks_hewan) ? $matriks_hewan : array(array('jenis_hewan'=>'','kondisi'=>'','jenis_kontak'=>'','keterangan'=>'')); ?>
+            <?php foreach($mh_list as $mh): ?>
+            <div class="row matriks-hewan-row" style="margin-bottom:4px">
+              <div class="col-sm-3">
+                <select name="mh_jenis[]" class="form-control input-sm">
+                  <option value="">-- Jenis Hewan --</option>
+                  <?php foreach(array('Kambing','Sapi','Kuda','Babi','Lainnya') as $opt): ?>
+                  <option value="<?=$opt?>" <?=$mh['jenis_hewan']==$opt?'selected':''?>><?=$opt?></option>
+                  <?php endforeach; ?>
+                </select>
+              </div>
+              <div class="col-sm-2">
+                <select name="mh_kondisi[]" class="form-control input-sm">
+                  <option value="">-- Kondisi --</option>
+                  <?php foreach(array('Sehat','Sakit','Meninggal') as $opt): ?>
+                  <option value="<?=$opt?>" <?=$mh['kondisi']==$opt?'selected':''?>><?=$opt?></option>
+                  <?php endforeach; ?>
+                </select>
+              </div>
+              <div class="col-sm-3">
+                <select name="mh_kontak[]" class="form-control input-sm">
+                  <option value="">-- Jenis Kontak --</option>
+                  <?php foreach(array('Kontak Sehari-hari'=>'Kontak Sehari-hari (peternakan/pasar/pemotongan)','Kontak Tidak Erat'=>'Kontak Tidak Erat','Kontak Lain'=>'Kontak Lain') as $kv=>$kl): ?>
+                  <option value="<?=$kv?>" <?=$mh['jenis_kontak']==$kv?'selected':''?>><?=$kl?></option>
+                  <?php endforeach; ?>
+                </select>
+              </div>
+              <div class="col-sm-3">
+                <input type="text" name="mh_ket[]" class="form-control input-sm" placeholder="Keterangan" value="<?=htmlspecialchars($mh['keterangan'])?>">
+              </div>
+              <div class="col-sm-1">
+                <button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.matriks-hewan-row').remove()"><i class="fa fa-times"></i></button>
+              </div>
+            </div>
+            <?php endforeach; ?>
+          </div>
+          <button type="button" class="btn btn-xs btn-default" onclick="tambahMatriksHewan()"><i class="fa fa-plus"></i> Tambah Hewan</button>
+          <script>
+          function tambahMatriksHewan(){
+            var row = $('#tbl-matriks-hewan .matriks-hewan-row:first').clone();
+            row.find('select').val('');
+            row.find('input').val('');
+            $('#tbl-matriks-hewan').append(row);
+          }
+          </script>
+        </div>
+      </div>
+      <?php endif; ?>
       <div class="row">
       <div class="row">
         <div class="col-sm-3">
