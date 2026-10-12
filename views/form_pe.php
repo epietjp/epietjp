@@ -1029,26 +1029,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             </select>
           </div>
         </div>
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Kondisi Akhir Pasien</label>
-            <select name="akhir_no" class="form-control" onchange="$('#wrap_rab_tgl_meninggal').toggle(this.value=='2')">
-              <option value="">-- Belum Diketahui --</option>
-              <option value="1" <?=fv($v,'akhir_no')=='1'?'selected':''?>>Sembuh</option>
-              <option value="2" <?=fv($v,'akhir_no')=='2'?'selected':''?>>Meninggal</option>
-              <option value="3" <?=fv($v,'akhir_no')=='3'?'selected':''?>>Masih Dirawat</option>
-              <option value="9" <?=fv($v,'akhir_no')=='9'?'selected':''?>>Tidak Diketahui</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-sm-3" id="wrap_rab_tgl_meninggal" style="display:<?=fv($v,'akhir_no')=='2'?'block':'none'?>">
-          <div class="form-group">
-            <label>Tanggal Meninggal</label>
-            <input type="date" name="tgl_meninggal" class="form-control" value="<?=fv($v,'tgl_meninggal')?>">
-          </div>
-        </div>
-      </div>
-
       <!-- Lab GHPR -->
       <div class="row">
         <div class="col-sm-3">
@@ -2194,7 +2174,30 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 <?php endif; ?>
 <?php if($id_penyakit==8): ?><div id="ghpr-page-5" class="ghpr-page" style="display:none"><?php endif; ?>
     <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-sticky-note"></i> <b><?=$id_penyakit==8?"H. Keterangan Lainnya":"N. Keterangan Lain"?></b></div>
+      <div class="form-section-title"><i class="fa fa-heartbeat"></i> <b>H. Kondisi Akhir Pasien</b></div>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label>Kondisi Akhir Pasien</label>
+            <select name="akhir_no" class="form-control" onchange="$('#wrap_rab_tgl_meninggal').toggle(this.value=='2')">
+              <option value="">-- Belum Diketahui --</option>
+              <option value="1" <?=fv($v,'akhir_no')=='1'?'selected':''?>>Sembuh</option>
+              <option value="2" <?=fv($v,'akhir_no')=='2'?'selected':''?>>Meninggal</option>
+              <option value="3" <?=fv($v,'akhir_no')=='3'?'selected':''?>>Masih Dirawat</option>
+              <option value="9" <?=fv($v,'akhir_no')=='9'?'selected':''?>>Tidak Diketahui</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm-4" id="wrap_rab_tgl_meninggal" style="display:<?=fv($v,'akhir_no')=='2'?'block':'none'?>">
+          <div class="form-group">
+            <label>Tanggal Meninggal</label>
+            <input type="date" name="tgl_meninggal" class="form-control" value="<?=fv($v,'tgl_meninggal')?>">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-sticky-note"></i> <b><?=$id_penyakit==8?"I. Keterangan Lainnya":"N. Keterangan Lain"?></b></div>
       <div class="form-group">
         <textarea name="ket_lain" class="form-control" rows="3" placeholder="Keterangan tambahan..."><?=fv($v,'ket_lain')?></textarea>
       </div>
