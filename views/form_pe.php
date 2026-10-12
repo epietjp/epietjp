@@ -54,6 +54,18 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <input type="hidden" name="id" value="<?=$is_edit ? $pe['id'] : ''?>">
     <input type="hidden" name="id_penyakit" value="<?=$id_penyakit?>">
 
+<?php if($id_penyakit==8): ?>
+<div id="ghpr-wizard" style="margin-bottom:12px">
+  <div style="background:#1F4E79;color:#fff;padding:6px 14px;border-radius:4px 4px 0 0"><small style="opacity:.8">Formulir PE Rabies — SKDR</small></div>
+  <div style="background:#EBF5FB;padding:8px 14px;border:1px solid #AED6F1;border-top:0;border-radius:0 0 4px 4px;margin-bottom:10px">
+    <div class="progress" style="height:5px;margin-bottom:5px;background:#D6EAF8"><div id="ghpr-progress" class="progress-bar" style="width:16.6%;background:#1F4E79;transition:width .3s"></div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span id="ghpr-step-label" style="font-weight:700;color:#1F4E79;font-size:12px">Halaman 1 dari 6: Identitas Laporan &amp; Pasien</span>
+      <span><?php for($pg=1;$pg<=6;$pg++): ?><span class="ghpr-dot label" id="ghpr-dot-<?=$pg?>" style="margin:0 2px;cursor:pointer;background:<?=$pg==1?'#1F4E79':'#BDC3C7'?>"><?=$pg?></span><?php endfor; ?></span>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
 <?php if($id_penyakit==8): ?><div id="ghpr-page-1" class="ghpr-page" style="display:block"><?php endif; ?>
     <?php if(!empty($list_diagnosa)): ?>
     <div class="form-section">
@@ -77,18 +89,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     <?php endif; ?>
 
     <!-- IDENTITAS PELAPOR -->
-<?php if($id_penyakit==8): ?>
-<div id="ghpr-wizard" style="margin-bottom:12px">
-  <div style="background:#1F4E79;color:#fff;padding:6px 14px;border-radius:4px 4px 0 0"><small style="opacity:.8">Formulir PE Rabies — SKDR</small></div>
-  <div style="background:#EBF5FB;padding:8px 14px;border:1px solid #AED6F1;border-top:0;border-radius:0 0 4px 4px;margin-bottom:10px">
-    <div class="progress" style="height:5px;margin-bottom:5px;background:#D6EAF8"><div id="ghpr-progress" class="progress-bar" style="width:16.6%;background:#1F4E79;transition:width .3s"></div></div>
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <span id="ghpr-step-label" style="font-weight:700;color:#1F4E79;font-size:12px">Halaman 1 dari 6: Identitas Laporan &amp; Pasien</span>
-      <span><?php for($pg=1;$pg<=6;$pg++): ?><span class="ghpr-dot label" id="ghpr-dot-<?=$pg?>" style="margin:0 2px;cursor:pointer;background:<?=$pg==1?'#1F4E79':'#BDC3C7'?>"><?=$pg?></span><?php endfor; ?></span>
-    </div>
-  </div>
-</div>
-<?php endif; ?>
     <!-- STATUS LAPORAN ANTRAKS -->
     <?php if($id_penyakit==14): ?>
     <div class="form-section">
