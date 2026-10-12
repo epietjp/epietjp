@@ -1811,6 +1811,116 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 
     <?php if($id_penyakit!=8): // Lab sudah ada di Section F GHPR ?>
     <div class="form-section">
+    <!-- ANTHRAKS: Riwayat Kontak Hewan -->
+    <?php if($id_penyakit==14): ?>
+    <div class="form-section">
+      <div class="form-section-title"><i class="fa fa-paw"></i> <b>F. Riwayat Kontak Hewan</b></div>
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Riwayat Kontak Hewan</label>
+            <select name="riwayat_kontak_hewan" class="form-control" onchange="toggleKontakHewan(this.value)">
+              <option value="">-- Tidak Diketahui --</option>
+              <option value="1" <?=fv($v,'riwayat_kontak_hewan')=='1'?'selected':''?>>Ya</option>
+              <option value="0" <?=fv($v,'riwayat_kontak_hewan')=='0'?'selected':''?>>Tidak</option>
+            </select>
+            <script>
+            function toggleKontakHewan(val){
+                $('#detail-kontak-hewan').toggle(val === '1');
+            }
+            $(function(){ toggleKontakHewan('<?=fv($v,"riwayat_kontak_hewan")?>'); });
+            
+          </div>
+        </div>
+<!-- jenis_hewan dihapus, gunakan dp_hpr di variabel tambahan -->
+      </div>
+      <div class="row" id="detail-kontak-hewan" style="display:<?=fv($v,'riwayat_kontak_hewan')=='1'?'block':'none'?>">
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Tanggal Kontak</label>
+            <input type="date" name="tgl_kontak" id="f_tgl_kontak" class="form-control" value="<?=fv($v,'tgl_kontak')?>" onblur="cekTglKontak()">
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Lokasi Kontak</label>
+            <select name="lokasi_kontak" class="form-control">
+              <option value="">-- Pilih Lokasi --</option>
+              <option value="Rumah" <?=fv($v,'lokasi_kontak')=='Rumah'?'selected':''?>>Rumah</option>
+              <option value="Peternakan" <?=fv($v,'lokasi_kontak')=='Peternakan'?'selected':''?>>Peternakan</option>
+              <option value="Pasar Hewan" <?=fv($v,'lokasi_kontak')=='Pasar Hewan'?'selected':''?>>Pasar Hewan</option>
+              <option value="Sawah/Kebun" <?=fv($v,'lokasi_kontak')=='Sawah/Kebun'?'selected':''?>>Sawah/Kebun</option>
+              <option value="Hutan" <?=fv($v,'lokasi_kontak')=='Hutan'?'selected':''?>>Hutan</option>
+              <option value="Sungai/Danau" <?=fv($v,'lokasi_kontak')=='Sungai/Danau'?'selected':''?>>Sungai/Danau</option>
+              <option value="Tempat Kerja" <?=fv($v,'lokasi_kontak')=='Tempat Kerja'?'selected':''?>>Tempat Kerja</option>
+              <option value="Lainnya" <?=fv($v,'lokasi_kontak')=='Lainnya'?'selected':''?>>Lainnya</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Riwayat Vaksinasi</label>
+            <select name="riwayat_vaksinasi" class="form-control">
+              <option value="">-- Tidak Diketahui --</option>
+              <option value="1" <?=fv($v,'riwayat_vaksinasi')=='1'?'selected':''?>>Ya</option>
+              <option value="0" <?=fv($v,'riwayat_vaksinasi')=='0'?'selected':''?>>Tidak</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm-3" id="detail-vaksinasi">
+          <div class="form-group">
+            <label>Jenis Vaksin</label>
+            <input type="text" name="jenis_vaksin" class="form-control" value="<?=fv($v,'jenis_vaksin')?>">
+          </div>
+        </div>
+        <?php if($id_penyakit==8): // GHPR only ?>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Tgl Vaksinasi Terakhir Hewan</label>
+            <input type="date" name="tgl_vaksinasi_hewan" class="form-control" value="<?=fv($v,'tgl_vaksinasi_hewan')?>">
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Nama Pemilik Hewan</label>
+            <input type="text" name="nama_pemilik_hewan" class="form-control" value="<?=fv($v,'nama_pemilik_hewan')?>">
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Alamat Pemilik Hewan</label>
+            <input type="text" name="alamat_pemilik_hewan" class="form-control" value="<?=fv($v,'alamat_pemilik_hewan')?>">
+          </div>
+        </div>
+        <?php endif; ?>
+        <?php // oseltamivir dipindah ke seksi Klinis ?>
+      </div>
+      <?php if($id_penyakit==11): ?>
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Diberikan Oseltamivir?</label>
+            <select name="oseltamivir" class="form-control">
+              <option value="">-- --</option>
+              <option value="1" <?=fv($v,'oseltamivir')=='1'?'selected':''?>>Ya</option>
+              <option value="0" <?=fv($v,'oseltamivir')=='0'?'selected':''?>>Tidak</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label>Tanggal Pemberian Oseltamivir</label>
+            <input type="date" name="tgl_oseltamivir" class="form-control" value="<?=fv($v,'tgl_oseltamivir')?>">
+          </div>
+        </div>
+      </div>
+      <?php endif; ?>
+    </div>
+    <?php endif; // end Section Z - hide GHPR ?>
+
     <?php if($id_penyakit==14): ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-map-marker"></i> <b>F1. Riwayat Kunjungan Daerah Wabah (Anthraks)</b></div>
@@ -2771,115 +2881,6 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; ?>
 
-    <!-- ANTHRAKS: Pemeriksaan Lingkungan Rumah -->
-    <?php if($id_penyakit==14): ?>
-    <div class="form-section">
-      <div class="form-section-title"><i class="fa fa-paw"></i> <b>Z. Riwayat Kontak Hewan</b></div>
-      <div class="row">
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Riwayat Kontak Hewan</label>
-            <select name="riwayat_kontak_hewan" class="form-control" onchange="toggleKontakHewan(this.value)">
-              <option value="">-- Tidak Diketahui --</option>
-              <option value="1" <?=fv($v,'riwayat_kontak_hewan')=='1'?'selected':''?>>Ya</option>
-              <option value="0" <?=fv($v,'riwayat_kontak_hewan')=='0'?'selected':''?>>Tidak</option>
-            </select>
-            <script>
-            function toggleKontakHewan(val){
-                $('#detail-kontak-hewan').toggle(val === '1');
-            }
-            $(function(){ toggleKontakHewan('<?=fv($v,"riwayat_kontak_hewan")?>'); });
-            
-          </div>
-        </div>
-<!-- jenis_hewan dihapus, gunakan dp_hpr di variabel tambahan -->
-      </div>
-      <div class="row" id="detail-kontak-hewan" style="display:<?=fv($v,'riwayat_kontak_hewan')=='1'?'block':'none'?>">
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Tanggal Kontak</label>
-            <input type="date" name="tgl_kontak" id="f_tgl_kontak" class="form-control" value="<?=fv($v,'tgl_kontak')?>" onblur="cekTglKontak()">
-          </div>
-        </div>
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Lokasi Kontak</label>
-            <select name="lokasi_kontak" class="form-control">
-              <option value="">-- Pilih Lokasi --</option>
-              <option value="Rumah" <?=fv($v,'lokasi_kontak')=='Rumah'?'selected':''?>>Rumah</option>
-              <option value="Peternakan" <?=fv($v,'lokasi_kontak')=='Peternakan'?'selected':''?>>Peternakan</option>
-              <option value="Pasar Hewan" <?=fv($v,'lokasi_kontak')=='Pasar Hewan'?'selected':''?>>Pasar Hewan</option>
-              <option value="Sawah/Kebun" <?=fv($v,'lokasi_kontak')=='Sawah/Kebun'?'selected':''?>>Sawah/Kebun</option>
-              <option value="Hutan" <?=fv($v,'lokasi_kontak')=='Hutan'?'selected':''?>>Hutan</option>
-              <option value="Sungai/Danau" <?=fv($v,'lokasi_kontak')=='Sungai/Danau'?'selected':''?>>Sungai/Danau</option>
-              <option value="Tempat Kerja" <?=fv($v,'lokasi_kontak')=='Tempat Kerja'?'selected':''?>>Tempat Kerja</option>
-              <option value="Lainnya" <?=fv($v,'lokasi_kontak')=='Lainnya'?'selected':''?>>Lainnya</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-      <div class="row">
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Riwayat Vaksinasi</label>
-            <select name="riwayat_vaksinasi" class="form-control">
-              <option value="">-- Tidak Diketahui --</option>
-              <option value="1" <?=fv($v,'riwayat_vaksinasi')=='1'?'selected':''?>>Ya</option>
-              <option value="0" <?=fv($v,'riwayat_vaksinasi')=='0'?'selected':''?>>Tidak</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-sm-3" id="detail-vaksinasi">
-          <div class="form-group">
-            <label>Jenis Vaksin</label>
-            <input type="text" name="jenis_vaksin" class="form-control" value="<?=fv($v,'jenis_vaksin')?>">
-          </div>
-        </div>
-        <?php if($id_penyakit==8): // GHPR only ?>
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Tgl Vaksinasi Terakhir Hewan</label>
-            <input type="date" name="tgl_vaksinasi_hewan" class="form-control" value="<?=fv($v,'tgl_vaksinasi_hewan')?>">
-          </div>
-        </div>
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Nama Pemilik Hewan</label>
-            <input type="text" name="nama_pemilik_hewan" class="form-control" value="<?=fv($v,'nama_pemilik_hewan')?>">
-          </div>
-        </div>
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Alamat Pemilik Hewan</label>
-            <input type="text" name="alamat_pemilik_hewan" class="form-control" value="<?=fv($v,'alamat_pemilik_hewan')?>">
-          </div>
-        </div>
-        <?php endif; ?>
-        <?php // oseltamivir dipindah ke seksi Klinis ?>
-      </div>
-      <?php if($id_penyakit==11): ?>
-      <div class="row">
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Diberikan Oseltamivir?</label>
-            <select name="oseltamivir" class="form-control">
-              <option value="">-- --</option>
-              <option value="1" <?=fv($v,'oseltamivir')=='1'?'selected':''?>>Ya</option>
-              <option value="0" <?=fv($v,'oseltamivir')=='0'?'selected':''?>>Tidak</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-sm-3">
-          <div class="form-group">
-            <label>Tanggal Pemberian Oseltamivir</label>
-            <input type="date" name="tgl_oseltamivir" class="form-control" value="<?=fv($v,'tgl_oseltamivir')?>">
-          </div>
-        </div>
-      </div>
-      <?php endif; ?>
-    </div>
-    <?php endif; // end Section Z - hide GHPR ?>
 
     <!-- VARIABEL TAMBAHAN PER PENYAKIT -->
     <?php if(!empty($detail)): ?>
