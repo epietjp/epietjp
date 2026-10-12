@@ -2326,7 +2326,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; // end section I - hide GHPR/Rabies ?>
     <!-- ANGGOTA SERUMAH -->
-    <?php if(!in_array($id_penyakit, array(8,14))): ?>
+    <?php if($id_penyakit != 8): ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-users"></i> <b>J. Anggota Serumah</b></div>
       <div class="row" style="margin-bottom:8px">
