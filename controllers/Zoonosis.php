@@ -467,7 +467,7 @@ class Zoonosis extends BackendController {
             'kontak_pn'   => $this->zm->get_kontak_pneumonia($id),
             'kontak_pe'   => $this->db->where('id_pe',$id)->get('ghs_zoonosis_kontak_pe')->result_array(),
             'tim_pe'      => $this->db->where('id_pe',$id)->get('ghs_zoonosis_tim_pe')->result_array(),
-            'kontak_kasus'=> $this->db->where('id_pe',$id)->get('ghs_zoonosis_kontak_kasus')->result_array(),
+            'kontak_kasus'=> $this->db->where('id_pe',$id)->get('ewarn_ghs_zoonosis_kontak_kasus')->result_array(),
             'matriks_hewan'=> $this->db->where('id_pe',$id)->get('ewarn_ghs_zoonosis_matriks_hewan')->result_array(),
             'rawat_rs'     => $this->db->where('id_pe',$id)->get('ewarn_ghs_zoonosis_rawat_rs')->result_array(),
             'kontak_gs'   => $this->db->where('id_pe',$id)->get('ghs_zoonosis_kontak_gejala')->result_array(),
@@ -649,8 +649,8 @@ class Zoonosis extends BackendController {
                 );
             }
         }
-        $this->db->where('id_pe', $id)->delete('ghs_zoonosis_kontak_kasus');
-        if ($kontak_kasus) $this->db->insert_batch('ghs_zoonosis_kontak_kasus', $kontak_kasus);
+        $this->db->where('id_pe', $id)->delete('ewarn_ghs_zoonosis_kontak_kasus');
+        if ($kontak_kasus) $this->db->insert_batch('ewarn_ghs_zoonosis_kontak_kasus', $kontak_kasus);
 
         // Save Matriks Hewan Anthraks
         $matriks_hewan = array();
@@ -923,7 +923,7 @@ class Zoonosis extends BackendController {
             'kontak_pn'  => $this->zm->get_kontak_pneumonia($id),
             'kontak_pe'  => $this->db->where('id_pe',$id)->get('ghs_zoonosis_kontak_pe')->result_array(),
             'tim_pe'     => $this->db->where('id_pe',$id)->get('ghs_zoonosis_tim_pe')->result_array(),
-            'kontak_kasus' => $this->db->where('id_pe',$id)->get('ghs_zoonosis_kontak_kasus')->result_array(),
+            'kontak_kasus' => $this->db->where('id_pe',$id)->get('ewarn_ghs_zoonosis_kontak_kasus')->result_array(),
             'kontak_gs'  => $this->db->where('id_pe',$id)->get('ghs_zoonosis_kontak_gejala')->result_array(),
             'rawat_inap' => $this->db->where('id_pe',$id)->where('submodule','Rawat Inap RS')->get('ghs_zoonosis_pe_detail')->result_array(),
             'spesimen'   => $this->db->where('id_pe',$id)->where('submodule','Spesimen Lab')->get('ghs_zoonosis_pe_detail')->result_array(),
