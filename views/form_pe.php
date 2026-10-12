@@ -816,13 +816,11 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Kondisi Akhir</label>
-            <select name="akhir_no" class="form-control">
+            <select name="akhir_no" class="form-control" onchange="$('#wrap_tgl_meninggal').toggle(this.value=='2')">
               <option value="">-- Belum Diketahui --</option>
               <option value="1" <?=fv($v,'akhir_no')=='1'?'selected':''?>>Sembuh</option>
               <option value="2" <?=fv($v,'akhir_no')=='2'?'selected':''?>>Meninggal</option>
-              <option value="3" <?=fv($v,'akhir_no')=='3'?'selected':''?>>Dirawat RS</option>
-              <option value="4" <?=fv($v,'akhir_no')=='4'?'selected':''?>>Dirawat Klinik</option>
-              <option value="5" <?=fv($v,'akhir_no')=='5'?'selected':''?>>Dirawat di Rumah</option>
+              <option value="9" <?=fv($v,'akhir_no')=='9'?'selected':''?>>Tidak Diketahui</option>
             </select>
           </div>
         </div>
@@ -1632,10 +1630,9 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="Antraks Injeksi" <?=$atx_da=='Antraks Injeksi'?'selected':''?>>Antraks Injeksi (Injection Anthrax)</option>
               <option value="Lainnya" <?=$atx_da=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
-            <input type="text" id="atx_da_lainnya" class="form-control" placeholder="Tulis diagnosis awal lainnya"
+            <input type="text" id="atx_da_lainnya" name="atx_da_lainnya" class="form-control" placeholder="Jika lainnya, sebutkan"
               style="margin-top:5px;display:<?=$atx_da=='Lainnya'?'block':'none'?>"
-              value="<?=$atx_da=='Lainnya'?'':''?>"
-              oninput="document.querySelector('select[name=dval[]]').value=this.value">
+              value="<?php $v=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_da_lainnya'){$v=$ed['var_value'];break;}} echo htmlspecialchars($v); ?>">
           </div>
         </div>
         <div class="col-sm-4">
@@ -1654,8 +1651,9 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="Antraks Injeksi" <?=$atx_dk=='Antraks Injeksi'?'selected':''?>>Antraks Injeksi (Injection Anthrax)</option>
               <option value="Lainnya" <?=$atx_dk=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
-            <input type="text" id="atx_dk_lainnya" class="form-control" placeholder="Tulis diagnosis akhir lainnya"
-              style="margin-top:5px;display:<?=$atx_dk=='Lainnya'?'block':'none'?>">
+            <input type="text" id="atx_dk_lainnya" name="atx_dk_lainnya" class="form-control" placeholder="Jika lainnya, sebutkan"
+              style="margin-top:5px;display:<?=$atx_dk=='Lainnya'?'block':'none'?>"
+              value="<?php $v=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_dk_lainnya'){$v=$ed['var_value'];break;}} echo htmlspecialchars($v); ?>">
           </div>
         </div>
         <div class="col-sm-4">
@@ -1741,13 +1739,17 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="hidden" name="dsub[]" value="Tata Laksana Anthraks">
             <input type="hidden" name="dtype[]" value="text">
             <?php $atx_jab=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_jenis_antibiotik'){$atx_jab=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control">
+            <select name="dval[]" class="form-control" onchange="toggleDiagLainnya(this,'atx_jab_lainnya')">
               <option value="">-- Pilih --</option>
               <?php $ab_opts=array('Ciprofloxacin','Doxycycline','Amoxicillin','Penicillin G','Levofloxacin','Lainnya');
               foreach($ab_opts as $ao): ?>
               <option value="<?=$ao?>" <?=$atx_jab==$ao?'selected':''?>><?=$ao?></option>
               <?php endforeach; ?>
             </select>
+            <input type="text" id="atx_jab_lainnya" name="atx_jab_lainnya" class="form-control"
+              placeholder="Jika lainnya, sebutkan"
+              style="margin-top:5px;display:<?=$atx_jab=='Lainnya'?'block':'none'?>"
+              value="<?php $v2=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_jab_lainnya'){$v2=$ed['var_value'];break;}} echo htmlspecialchars($v2); ?>">
           </div>
         </div>
       </div>
