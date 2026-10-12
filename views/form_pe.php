@@ -1005,12 +1005,13 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="hidden" name="dsub[]" value="Klinis GHPR">
             <input type="hidden" name="dtype[]" value="select">
             <?php $rab_da=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_diagnosis_awal'){$rab_da=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control">
+            <select name="dval[]" class="form-control" onchange="toggleDiagLainnya(this,'rab_da_lainnya')">
               <option value="">-- Pilih --</option>
               <option value="Rabies Klinis" <?=$rab_da=='Rabies Klinis'?'selected':''?>>Rabies Klinis</option>
               <option value="Rabies Konfirmasi" <?=$rab_da=='Rabies Konfirmasi'?'selected':''?>>Rabies Konfirmasi</option>
               <option value="Lainnya" <?=$rab_da=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
+            <input type="text" id="rab_da_lainnya" name="rab_da_lainnya" class="form-control" placeholder="Jika lainnya, sebutkan" style="margin-top:5px;display:<?=$rab_da=='Lainnya'?'block':'none'?>" value="<?php $v=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_da_lainnya'){$v=$ed['var_value'];break;}} echo htmlspecialchars($v); ?>">
           </div>
         </div>
         <div class="col-sm-3">
@@ -1021,12 +1022,13 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="hidden" name="dsub[]" value="Klinis GHPR">
             <input type="hidden" name="dtype[]" value="select">
             <?php $rab_dk=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_diagnosis_akhir'){$rab_dk=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control">
+            <select name="dval[]" class="form-control" onchange="toggleDiagLainnya(this,'rab_dk_lainnya')">
               <option value="">-- Pilih --</option>
               <option value="Rabies Klinis" <?=$rab_dk=='Rabies Klinis'?'selected':''?>>Rabies Klinis</option>
               <option value="Rabies Konfirmasi" <?=$rab_dk=='Rabies Konfirmasi'?'selected':''?>>Rabies Konfirmasi</option>
               <option value="Lainnya" <?=$rab_dk=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
+            <input type="text" id="rab_dk_lainnya" name="rab_dk_lainnya" class="form-control" placeholder="Jika lainnya, sebutkan" style="margin-top:5px;display:<?=$rab_dk=='Lainnya'?'block':'none'?>" value="<?php $v=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_dk_lainnya'){$v=$ed['var_value'];break;}} echo htmlspecialchars($v); ?>">
           </div>
         </div>
       </div>
@@ -1420,7 +1422,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="hidden" name="dsub[]" value="Informasi HPR">
             <input type="hidden" name="dtype[]" value="select">
             <?php $rab_khpr2=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_kondisi_hpr'){$rab_khpr2=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control" onchange="$('#wrap_rab_hpr_mati').toggle(this.value=='Mati dibunuh'||this.value=='Mati sakit')">
+            <select name="dval[]" class="form-control" onchange="$('#wrap_rab_hpr_mati').toggle(this.value=='Mati dibunuh'||this.value=='Mati sakit');toggleDiagLainnya(this,'rab_khpr_lainnya')">
               <option value="">-- Pilih --</option>
               <option value="Lari" <?=$rab_khpr2=='Lari'?'selected':''?>>Lari/Tidak Diketahui</option>
               <option value="Diobservasi" <?=$rab_khpr2=='Diobservasi'?'selected':''?>>Diobservasi</option>
@@ -1428,6 +1430,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
               <option value="Mati sakit" <?=$rab_khpr2=='Mati sakit'?'selected':''?>>Mati sakit sendiri</option>
               <option value="Lainnya" <?=$rab_khpr2=='Lainnya'?'selected':''?>>Lainnya</option>
             </select>
+            <input type="text" id="rab_khpr_lainnya" name="rab_khpr_lainnya" class="form-control" placeholder="Jika lainnya, sebutkan" style="margin-top:5px;display:<?=$rab_khpr2=='Lainnya'?'block':'none'?>" value="<?php $v=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_khpr_lainnya'){$v=$ed['var_value'];break;}} echo htmlspecialchars($v); ?>">
           </div>
         </div>
       </div>
