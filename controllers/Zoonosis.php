@@ -434,6 +434,7 @@ class Zoonosis extends BackendController {
             'tim_pe'      => array(),
             'kontak_kasus'=> array(),
             'matriks_hewan'=> array(),
+            'rawat_rs'     => array(),
             'kontak_gs'   => array(),
             'list_ebs'    => $this->zm->get_ebs_by_penyakit($id_penyakit, $this->kel_place, $this->detail_place),
             'list_diagnosa' => $this->zm->get_diagnosa_by_penyakit($id_penyakit),
@@ -468,6 +469,7 @@ class Zoonosis extends BackendController {
             'tim_pe'      => $this->db->where('id_pe',$id)->get('ghs_zoonosis_tim_pe')->result_array(),
             'kontak_kasus'=> $this->db->where('id_pe',$id)->get('ghs_zoonosis_kontak_kasus')->result_array(),
             'matriks_hewan'=> $this->db->where('id_pe',$id)->get('ewarn_ghs_zoonosis_matriks_hewan')->result_array(),
+            'rawat_rs'     => $this->db->where('id_pe',$id)->get('ewarn_ghs_zoonosis_rawat_rs')->result_array(),
             'kontak_gs'   => $this->db->where('id_pe',$id)->get('ghs_zoonosis_kontak_gejala')->result_array(),
         );
         $this->template->build('form_pe', $data);
@@ -665,6 +667,22 @@ class Zoonosis extends BackendController {
         }
         $this->db->where('id_pe', $id)->delete('ewarn_ghs_zoonosis_matriks_hewan');
         if ($matriks_hewan) $this->db->insert_batch('ewarn_ghs_zoonosis_matriks_hewan', $matriks_hewan);
+
+        // Save Rawat RS Anthraks
+        $rawat_rs = array();
+        if (isset($_POST['rrs_nama'])) {
+            foreach ($_POST['rrs_nama'] as $idx => $nama) {
+                if (trim($nama)) $rawat_rs[] = array(
+                    'id_pe'      => $id,
+                    'nama_rs'    => trim($nama),
+                    'alamat_rs'  => isset($_POST['rrs_alamat'][$idx]) ? trim($_POST['rrs_alamat'][$idx]) : '',
+                    'tgl_masuk'  => isset($_POST['rrs_tgl'][$idx])    ? (trim($_POST['rrs_tgl'][$idx]) ?: null) : null,
+                    'keterangan' => isset($_POST['rrs_ket'][$idx])     ? trim($_POST['rrs_ket'][$idx])     : '',
+                );
+            }
+        }
+        $this->db->where('id_pe', $id)->delete('ewarn_ghs_zoonosis_rawat_rs');
+        if ($rawat_rs) $this->db->insert_batch('ewarn_ghs_zoonosis_rawat_rs', $rawat_rs);
 
         // Save Kontak Gejala Sama (Avian)
         $kontak_gs = array();

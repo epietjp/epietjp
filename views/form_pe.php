@@ -1731,38 +1731,39 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         </div>
       </div>
       <div class="row" id="wrap_atx_ri" style="display:<?=$atx_ri=='Ya'?'block':'none'?>">
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Nama RS/Puskesmas/Klinik</label>
-            <input type="hidden" name="dkey[]" value="atx_nama_rs">
-            <input type="hidden" name="dlabel[]" value="Nama RS Perawatan">
-            <input type="hidden" name="dsub[]" value="Klinis Anthraks">
-            <input type="hidden" name="dtype[]" value="text">
-            <?php $atx_rs=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_nama_rs'){$atx_rs=$ed['var_value'];break;}} ?>
-            <input type="text" name="dval[]" class="form-control" value="<?=htmlspecialchars($atx_rs)?>" placeholder="Nama fasilitas kesehatan">
+        <div class="col-sm-12">
+          <label><b>RS/Klinik yang Pernah Memeriksa/Merawat</b></label>
+          <small class="text-muted"> &mdash; Nama | Alamat | Tgl Masuk | Keterangan</small>
+          <div id="tbl-rawat-rs">
+            <?php $rrs_list = !empty($rawat_rs) ? $rawat_rs : array(array('nama_rs'=>'','alamat_rs'=>'','tgl_masuk'=>'','keterangan'=>'')); ?>
+            <?php foreach($rrs_list as $rrs): ?>
+            <div class="row rawat-rs-row" style="margin-bottom:4px">
+              <div class="col-sm-3">
+                <input type="text" name="rrs_nama[]" class="form-control input-sm" placeholder="Nama RS/Klinik" value="<?=htmlspecialchars($rrs['nama_rs'])?>">
+              </div>
+              <div class="col-sm-3">
+                <input type="text" name="rrs_alamat[]" class="form-control input-sm" placeholder="Alamat" value="<?=htmlspecialchars($rrs['alamat_rs'])?>">
+              </div>
+              <div class="col-sm-2">
+                <input type="date" name="rrs_tgl[]" class="form-control input-sm" value="<?=htmlspecialchars($rrs['tgl_masuk'])?>">
+              </div>
+              <div class="col-sm-3">
+                <input type="text" name="rrs_ket[]" class="form-control input-sm" placeholder="Keterangan" value="<?=htmlspecialchars($rrs['keterangan'])?>">
+              </div>
+              <div class="col-sm-1">
+                <button type="button" class="btn btn-xs btn-danger" onclick="$(this).closest('.rawat-rs-row').remove()"><i class="fa fa-times"></i></button>
+              </div>
+            </div>
+            <?php endforeach; ?>
           </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Tanggal Masuk Rawat Inap</label>
-            <input type="hidden" name="dkey[]" value="atx_tgl_masuk_rs">
-            <input type="hidden" name="dlabel[]" value="Tgl Masuk Rawat Inap">
-            <input type="hidden" name="dsub[]" value="Klinis Anthraks">
-            <input type="hidden" name="dtype[]" value="date">
-            <?php $atx_tm=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_tgl_masuk_rs'){$atx_tm=$ed['var_value'];break;}} ?>
-            <input type="date" name="dval[]" class="form-control" value="<?=htmlspecialchars($atx_tm)?>">
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label>Tanggal Keluar Rawat Inap</label>
-            <input type="hidden" name="dkey[]" value="atx_tgl_keluar_rs">
-            <input type="hidden" name="dlabel[]" value="Tgl Keluar Rawat Inap">
-            <input type="hidden" name="dsub[]" value="Klinis Anthraks">
-            <input type="hidden" name="dtype[]" value="date">
-            <?php $atx_tk=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_tgl_keluar_rs'){$atx_tk=$ed['var_value'];break;}} ?>
-            <input type="date" name="dval[]" class="form-control" value="<?=htmlspecialchars($atx_tk)?>">
-          </div>
+          <button type="button" class="btn btn-xs btn-default" onclick="tambahRawatRS()"><i class="fa fa-plus"></i> Tambah RS/Klinik</button>
+          <script>
+          function tambahRawatRS(){
+            var row = $('#tbl-rawat-rs .rawat-rs-row:first').clone();
+            row.find('input').val('');
+            $('#tbl-rawat-rs').append(row);
+          }
+          </script>
         </div>
       </div>
     </div>
