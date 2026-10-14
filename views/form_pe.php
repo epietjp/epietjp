@@ -1632,6 +1632,155 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         </div>
       </div>
     </div>
+    
+    <!-- GHPR: Riwayat Kontak Epidemiologis -->
+    <?php if($id_penyakit==8): ?>
+    <?php
+    $rab_kgl=""; $rab_hewan=""; $rab_tggigit=""; $rab_lokgigit=""; $rab_saliva="";
+    $rab_cuci=""; $rab_vakhewan=""; $rab_vakmanusia=""; $rab_serum="";
+    if(!empty($eav_data)) {
+      foreach($eav_data as $ev) {
+        if($ev["dsub"]=="Riwayat Kontak Epi GHPR") {
+          if($ev["dkey"]=="rab_kgl") $rab_kgl=$ev["dval"];
+          if($ev["dkey"]=="rab_hewan") $rab_hewan=$ev["dval"];
+          if($ev["dkey"]=="rab_tggigit") $rab_tggigit=$ev["dval"];
+          if($ev["dkey"]=="rab_lokgigit") $rab_lokgigit=$ev["dval"];
+          if($ev["dkey"]=="rab_saliva") $rab_saliva=$ev["dval"];
+          if($ev["dkey"]=="rab_cuci") $rab_cuci=$ev["dval"];
+          if($ev["dkey"]=="rab_vakhewan") $rab_vakhewan=$ev["dval"];
+          if($ev["dkey"]=="rab_vakmanusia") $rab_vakmanusia=$ev["dval"];
+          if($ev["dkey"]=="rab_serum") $rab_serum=$ev["dval"];
+        }
+      }
+    }
+    ?>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">Kontak dengan Gigitan/Liur Hewan</label>
+      <div class="col-sm-9">
+        <input type="hidden" name="dkey[]" value="rab_kgl">
+        <input type="hidden" name="dlabel[]" value="Kontak Gigitan/Liur Hewan">
+        <input type="hidden" name="dsub[]" value="Riwayat Kontak Epi GHPR">
+        <input type="hidden" name="dtype[]" value="select">
+        <input type="hidden" name="dval[]" value="<?=$rab_kgl?>">
+        <select class="form-control" onchange="this.previousElementSibling.value=this.value;document.getElementById('div_rab_detail').style.display=this.value=='Ya'?'block':'none'">
+          <option value="">-- Pilih --</option>
+          <option value="Ya" <?=$rab_kgl=="Ya"?"selected":""?>>Ya</option>
+          <option value="Tidak" <?=$rab_kgl=="Tidak"?"selected":""?>>Tidak</option>
+        </select>
+      </div>
+    </div>
+    <div id="div_rab_detail" style="display:<?=$rab_kgl=='Ya'?'block':'none'?>">
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Jenis Hewan</label>
+        <div class="col-sm-9">
+          <input type="hidden" name="dkey[]" value="rab_hewan">
+          <input type="hidden" name="dlabel[]" value="Jenis Hewan">
+          <input type="hidden" name="dsub[]" value="Riwayat Kontak Epi GHPR">
+          <input type="hidden" name="dtype[]" value="text">
+          <input type="hidden" name="dval[]" value="<?=$rab_hewan?>">
+          <input type="text" class="form-control" placeholder="Jenis hewan (anjing/kucing/kera/dll)" value="<?=$rab_hewan?>" onchange="this.previousElementSibling.value=this.value">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Tanggal Gigitan/Kontak</label>
+        <div class="col-sm-9">
+          <input type="hidden" name="dkey[]" value="rab_tggigit">
+          <input type="hidden" name="dlabel[]" value="Tanggal Gigitan/Kontak">
+          <input type="hidden" name="dsub[]" value="Riwayat Kontak Epi GHPR">
+          <input type="hidden" name="dtype[]" value="date">
+          <input type="hidden" name="dval[]" value="<?=$rab_tggigit?>">
+          <input type="text" class="form-control datepicker" placeholder="dd-mm-yyyy" value="<?=$rab_tggigit?>" onchange="this.previousElementSibling.value=this.value">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Lokasi Gigitan</label>
+        <div class="col-sm-9">
+          <input type="hidden" name="dkey[]" value="rab_lokgigit">
+          <input type="hidden" name="dlabel[]" value="Lokasi Gigitan">
+          <input type="hidden" name="dsub[]" value="Riwayat Kontak Epi GHPR">
+          <input type="hidden" name="dtype[]" value="text">
+          <input type="hidden" name="dval[]" value="<?=$rab_lokgigit?>">
+          <input type="text" class="form-control" placeholder="Lokasi gigitan di tubuh" value="<?=$rab_lokgigit?>" onchange="this.previousElementSibling.value=this.value">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Kontak Saliva (Jilat)</label>
+        <div class="col-sm-9">
+          <input type="hidden" name="dkey[]" value="rab_saliva">
+          <input type="hidden" name="dlabel[]" value="Kontak Saliva">
+          <input type="hidden" name="dsub[]" value="Riwayat Kontak Epi GHPR">
+          <input type="hidden" name="dtype[]" value="select">
+          <input type="hidden" name="dval[]" value="<?=$rab_saliva?>">
+          <select class="form-control" onchange="this.previousElementSibling.value=this.value">
+            <option value="">-- Pilih --</option>
+            <option value="Ya" <?=$rab_saliva=="Ya"?"selected":""?>>Ya</option>
+            <option value="Tidak" <?=$rab_saliva=="Tidak"?"selected":""?>>Tidak</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Cuci Luka dengan Sabun/Air</label>
+        <div class="col-sm-9">
+          <input type="hidden" name="dkey[]" value="rab_cuci">
+          <input type="hidden" name="dlabel[]" value="Cuci Luka">
+          <input type="hidden" name="dsub[]" value="Riwayat Kontak Epi GHPR">
+          <input type="hidden" name="dtype[]" value="select">
+          <input type="hidden" name="dval[]" value="<?=$rab_cuci?>">
+          <select class="form-control" onchange="this.previousElementSibling.value=this.value">
+            <option value="">-- Pilih --</option>
+            <option value="Ya" <?=$rab_cuci=="Ya"?"selected":""?>>Ya</option>
+            <option value="Tidak" <?=$rab_cuci=="Tidak"?"selected":""?>>Tidak</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Vaksinasi Hewan</label>
+        <div class="col-sm-9">
+          <input type="hidden" name="dkey[]" value="rab_vakhewan">
+          <input type="hidden" name="dlabel[]" value="Vaksinasi Hewan">
+          <input type="hidden" name="dsub[]" value="Riwayat Kontak Epi GHPR">
+          <input type="hidden" name="dtype[]" value="select">
+          <input type="hidden" name="dval[]" value="<?=$rab_vakhewan?>">
+          <select class="form-control" onchange="this.previousElementSibling.value=this.value">
+            <option value="">-- Pilih --</option>
+            <option value="Ya" <?=$rab_vakhewan=="Ya"?"selected":""?>>Ya</option>
+            <option value="Tidak" <?=$rab_vakhewan=="Tidak"?"selected":""?>>Tidak</option>
+            <option value="Tidak Tahu" <?=$rab_vakhewan=="Tidak Tahu"?"selected":""?>>Tidak Tahu</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Vaksinasi Anti Rabies (VAR)</label>
+        <div class="col-sm-9">
+          <input type="hidden" name="dkey[]" value="rab_vakmanusia">
+          <input type="hidden" name="dlabel[]" value="Vaksinasi Anti Rabies">
+          <input type="hidden" name="dsub[]" value="Riwayat Kontak Epi GHPR">
+          <input type="hidden" name="dtype[]" value="select">
+          <input type="hidden" name="dval[]" value="<?=$rab_vakmanusia?>">
+          <select class="form-control" onchange="this.previousElementSibling.value=this.value">
+            <option value="">-- Pilih --</option>
+            <option value="Ya" <?=$rab_vakmanusia=="Ya"?"selected":""?>>Ya</option>
+            <option value="Tidak" <?=$rab_vakmanusia=="Tidak"?"selected":""?>>Tidak</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Serum Anti Rabies (SAR)</label>
+        <div class="col-sm-9">
+          <input type="hidden" name="dkey[]" value="rab_serum">
+          <input type="hidden" name="dlabel[]" value="Serum Anti Rabies">
+          <input type="hidden" name="dsub[]" value="Riwayat Kontak Epi GHPR">
+          <input type="hidden" name="dtype[]" value="select">
+          <input type="hidden" name="dval[]" value="<?=$rab_serum?>">
+          <select class="form-control" onchange="this.previousElementSibling.value=this.value">
+            <option value="">-- Pilih --</option>
+            <option value="Ya" <?=$rab_serum=="Ya"?"selected":""?>>Ya</option>
+            <option value="Tidak" <?=$rab_serum=="Tidak"?"selected":""?>>Tidak</option>
+          </select>
+        </div>
+      </div>
+    </div><!-- end div_rab_detail -->
+    <?php endif; // end GHPR Riwayat Kontak Epi ?>
     <?php endif; // end Section G HPR GHPR ?>
 
     <!-- GHPR: Section F Riwayat Kontak -->
