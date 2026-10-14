@@ -26,6 +26,24 @@
     padding: 8px 12px;
 }
 </style>
+<?php if($id_penyakit==14): ?>
+<style>
+.atx-wizard-header{background:linear-gradient(135deg,#8B0000 0%,#C0392B 100%);color:#fff;padding:14px 18px 10px;border-radius:6px 6px 0 0;margin-bottom:0}
+.atx-wizard-header .atx-title{font-size:16px;font-weight:700;margin-bottom:8px}
+.atx-progress-wrap{background:rgba(255,255,255,.3);border-radius:4px;height:6px;margin-bottom:10px}
+.atx-progress-bar{background:#fff;height:6px;border-radius:4px;transition:width .3s}
+.atx-dots{display:flex;gap:8px;flex-wrap:wrap}
+.atx-dot-wrap{display:flex;flex-direction:column;align-items:center}
+.atx-dot{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.3);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid rgba(255,255,255,.5);transition:all .2s}
+.atx-dot.active{background:#fff;color:#8B0000;border-color:#fff}
+.atx-dot-label{font-size:11px;color:rgba(255,255,255,.85);margin-top:4px;text-align:center;max-width:60px;line-height:1.2}
+.atx-nav-bar{margin-top:15px;padding:10px 0;border-top:1px solid #eee;display:flex;gap:8px;flex-wrap:wrap}
+.atx-page{display:none}
+#atx-page-1{display:block}
+.atx-field-error{border-color:#e74c3c !important;box-shadow:0 0 0 2px rgba(231,76,60,.25) !important}
+.atx-field-error-label{color:#e74c3c !important;font-weight:700}
+</style>
+<?php endif; ?>
 <div class="content-wrapper">
   <section class="content-header">
     <h1><i class="fa fa-file-text"></i> <?=htmlspecialchars($title)?></h1>
@@ -68,6 +86,20 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 <?php endif; ?>
 <?php if($id_penyakit==8): ?><div id="ghpr-page-1" class="ghpr-page" style="display:block"><?php endif; ?>
     <?php if(!empty($list_diagnosa)): ?>
+<?php if($id_penyakit==14): ?><div id="atx-page-1" class="atx-page" style="display:block"><!-- ATX-P1: Identitas --><?php endif; ?>
+<?php if($id_penyakit==14): ?>
+<div class="atx-wizard-header">
+  <div class="atx-title"><i class="fa fa-bug"></i> Form PE Antraks &mdash; <span id="atx-page-label">Identitas</span></div>
+  <div class="atx-progress-wrap"><div class="atx-progress-bar" id="atx-progress" style="width:20%"></div></div>
+  <div class="atx-dots">
+    <div class="atx-dot-wrap"><div class="atx-dot active" data-page="1">1</div><div class="atx-dot-label">Identitas</div></div>
+    <div class="atx-dot-wrap"><div class="atx-dot" data-page="2">2</div><div class="atx-dot-label">Klinis</div></div>
+    <div class="atx-dot-wrap"><div class="atx-dot" data-page="3">3</div><div class="atx-dot-label">Pajanan</div></div>
+    <div class="atx-dot-wrap"><div class="atx-dot" data-page="4">4</div><div class="atx-dot-label">Lab</div></div>
+    <div class="atx-dot-wrap"><div class="atx-dot" data-page="5">5</div><div class="atx-dot-label">Tim PE</div></div>
+  </div>
+</div>
+<?php endif; ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-stethoscope"></i> <b>Diagnosa</b></div>
       <div class="row">
@@ -134,7 +166,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="hidden" name="dsub[]" value="Status Laporan">
             <input type="hidden" name="dtype[]" value="date">
             <?php $v_tr=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='atx_tgl_rumor'){$v_tr=$ed['var_value'];break;}} ?>
-            <input type="date" name="dval[]" class="form-control" value="<?=htmlspecialchars($v_tr)?>">
+            <input type="date" name="dval[]" id="atx_tgl_rumor" class="form-control" value="<?=htmlspecialchars($v_tr)?>">
           </div>
         </div>
         <div class="col-sm-3" id="wrap_atx_lokasi_rumor" style="display:<?=$atx_rumor=='Ya'?'block':'none'?>">
@@ -163,7 +195,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="hidden" name="dsub[]" value="Status Laporan">
             <input type="hidden" name="dtype[]" value="select">
             <?php $rab_sl=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_status_laporan'){$rab_sl=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control" required>
+            <select name="dval[]" class="form-control">
               <option value="">-- Pilih --</option>
               <option value="Gigitan Hewan Penular Rabies" <?=$rab_sl=='Gigitan Hewan Penular Rabies'?'selected':''?>>Gigitan Hewan Penular Rabies (GHPR)</option>
               <option value="Rabies Klinis" <?=$rab_sl=='Rabies Klinis'?'selected':''?>>Rabies Klinis</option>
@@ -195,7 +227,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="hidden" name="dsub[]" value="Status Laporan">
             <input type="hidden" name="dtype[]" value="date">
             <?php $rab_tr=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='rab_tgl_rumor'){$rab_tr=$ed['var_value'];break;}} ?>
-            <input type="date" name="dval[]" class="form-control" value="<?=htmlspecialchars($rab_tr)?>">
+            <input type="date" name="dval[]" id="rab_tgl_rumor" class="form-control" value="<?=htmlspecialchars($rab_tr)?>">
           </div>
         </div>
         <div class="col-sm-3" id="wrap_rab_lokasi_rumor" style="display:<?=$rab_rumor=='Ya'?'block':'none'?>">
@@ -332,7 +364,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Provinsi <span class="req">*</span></label>
-            <select name="id_prop" id="sel_prop" class="form-control" required <?=$has_wilayah&&!$is_edit?"disabled":""?>>
+            <select name="id_prop" id="sel_prop" data-init="<?php echo isset($pe['id_prop'])?htmlspecialchars($pe['id_prop']):''?>" class="form-control" required <?=$has_wilayah&&!$is_edit?"disabled":""?>>
               <option value="">-- Pilih --</option>
               <?php foreach($list_prop as $pr): ?>
               <option value="<?=$pr['id']?>" <?=fv($v,'id_prop')==$pr['id']?'selected':''?>>
@@ -348,7 +380,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Kab/Kota <span class="req">*</span></label>
-            <select name="id_kota" id="sel_kota" class="form-control" required <?=$has_wilayah&&!$is_edit&&!empty($v["id_kota"])?"disabled":""?>>
+            <select name="id_kota" id="sel_kota" data-init="<?php echo isset($pe['id_kota'])?htmlspecialchars($pe['id_kota']):''?>" class="form-control" required <?=$has_wilayah&&!$is_edit&&!empty($v["id_kota"])?"disabled":""?>>
               <option value="">-- Pilih Provinsi --</option>
             </select>
             <?php if($has_wilayah && !$is_edit && !empty($v['id_kota'])): ?>
@@ -359,7 +391,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Kecamatan</label>
-            <select name="id_kecamatan" id="sel_kec_unit" class="form-control" required <?=$has_wilayah&&!$is_edit&&!empty($v["id_kecamatan"])?"disabled":""?>>
+            <select name="id_kecamatan" id="sel_kec_unit" data-init="<?php echo isset($pe['id_kecamatan'])?htmlspecialchars($pe['id_kecamatan']):''?>" class="form-control" required <?=$has_wilayah&&!$is_edit&&!empty($v["id_kecamatan"])?"disabled":""?>>
               <option value="">-- Pilih Kab/Kota dulu --</option>
             </select>
             <?php if($has_wilayah && !$is_edit && !empty($v["id_kecamatan"])): echo "<input type=hidden name=id_kecamatan value=" . fv($v,"id_kecamatan") . ">"; endif; ?>
@@ -368,7 +400,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Unit Pelapor</label>
-            <select name="id_puskesmas" id="sel_pusk" class="form-control" required <?=$has_wilayah&&!$is_edit&&!empty($v["id_puskesmas"])?"disabled":""?>>
+            <select name="id_puskesmas" id="sel_pusk" data-init="<?php echo isset($pe['id_puskesmas'])?htmlspecialchars($pe['id_puskesmas']):''?>" class="form-control" required <?=$has_wilayah&&!$is_edit&&!empty($v["id_puskesmas"])?"disabled":""?>>
               <option value="">-- Pilih Kab/Kota --</option>
             </select>
             <?php if($has_wilayah && !$is_edit && !empty($v["id_puskesmas"])): echo "<input type=hidden name=id_puskesmas value=" . fv($v,"id_puskesmas") . ">"; endif; ?>
@@ -461,7 +493,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Provinsi Domisili Pasien</label>
-            <select name="kd_prop_kasus" id="sel_prop_pasien" class="form-control">
+            <select name="kd_prop_kasus" id="sel_prop_pasien" class="form-control" data-init="<?php echo isset($pe['kd_prop_kasus'])?htmlspecialchars($pe['kd_prop_kasus']):''?>">
               <option value="">-- Sama dengan Unit Pelapor --</option>
               <?php foreach($list_prop as $pr): ?>
               <option value="<?=$pr['id']?>" <?=fv($v,'kd_prop_kasus')==$pr['id']?'selected':''?>>
@@ -474,7 +506,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Kab/Kota Domisili Pasien</label>
-            <select name="kd_kota_kasus" id="sel_kota_pasien" class="form-control" onchange="loadKecamatanPasien(this.value, null)">
+            <select name="kd_kota_kasus" id="sel_kota_pasien" class="form-control" data-init="<?php echo isset($pe['kd_kota_kasus'])?htmlspecialchars($pe['kd_kota_kasus']):''?>" onchange="loadKecamatanPasien(this.value, null)">
               <option value="">-- Pilih Provinsi dulu --</option>
             </select>
           </div>
@@ -482,7 +514,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Kecamatan Domisili Pasien</label>
-            <select name="id_kecamatan_kasus" id="sel_kecamatan_pasien" class="form-control">
+            <select name="id_kecamatan_kasus" id="sel_kecamatan_pasien" class="form-control" data-init="<?php echo isset($pe['id_kecamatan_kasus'])?htmlspecialchars($pe['id_kecamatan_kasus']):''?>">
               <option value="">-- Pilih Kab/Kota dulu --</option>
             </select>
             <input type="hidden" name="kecamatan" id="hid_kecamatan_nama">
@@ -652,7 +684,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
             <input type="hidden" name="dsub[]" value="Gigitan HPR">
             <input type="hidden" name="dtype[]" value="select">
             <?php $ghpr_digigit=''; if(!empty($eav_data)) foreach($eav_data as $ed){if($ed['var_key']=='ghpr_pernah_digigit'){$ghpr_digigit=$ed['var_value'];break;}} ?>
-            <select name="dval[]" class="form-control" required onchange="$('#wrap_ghpr_gigit_detail').toggle(this.value==='Ya')">
+            <select name="dval[]" class="form-control" onchange="$('#wrap_ghpr_gigit_detail').toggle(this.value==='Ya')">
               <option value="">-- Pilih --</option>
               <option value="Ya" <?=$ghpr_digigit=='Ya'?'selected':''?>>Ya</option>
               <option value="Tidak" <?=$ghpr_digigit=='Tidak'?'selected':''?>>Tidak</option>
@@ -733,6 +765,15 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 
     <!-- KLINIS -->
     <?php if($id_penyakit!=8): // Klinis GHPR sudah ada di Section F ?>
+<?php if($id_penyakit==14): ?>
+<div class="atx-nav-bar">
+  <button type="button" class="btn btn-primary btn-sm atx-next">Selanjutnya <i class="fa fa-chevron-right"></i></button>
+  <button type="button" class="btn btn-success btn-sm atx-save"><i class="fa fa-save"></i> Simpan</button>
+  <button type="button" class="btn btn-default btn-sm atx-exit"><i class="fa fa-times"></i> Keluar</button>
+</div>
+<?php endif; ?>
+<?php if($id_penyakit==14): ?></div><!-- /atx-page-1 --><?php endif; ?>
+<?php if($id_penyakit==14): ?><div id="atx-page-2" class="atx-page" style="display:none"><!-- ATX-P2: Klinis Pasien --><?php endif; ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-heartbeat"></i> <b>E. Informasi Klinis</b></div>
       <div class="row">
@@ -782,7 +823,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Tanggal Sakit (Berobat) <span class="req">*</span></label>
-            <input type="date" name="tgl_sakit" class="form-control" required value="<?=fv($v,'tgl_sakit')?>">
+            <input type="date" name="tgl_sakit" class="form-control" value="<?=fv($v,'tgl_sakit')?>">
           </div>
         </div>
         <?php if(in_array($id_penyakit, array(14,26))): // Anthrax dan Lepto ?>
@@ -1029,7 +1070,7 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <div class="col-sm-3">
           <div class="form-group">
             <label>Tanggal Mulai Sakit/Bergejala <span class="req">*</span></label>
-            <input type="date" name="tgl_bergejala" class="form-control" required value="<?=fv($v,'tgl_bergejala')?>">
+            <input type="date" name="tgl_bergejala" class="form-control" value="<?=fv($v,'tgl_bergejala')?>">
           </div>
         </div>
         <div class="col-sm-3">
@@ -1841,6 +1882,16 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; ?>
 
+<?php if($id_penyakit==14): ?>
+<div class="atx-nav-bar">
+  <button type="button" class="btn btn-default btn-sm atx-prev"><i class="fa fa-chevron-left"></i> Sebelumnya</button>
+  <button type="button" class="btn btn-primary btn-sm atx-next">Selanjutnya <i class="fa fa-chevron-right"></i></button>
+  <button type="button" class="btn btn-success btn-sm atx-save"><i class="fa fa-save"></i> Simpan</button>
+  <button type="button" class="btn btn-default btn-sm atx-exit"><i class="fa fa-times"></i> Keluar</button>
+</div>
+<?php endif; ?>
+<?php if($id_penyakit==14): ?></div><!-- /atx-page-2 --><?php endif; ?>
+<?php if($id_penyakit==14): ?><div id="atx-page-3" class="atx-page" style="display:none"><!-- ATX-P3: Riwayat Pajanan --><?php endif; ?>
     <!-- ANTHRAKS: Riwayat Kontak Hewan -->
     <?php if($id_penyakit==14): ?>
     <div class="form-section">
@@ -2111,6 +2162,17 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
     </div>
     <?php endif; ?>
 
+<?php if($id_penyakit==14): ?>
+<div class="atx-nav-bar">
+  <button type="button" class="btn btn-default btn-sm atx-prev"><i class="fa fa-chevron-left"></i> Sebelumnya</button>
+  <button type="button" class="btn btn-primary btn-sm atx-next">Selanjutnya <i class="fa fa-chevron-right"></i></button>
+  <button type="button" class="btn btn-success btn-sm atx-save"><i class="fa fa-save"></i> Simpan</button>
+  <button type="button" class="btn btn-default btn-sm atx-exit"><i class="fa fa-times"></i> Keluar</button>
+</div>
+<?php endif; ?>
+<?php if($id_penyakit==14): ?></div></div></div><!-- /atx-page-3 --><?php endif; ?>
+<?php if($id_penyakit==14): ?><div id="atx-page-4" class="atx-page" style="display:none"><!-- ATX-P4: Lab & Kondisi Akhir --><?php endif; ?>
+<div class="form-section">
     <!-- KONTAK HEWAN -->
       <div class="form-section-title"><i class="fa fa-flask"></i> <b>G. Pemeriksaan Laboratorium</b></div>
       <div class="row">
@@ -2573,6 +2635,16 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
       </div>
     </div>
     <?php if($id_penyakit != 8): ?>
+<?php if($id_penyakit==14): ?>
+<div class="atx-nav-bar">
+  <button type="button" class="btn btn-default btn-sm atx-prev"><i class="fa fa-chevron-left"></i> Sebelumnya</button>
+  <button type="button" class="btn btn-primary btn-sm atx-next">Selanjutnya <i class="fa fa-chevron-right"></i></button>
+  <button type="button" class="btn btn-success btn-sm atx-save"><i class="fa fa-save"></i> Simpan</button>
+  <button type="button" class="btn btn-default btn-sm atx-exit"><i class="fa fa-times"></i> Keluar</button>
+</div>
+<?php endif; ?>
+<?php if($id_penyakit==14): ?></div><!-- /atx-page-4 --><?php endif; ?>
+<?php if($id_penyakit==14): ?><div id="atx-page-5" class="atx-page" style="display:none"><!-- ATX-P5: Tim PE --><?php endif; ?>
     <div class="form-section">
       <div class="form-section-title"><i class="fa fa-phone"></i> <b><?=$id_penyakit==14?"L. Kontak Penyelidikan":"O. Kontak Penyelidikan"?></b></div>
       <small class="text-muted">Narasumber (pejabat/petugas/dokter) yang dihubungi saat penyelidikan</small>
@@ -3302,6 +3374,14 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
         <i class="fa fa-arrow-left"></i> Kembali
       </a>
     </div>
+<?php if($id_penyakit==14): ?>
+<div class="atx-nav-bar">
+  <button type="button" class="btn btn-default btn-sm atx-prev"><i class="fa fa-chevron-left"></i> Sebelumnya</button>
+  <button type="button" class="btn btn-success btn-sm atx-save"><i class="fa fa-save"></i> Simpan</button>
+  <button type="button" class="btn btn-default btn-sm atx-exit"><i class="fa fa-times"></i> Keluar</button>
+</div>
+<?php endif; ?>
+<?php if($id_penyakit==14): ?></div><!-- /atx-page-5 --><?php endif; ?>
     </form>
 
   </section>
@@ -3310,11 +3390,14 @@ $warna_hex = isset($warna_map[$info_p['warna']]) ? $warna_map[$info_p['warna']] 
 
 <script>
 var BASE = '<?=base_url()?>';
-var initProp = '<?=fv($v,"id_prop")?>';
-var initKota = '<?=fv($v,"id_kota")?>';
-var initPropPasien  = '<?=fv($v,"kd_prop_kasus")?>';
-var initKotaPasien  = '<?=fv($v,"kd_kota_kasus")?>';
-var initKecPasien   = '<?=fv($v,"id_kecamatan_kasus")?>';
+var initProp = $('#sel_prop').data('init') || '';
+var initKota = $('#sel_kota').data('init') || '';
+// Fallback: baca dari hidden input jika PHP echo kosong
+if (!initProp) initProp = $('input[name="id_prop"]').val() || '';
+if (!initKota) initKota = $('input[name="id_kota"]').val() || '';
+var initPropPasien  = $('#sel_prop_pasien').data('init') || '';
+var initKotaPasien  = $('#sel_kota_pasien').data('init') || '';
+var initKecPasien   = $('#sel_kecamatan_pasien').data('init') || '';
 var initKecNama     = '<?=fv($v,"kecamatan")?>';
 
 // Cascade Kab/Kota Pasien
@@ -3359,8 +3442,8 @@ if (initPropPasien) {
     loadKotaPasien(initPropPasien, initKotaPasien);
 }
 if (initKecNama) { $('#hid_kecamatan_nama').val(initKecNama); }
-var initPusk = '<?=fv($v,"id_puskesmas")?>';
-var initKec  = '<?=fv($v,"id_kecamatan")?>';
+var initPusk = $('#sel_pusk').data('init') || '';
+var initKec  = $('#sel_kec_unit').data('init') || '';
 
 $('#sel_prop').change(function() {
     var id = $(this).val();
@@ -3540,6 +3623,13 @@ function cekUrutan() {
         addWarn('input[name=tgl_ambil_sample]', 'Tgl Ambil tidak boleh setelah Tgl Kirim');
     if (tgl_kirim && tgl_hasil && tgl_kirim > tgl_hasil)
         addWarn('input[name=tgl_kirim_sample]', 'Tgl Kirim tidak boleh setelah Tgl Hasil');
+    // Validasi Tanggal Rumor (ATX + GHPR)
+    var tgl_rumor_atx = $('#atx_tgl_rumor').val();
+    var tgl_rumor_rab = $('#rab_tgl_rumor').val();
+    if (tgl_rumor_atx && tgl_laporan && tgl_rumor_atx > tgl_laporan)
+        addWarn('#atx_tgl_rumor', 'Tgl Rumor tidak boleh lebih dari Tgl Laporan');
+    if (tgl_rumor_rab && tgl_laporan && tgl_rumor_rab > tgl_laporan)
+        addWarn('#rab_tgl_rumor', 'Tgl Rumor tidak boleh lebih dari Tgl Laporan');
 }
 
 // Pasang event blur ke semua field tanggal
@@ -3559,7 +3649,7 @@ $('input[name=tgl_lahir]').on('change', function(){
     $('input[name=umur_hari]').val(hari >= 0 ? hari : 0);
 });
 
-$(document).on('change', 'input[name="tgl_bergejala"], input[name="tgl_sakit"], input[name="tgl_laporan"], input[name="tgl_pe"], input[name="tgl_masuk_rs"], input[name="tgl_meninggal"], input[name="tgl_ambil_sample"], input[name="tgl_kirim_sample"], input[name="tgl_hasil_lab"]', function(){
+$(document).on('change', 'input[name="tgl_bergejala"], input[name="tgl_sakit"], input[name="tgl_laporan"], input[name="tgl_pe"], input[name="tgl_masuk_rs"], input[name="tgl_meninggal"], input[name="tgl_ambil_sample"], input[name="tgl_kirim_sample"], input[name="tgl_hasil_lab"], #atx_tgl_rumor, #rab_tgl_rumor', function(){
     cekUrutan();
 });
 
@@ -3773,5 +3863,62 @@ $(document).on('click','.ghpr-prev',function(){GHPR.back(parseInt($(this).data('
 $(document).on('click','.ghpr-save',function(){if(confirm('Simpan laporan PE?'))$('#formPE').submit();});
 $(document).on('click','.ghpr-keluar',function(){if(confirm('Keluar? Data belum tersimpan akan hilang.'))location.href='<?=base_url("zoonosis")?>';});
 $(document).on('click','.ghpr-dot',function(){var t=parseInt($(this).text());if(t<GHPR.cur)GHPR.back(t);});
+<?php endif; ?>
+<?php if($id_penyakit==14): ?>
+// ===== ATX Wizard JS =====
+var ATX={
+  cur:1,tot:5,
+  labels:["","Identitas","Klinis Pasien","Riwayat Pajanan","Lab & Kondisi Akhir","Tim PE"],
+  pct:{"1":20,"2":40,"3":60,"4":80,"5":100},
+  update:function(n){
+    ATX.cur=n;
+    document.getElementById("atx-progress").style.width=ATX.pct[n]+"%";
+    document.getElementById("atx-page-label").textContent=ATX.labels[n];
+    document.querySelectorAll(".atx-dot").forEach(function(d){
+      d.classList.toggle("active",parseInt(d.getAttribute("data-page"))===n);
+    });
+  },
+  validate:function(){
+    var errs=[];
+    var pg=document.getElementById("atx-page-"+ATX.cur);
+    if(!pg) return errs;
+    pg.querySelectorAll("input[required],select[required],textarea[required]").forEach(function(el){
+      if(!el.value||el.value.trim()===""){
+        var fg=el.closest(".form-group");
+        var nm=fg&&fg.querySelector("label")?fg.querySelector("label").textContent.trim():(el.name||el.id||"field");
+        errs.push(nm); el.classList.add("atx-field-error"); var lbl=el.closest(".form-group"); if(lbl&&lbl.querySelector("label")) lbl.querySelector("label").classList.add("atx-field-error-label");
+      }
+    });
+    return errs;
+  },
+  show:function(n){
+    if(n<1||n>ATX.tot) return;
+    document.querySelectorAll(".atx-field-error").forEach(function(e){e.classList.remove("atx-field-error");}); document.querySelectorAll(".atx-field-error-label").forEach(function(e){e.classList.remove("atx-field-error-label");}); document.querySelectorAll(".atx-page").forEach(function(p){p.style.display="none";});
+    var pg=document.getElementById("atx-page-"+n);
+    if(pg) pg.style.display="block";
+    ATX.update(n);
+    window.scrollTo(0,0);
+  },
+  go:function(n){
+    var errs=ATX.validate();
+    if(errs.length){alert("Mohon isi field wajib:\n- "+errs.slice(0,5).join("\n- ")+(errs.length>5?"\n...dan "+(errs.length-5)+" lainnya":""));return;}
+    ATX.show(n);
+  },
+  back:function(n){ATX.show(n);}
+};
+$(document).ready(function(){
+  $(".atx-page").hide();
+  $("#atx-page-1").show();
+  ATX.update(1);
+  $(document).on("click",".atx-next",function(){ATX.go(ATX.cur+1);});
+  $(document).on("click",".atx-prev",function(){ATX.back(ATX.cur-1);});
+  $(document).on("click",".atx-dot",function(){
+    var n=parseInt($(this).data("page"));
+    if(n<ATX.cur) ATX.back(n); else ATX.go(n);
+  });
+  $(document).on("click",".atx-save",function(){if(confirm("Simpan data PE Antraks?")) $("#formPE").submit();});
+  $(document).on("click",".atx-exit",function(){if(confirm("Keluar? Data belum disimpan akan hilang.")) history.back();});
+});
+// ===== END ATX Wizard JS =====
 <?php endif; ?>
 </script>
