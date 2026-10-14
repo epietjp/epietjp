@@ -159,7 +159,7 @@ class Zoonosis_model extends CI_Model {
         $diagnosa_map = array(
             8  => array(18, 31),
             11 => array(226, 32),
-            14 => array(294),
+            14 => array(402, 294),          // Suspek Anthraks + Anthraks
             26 => array(222, 24),
         );
         if (!isset($diagnosa_map[$id_penyakit])) return array();
@@ -276,7 +276,7 @@ class Zoonosis_model extends CI_Model {
         $diagnosa_map = array(
             8  => array(18,31),
             11 => array(226, 32),   // Suspek Flu Burung + Flu Burung Pada Manusia
-            14 => array(294),          // Anthraks
+            14 => array(402, 294),          // Suspek Anthraks + Anthraks
             26 => array(222,24),
         );
         if (!isset($diagnosa_map[$id_penyakit])) return array();
